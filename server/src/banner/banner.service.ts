@@ -21,8 +21,7 @@ export class BannerService {
     @InjectModel(BannerTranslation.name)
     private translationModel: Model<BannerTranslationDocument>,
     private readonly i18n: YcI18nService,
-  ) {
-  }
+  ) {}
 
   async create(dto: CreateBannerDto) {
     const banner = await this.bannerModel.create(dto);
@@ -44,7 +43,7 @@ export class BannerService {
         ...dto,
         bannerId: new Types.ObjectId(dto.bannerId),
       },
-      { upsert: true, new: true },
+      { upsert: true, new: true, runValidators: true, context: 'query' },
     );
 
     if (!bannerTranslation) {
@@ -70,10 +69,7 @@ export class BannerService {
   async updateTranslation(id: string, dto: UpdateBannerTranslationDto) {
     const bannerTranslation = await this.translationModel.findByIdAndUpdate(
       id,
-      {
-        ...dto,
-        bannerId: new Types.ObjectId(dto.bannerId),
-      },
+      dto,
       {
         new: true,
         runValidators: true,
@@ -89,7 +85,9 @@ export class BannerService {
   }
 
   async delete(id: string) {
-    await this.translationModel.deleteMany({ bannerId: id });
+    await this.translationModel.deleteMany({
+      bannerId: new Types.ObjectId(id),
+    });
     return this.bannerModel.findByIdAndDelete(id);
   }
 
