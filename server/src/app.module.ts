@@ -13,6 +13,7 @@ import { YcI18nModule } from './yc-i18n/yc-i18n.module';
 import * as path from 'node:path';
 import { MongooseModule } from '@nestjs/mongoose';
 import { BannerModule } from './banner/banner.module';
+import { FaqModule } from './faq/faq.module';
 import * as process from 'node:process';
 
 @Module({
@@ -35,6 +36,7 @@ import * as process from 'node:process';
     YcI18nModule,
     MongooseModule.forRoot(process.env.MONGODB_URI || ''),
     BannerModule,
+    FaqModule,
   ],
   controllers: [AppController],
   providers: [AppService],

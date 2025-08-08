@@ -44,7 +44,8 @@ export class MongoExceptionFilter implements ExceptionFilter {
         break;
 
       // Indexing or schema conflict
-      case exception.name === 'MongoError' && exception.message?.includes('index'):
+      case exception.name === 'MongoError' &&
+        exception.message?.includes('index'):
         status = HttpStatus.BAD_REQUEST;
         message = 'Indexing conflict';
         break;
