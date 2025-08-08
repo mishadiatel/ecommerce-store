@@ -15,6 +15,8 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { BannerModule } from './banner/banner.module';
 import { FaqModule } from './faq/faq.module';
 import * as process from 'node:process';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { UploadModule } from './upload/upload.module';
 
 @Module({
   imports: [
@@ -33,10 +35,15 @@ import * as process from 'node:process';
         new HeaderResolver(['x-lang']),
       ],
     }),
+    ServeStaticModule.forRoot({
+      rootPath: path.join(__dirname, '..', 'uploads'),
+      serveRoot: '/files',
+    }),
     YcI18nModule,
     MongooseModule.forRoot(process.env.MONGODB_URI || ''),
     BannerModule,
     FaqModule,
+    UploadModule,
   ],
   controllers: [AppController],
   providers: [AppService],
