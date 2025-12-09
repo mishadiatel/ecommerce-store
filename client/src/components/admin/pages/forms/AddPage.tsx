@@ -8,18 +8,17 @@ import { DialogClose } from '@radix-ui/react-dialog';
 import { Button } from '@/components/admin/shadcnuiComponents/button';
 import GroupSelect from '@/components/admin/ui/selectGroup';
 import { LANGUAGES_LIST } from '@/variables/languages';
-import { ROBOTS_VALUES } from '@/variables/robots';
 import { createPage } from '@/services/pages';
 import { toast } from 'react-toastify';
 import { useRef } from 'react';
 import { useRouter } from '@/i18n/navigation';
+import CheckboxInput from '@/components/admin/ui/checkboxInput';
 
 interface AddPageFormProps {
   updatePagesList: () => void;
 }
 
 export default function AddPageForm({updatePagesList}: AddPageFormProps) {
-  const router = useRouter();
   const closeRef = useRef<HTMLButtonElement>(null);
   const editPageFormSchema = z.object({
     slug: z.string({ error: 'slug is required' }).min(1, { message: 'slug is required' }),
@@ -27,6 +26,8 @@ export default function AddPageForm({updatePagesList}: AddPageFormProps) {
     description: z.string({ error: 'description is required' }).min(1, { message: 'description is required' }),
     robots: z.string({ error: 'robots is required' }).min(1, { message: 'robots is required' }),
     language: z.string({ error: 'language is required' }).min(1, { message: 'language is required' }),
+    index: z.boolean(),
+    follow: z.boolean(),
   });
   type EditPageData = z.infer<typeof editPageFormSchema>
 
@@ -42,6 +43,8 @@ export default function AddPageForm({updatePagesList}: AddPageFormProps) {
       description: '',
       robots: '',
       language: '',
+      index: false,
+      follow: false
     },
   });
 
@@ -66,8 +69,8 @@ export default function AddPageForm({updatePagesList}: AddPageFormProps) {
         <InputGroup control={control} name={'slug'} label={'page slug'} placeholder={'slug'} />
         <InputGroup control={control} name={'title'} label={'page title'} placeholder={'title'} />
         <InputGroup control={control} name={'description'} label={'page description'} placeholder={'description'} />
-        <GroupSelect control={control} name={'robots'} values={ROBOTS_VALUES} label={'page robots'}
-                     placeholder={'robots'} />
+        <CheckboxInput control={control} name={'index'} label={'index'} />
+        <CheckboxInput control={control} name={'follow'} label={'follow'} />
         <GroupSelect control={control} name={'language'} values={LANGUAGES_LIST} label={'page language'}
                      placeholder={'language'} />
         <DialogFooter>

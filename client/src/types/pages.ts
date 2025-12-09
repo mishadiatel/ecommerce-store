@@ -3,8 +3,9 @@ export interface Page {
   slug: string;
   title: string;
   description: string;
-  robots: string;
   language: string;
+  index: boolean;
+  follow: boolean;
   updatedAt: string;
   createdAt: string;
 }

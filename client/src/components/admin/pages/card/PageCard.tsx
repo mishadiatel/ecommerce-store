@@ -40,7 +40,7 @@ export default function PageCard({page, updatePagesList}: PageCardProps) {
       <div> {page.slug}</div>
       <div> {page.language}</div>
       <div>{page.title}</div>
-      <div>{page.robots}</div>
+      <div>{page.index ? 'index' : 'noindex'}, {page.follow ? 'follow' : 'nofollow'}</div>
       <div className={'flex gap-5'}>
         <Dialog>
           <DialogTrigger>
