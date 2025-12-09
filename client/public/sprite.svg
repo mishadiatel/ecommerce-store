@@ -1,0 +1,21 @@
+<svg width="0" height="0" class="hidden">
+    <symbol fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1920" id="icon-check">
+        <path d="M1827.701 303.065 698.835 1431.801 92.299 825.266 0 917.564 698.835 1616.4 1919.869 395.234z" fill-rule="evenodd"></path>
+    </symbol>
+    <symbol fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 19" id="icon-burger">
+        <path d="M1 1.66666H19" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+        <path d="M1 9.66666H19" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+        <path d="M1 17.6667H19" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+    </symbol>
+    <symbol fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 26 26" id="icon-close">
+        <path d="M19.3638 6.63602L6.63585 19.3639" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+        <path d="M6.63623 6.63602L19.3642 19.3639" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+    </symbol>
+    <symbol fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 77 16" id="icon-arrow">
+        <path d="M69 1L76 8M76 8L69 15M76 8H0.5" stroke="currentColor"></path>
+    </symbol>s
+    <symbol fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 26 13" id="icon-down">
+        <path d="M25 1L13 12L1 0.999999" stroke="currentColor"></path>
+    </symbol>
+
+</svg>
