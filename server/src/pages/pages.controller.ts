@@ -8,6 +8,7 @@ import {
   Delete,
   HttpCode,
   HttpStatus,
+  Query,
 } from '@nestjs/common';
 import { PagesService } from './pages.service';
 import { CreatePageDto } from './dto/create-page.dto';
@@ -25,8 +26,8 @@ export class PagesController {
 
   @Get()
   @HttpCode(HttpStatus.OK)
-  findAll() {
-    return this.pagesService.findAll();
+  findAll(@Query() query: any) {
+    return this.pagesService.findAll(query);
   }
 
   @Get('/getPublicPage/:slug')

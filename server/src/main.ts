@@ -6,7 +6,7 @@ import { MongoExceptionFilter } from './filters/mongodb.filter';
 
 async function bootstrap() {
   const PORT = process.env.PORT || 5000;
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, { cors: true });
 
   app.useGlobalPipes(new I18nValidationPipe());
   app.useGlobalFilters(

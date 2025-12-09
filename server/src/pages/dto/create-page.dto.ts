@@ -1,4 +1,4 @@
-import { IsOptional, IsString } from 'class-validator';
+import { IsBoolean, IsOptional, IsString } from 'class-validator';
 
 export class CreatePageDto {
   @IsString()
@@ -16,4 +16,12 @@ export class CreatePageDto {
   @IsString()
   @IsOptional()
   language?: string;
+
+  @IsBoolean()
+  @IsOptional()
+  index: boolean;
+
+  @IsBoolean()
+  @IsOptional()
+  follow: boolean;
 }

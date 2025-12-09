@@ -14,11 +14,15 @@ export class Page {
   @Prop({ type: String, required: true })
   description: string;
 
-  @Prop({ type: String, required: true })
-  robots: string;
-
   @Prop({ type: String, required: true, default: 'ua' })
   language: string;
+
+  @Prop({ type: Boolean, required: true, default: false })
+  index: boolean;
+
+  @Prop({ type: Boolean, required: true, default: false })
+  follow: boolean;
 }
 
 export const PageSchema = SchemaFactory.createForClass(Page);
+PageSchema.index({ slug: 1, language: 1 }, { unique: true });

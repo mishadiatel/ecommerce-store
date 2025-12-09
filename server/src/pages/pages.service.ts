@@ -5,6 +5,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import { Page, PageDocument } from './schemas/page.schema';
 import { YcI18nService } from '../yc-i18n/yc-i18n.service';
+import { APIFeatures } from '../utils/APIFeature';
 
 @Injectable()
 export class PagesService {
@@ -24,8 +25,13 @@ export class PagesService {
     return page;
   }
 
-  findAll() {
-    return this.pageModel.find();
+  async findAll(query: any) {
+    const pagesQuery = new APIFeatures(this.pageModel.find(), query)
+      .search(['slug', 'language', 'title'])
+      .filter()
+      .sort();
+
+    return pagesQuery.query;
   }
 
   async findOne(id: string) {
