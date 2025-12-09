@@ -17,6 +17,7 @@ import { FaqModule } from './faq/faq.module';
 import * as process from 'node:process';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { UploadModule } from './upload/upload.module';
+import { PagesModule } from './pages/pages.module';
 
 @Module({
   imports: [
@@ -44,6 +45,7 @@ import { UploadModule } from './upload/upload.module';
     BannerModule,
     FaqModule,
     UploadModule,
+    PagesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
