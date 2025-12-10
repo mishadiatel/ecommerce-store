@@ -5,30 +5,30 @@ import {
   DialogTrigger,
 } from '@/components/admin/shadcnuiComponents/dialog';
 import { Button } from '@/components/admin/shadcnuiComponents/button';
-import PageCard from '@/components/admin/pages/card/PageCard';
-import { Page } from '@/types/pages';
-import AddPageForm from '@/components/admin/pages/forms/AddPage';
 import { useEffect, useRef, useState } from 'react';
 import { Input } from '@/components/admin/shadcnuiComponents/input';
-import { getPages } from '@/services/pages';
 import { toast } from 'react-toastify';
+import { Block } from '@/types/blocks';
+import { getBlocks } from '@/services/blocks';
+import BlockCard from '@/components/admin/blocks/card/BlockCard';
+import AddBlockForm from '@/components/admin/blocks/forms/AddBlock';
 
-interface PagesListProps {
-  pages?: Page[];
+interface BlocksListProps {
+  blocks?: Block<object>[];
 }
 
-export default function PagesList ({pages}: PagesListProps) {
+export default function BlocksList ({blocks}: BlocksListProps) {
   const isFirstRender = useRef(true);
-  const [pagesState, setPagesState] = useState<Page[] | undefined>(pages);
+  const [blocksState, setBlocksState] = useState<Block<object>[] | undefined>(blocks);
   const [searchWord, setSearchWord] = useState('');
 
-  const updatePagesList = () => {
+  const updateBlocksList = () => {
     if (isFirstRender.current) {
       isFirstRender.current = false;
       return;
     }
-    getPages(searchWord ? {search: searchWord.toString()} : {}).then((pagesResult) => {
-      setPagesState(pagesResult);
+    getBlocks(searchWord ? {search: searchWord.toString()} : {}).then((pagesResult) => {
+      setBlocksState(pagesResult);
     }).catch((err) => {
       toast.error('error loading pages.');
     })
@@ -36,7 +36,7 @@ export default function PagesList ({pages}: PagesListProps) {
 
   useEffect(() => {
     const handler = setTimeout(() => {
-      updatePagesList();
+      updateBlocksList();
     }, 1000);
     return () => clearTimeout(handler);
   }, [searchWord]);
@@ -45,10 +45,11 @@ export default function PagesList ({pages}: PagesListProps) {
       <div className={'w-fit'}>
         <Dialog>
           <DialogTrigger className={'w-fit'} asChild>
-            <Button>Add page</Button>
+            <Button>Add block</Button>
           </DialogTrigger>
-          <DialogContent className={'max-h-screen overflow-y-auto'}>
-            <AddPageForm updatePagesList={updatePagesList} />
+          <DialogContent className={'max-w-[1000px] sm:max-w-[1000px] max-h-screen overflow-y-auto'}>
+            {/*<AddPageForm updatePagesList={updatePagesList} />*/}
+            <AddBlockForm onSuccess={updateBlocksList} />
           </DialogContent>
         </Dialog>
       </div>
@@ -61,8 +62,8 @@ export default function PagesList ({pages}: PagesListProps) {
       />
 
       <div className={'flex flex-col gap-5'}>
-        {pagesState && pagesState.length > 0 ? pagesState.map((page) => (
-          <PageCard page={page} key={page._id} updatePagesList={updatePagesList} />
+        {blocksState && blocksState.length > 0 ? blocksState.map((block) => (
+          <BlockCard block={block} updateBlocksList={updateBlocksList} key={block._id} />
         )) : (
           <div>not found pages</div>
         )}

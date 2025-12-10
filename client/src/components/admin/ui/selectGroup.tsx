@@ -14,6 +14,8 @@ type SelectProps<T extends FieldValues> = {
   placeholder?: string;
   label?: string;
   values: { _id: string, text: string }[];
+  onSelectValueChange?: (value: string) => void;
+  disabled?: boolean;
 };
 export default function GroupSelect<T extends FieldValues>({
                                                              control,
@@ -21,6 +23,8 @@ export default function GroupSelect<T extends FieldValues>({
                                                              placeholder,
                                                              label,
                                                              values,
+                                                             onSelectValueChange,
+                                                              disabled,
                                                            }: SelectProps<T>) {
   return (
     <><FieldGroup>
@@ -32,9 +36,16 @@ export default function GroupSelect<T extends FieldValues>({
             <FieldLabel>
               {label}
             </FieldLabel>
-            <Select onValueChange={field.onChange}
-                    value={field.value}
-                    defaultValue={field.value}>
+            <Select
+              onValueChange={(value) => {
+                field.onChange(value);
+                if (onSelectValueChange) {
+                  onSelectValueChange(value);
+                }
+              }}
+              disabled={disabled}
+              value={field.value}
+              defaultValue={field.value}>
               <SelectTrigger className="w-[180px]">
                 <SelectValue placeholder={placeholder} />
               </SelectTrigger>

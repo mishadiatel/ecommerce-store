@@ -11,7 +11,6 @@ import { LANGUAGES_LIST } from '@/variables/languages';
 import { createPage } from '@/services/pages';
 import { toast } from 'react-toastify';
 import { useRef } from 'react';
-import { useRouter } from '@/i18n/navigation';
 import CheckboxInput from '@/components/admin/ui/checkboxInput';
 
 interface AddPageFormProps {

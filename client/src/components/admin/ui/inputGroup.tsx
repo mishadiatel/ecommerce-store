@@ -7,12 +7,14 @@ type InputProps<T extends FieldValues> = {
   name: Path<T>;
   placeholder?: string;
   label?: string;
+  type?: string
 };
 export default function InputGroup<T extends FieldValues>({
                                                             control,
                                                             name,
                                                             placeholder,
                                                             label,
+                                                            type
                                                           }: InputProps<T>) {
   return (
     <FieldGroup>
@@ -29,6 +31,10 @@ export default function InputGroup<T extends FieldValues>({
               aria-invalid={fieldState.invalid}
               placeholder={placeholder}
               autoComplete="off"
+              type={type || 'text'}
+              onChange={(e) => {
+                field.onChange(type === 'number' ? +e.target.value : e.target.value)
+              }}
             />
             {fieldState.invalid && (
               <FieldError errors={[fieldState.error]} />
