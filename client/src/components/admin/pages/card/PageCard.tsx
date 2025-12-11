@@ -14,12 +14,10 @@ import EditPageForm from '@/components/admin/pages/forms/EditPage';
 import { DialogClose } from '@radix-ui/react-dialog';
 import { Button } from '@/components/admin/shadcnuiComponents/button';
 import { useEffect, useRef, useState } from 'react';
-import { deletePage, updatePage } from '@/services/pages';
+import { deletePage } from '@/services/pages';
 import { toast } from 'react-toastify';
-import AddBlockForm from '@/components/admin/blocks/forms/AddBlock';
 import { Block } from '@/types/blocks';
 import { getPublicBlocks } from '@/services/blocks';
-import { block } from 'sharp';
 import BlockCard from '@/components/admin/blocks/card/BlockCard';
 
 interface PageCardProps {

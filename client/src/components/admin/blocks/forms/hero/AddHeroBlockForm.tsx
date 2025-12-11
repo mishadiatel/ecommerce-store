@@ -2,6 +2,7 @@
 import { useFieldArray, useFormContext } from 'react-hook-form';
 import InputGroup from '@/components/admin/ui/inputGroup';
 import { Button } from '@/components/admin/shadcnuiComponents/button';
+import FileInput from '@/components/admin/ui/fileInput';
 
 export default function HeroBlockForm() {
   const { control } = useFormContext();
@@ -19,7 +20,7 @@ export default function HeroBlockForm() {
         <div key={item.id} className="border p-4 rounded-md grid grid-cols-1 sm:grid-cols-2 gap-3">
           <InputGroup control={control} name={`blockData.items.${index}.title`} label="Title" />
           <InputGroup control={control} name={`blockData.items.${index}.text`} label="Text" />
-          <InputGroup control={control} name={`blockData.items.${index}.image`} label="Image URL" />
+          <FileInput control={control} name={`blockData.items.${index}.image`} label="Image URL" placeholder={'load image'} />
           <InputGroup control={control} name={`blockData.items.${index}.buttonText`} label="Button Text" />
           <InputGroup control={control} name={`blockData.items.${index}.buttonLink`} label="Button Link" />
           <InputGroup control={control} name={`blockData.items.${index}.order`} label="Order" type={'number'} />

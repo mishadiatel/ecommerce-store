@@ -34,7 +34,14 @@ export default function BlockForm({
   const heroItemSchema = z.object({
     title: z.string().min(1),
     text: z.string().min(1),
-    image: z.string().min(1),
+    image: z.string().min(1)
+      .url("Image must be a valid URL")
+      .refine(
+        (val) => /\.(jpg|jpeg|png|webp|avif|gif|svg)$/.test(val.split("?")[0]),
+        {
+          message: "Image URL must end with a valid image extension",
+        }
+      ),
     buttonText: z.string().min(1),
     buttonLink: z.string().min(1),
     order: z.number(),
