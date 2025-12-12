@@ -11,7 +11,6 @@ export class GeneralSettingsTranslation {
     type: String,
     required: true,
     default: process.env.SITE_SETTINGS_ID,
-    unique: true,
   })
   generalID: string;
 

@@ -5,13 +5,21 @@ import {
   GeneralSettings,
   GeneralSettingsDocument,
 } from './schemas/general.schema';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
+import {
+  GeneralSettingsTranslation,
+  GeneralSettingsTranslationDocument,
+} from './schemas/generalTranslation.schema';
+import { CreateSettingsTranslationDto } from './dto/create-settings-translation.dto';
+import { UpdateSettingsTranslationDto } from './dto/update-settings-translation.dto';
 
 @Injectable()
 export class GeneralService {
   constructor(
     @InjectModel(GeneralSettings.name)
     private settingsModel: Model<GeneralSettingsDocument>,
+    @InjectModel(GeneralSettingsTranslation.name)
+    private settingsTranslationModel: Model<GeneralSettingsTranslationDocument>,
   ) {}
 
   private settingsId = process.env.SITE_SETTINGS_ID;
@@ -54,5 +62,91 @@ export class GeneralService {
     }
 
     return settings;
+  }
+
+  async createSettingsTranslation(dto: CreateSettingsTranslationDto) {
+    try {
+      const translation = await this.settingsTranslationModel.create({
+        ...dto,
+        generalID: this.settingsId,
+      });
+      if (!translation) {
+        throw new HttpException(
+          'problem with creating translation',
+          HttpStatus.INTERNAL_SERVER_ERROR,
+        );
+      }
+      return translation;
+    } catch (error) {
+
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      if (error.code === 11000) {
+        throw new HttpException(
+          'Translation for this language already exists',
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+
+      throw new HttpException(
+        'Cannot create translation',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
+  async findAllSettingsTranslations() {
+    const settingsStanslation = await this.settingsTranslationModel.find();
+    if (!settingsStanslation) {
+      throw new HttpException(
+        'not found settings translations',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+
+    return settingsStanslation;
+  }
+
+  async findOneSettingsTranslation(id: string) {
+    const translation = await this.settingsTranslationModel.findById(
+      new Types.ObjectId(id),
+    );
+
+    if (!translation) {
+      throw new HttpException('Translation not found', HttpStatus.NOT_FOUND);
+    }
+
+    return translation;
+  }
+
+  async updateSettingsTranslation(
+    id: string,
+    dto: UpdateSettingsTranslationDto,
+  ) {
+    const updated = await this.settingsTranslationModel.findByIdAndUpdate(
+      new Types.ObjectId(id),
+      dto,
+      { new: true, runValidators: true },
+    );
+
+    if (!updated) {
+      throw new HttpException('Translation not found', HttpStatus.NOT_FOUND);
+    }
+
+    return updated;
+  }
+
+  async removeSettingsTranslation(id: string) {
+    const deleted = await this.settingsTranslationModel.findByIdAndDelete(
+      new Types.ObjectId(id),
+    );
+
+    if (!deleted) {
+      throw new HttpException(
+        'Error deleting translation',
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    return null;
   }
 }

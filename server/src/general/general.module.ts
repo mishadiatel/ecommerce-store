@@ -6,11 +6,19 @@ import {
   GeneralSettings,
   GeneralSettingsSchema,
 } from './schemas/general.schema';
+import {
+  GeneralSettingsTranslation,
+  GeneralSettingsTranslationSchema,
+} from './schemas/generalTranslation.schema';
 
 @Module({
   imports: [
     MongooseModule.forFeature([
       { name: GeneralSettings.name, schema: GeneralSettingsSchema },
+      {
+        name: GeneralSettingsTranslation.name,
+        schema: GeneralSettingsTranslationSchema,
+      },
     ]),
   ],
   controllers: [GeneralController],
