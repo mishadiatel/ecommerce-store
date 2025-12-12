@@ -12,6 +12,7 @@ import {
 } from './schemas/generalTranslation.schema';
 import { CreateSettingsTranslationDto } from './dto/create-settings-translation.dto';
 import { UpdateSettingsTranslationDto } from './dto/update-settings-translation.dto';
+import { YcI18nService } from '../yc-i18n/yc-i18n.service';
 
 @Injectable()
 export class GeneralService {
@@ -20,6 +21,7 @@ export class GeneralService {
     private settingsModel: Model<GeneralSettingsDocument>,
     @InjectModel(GeneralSettingsTranslation.name)
     private settingsTranslationModel: Model<GeneralSettingsTranslationDocument>,
+    private readonly i18n: YcI18nService,
   ) {}
 
   private settingsId = process.env.SITE_SETTINGS_ID;
@@ -78,7 +80,6 @@ export class GeneralService {
       }
       return translation;
     } catch (error) {
-
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       if (error.code === 11000) {
         throw new HttpException(
@@ -148,5 +149,42 @@ export class GeneralService {
     }
 
     return null;
+  }
+
+  async getPublicSettingsWithTranslation() {
+    const lang = this.i18n.lang();
+    const settings = await this.settingsModel.aggregate([
+      {
+        $match: { generalID: this.settingsId },
+      },
+      {
+        $lookup: {
+          from: 'generalsettingstranslations',
+          let: { generalID: '$generalID' },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $and: [
+                    { $eq: ['$generalID', '$$generalID'] },
+                    { $eq: ['$language', lang] },
+                  ],
+                },
+              },
+            },
+            { $limit: 1 },
+          ],
+          as: 'translation',
+        },
+      },
+      { $unwind: { path: '$translation', preserveNullAndEmptyArrays: true } },
+    ]);
+
+    if (!settings?.[0]) {
+      throw new HttpException('Settings not found', HttpStatus.NOT_FOUND);
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    return settings[0];
   }
 }

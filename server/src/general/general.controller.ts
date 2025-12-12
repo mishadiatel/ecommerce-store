@@ -19,8 +19,14 @@ export class GeneralController {
 
   @Get()
   @HttpCode(HttpStatus.OK)
-  getPublicSettings() {
+  getSettings() {
     return this.generalService.getSettings();
+  }
+
+  @Get('/public')
+  @HttpCode(HttpStatus.OK)
+  getPublicSettingsWithTranslation() {
+    return this.generalService.getPublicSettingsWithTranslation();
   }
 
   @Patch()
