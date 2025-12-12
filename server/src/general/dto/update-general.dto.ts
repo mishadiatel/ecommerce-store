@@ -32,4 +32,8 @@ export class UpdateGeneralDto {
   @IsString()
   @IsOptional()
   phoneNumber?: string;
+
+  @IsString()
+  @IsOptional()
+  email?: string;
 }

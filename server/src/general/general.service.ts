@@ -25,8 +25,14 @@ export class GeneralService {
       settings = await this.settingsModel.create({
         generalID: this.settingsId,
         companyName: 'Default company',
-        logo: 'https://placehold.co/600x400',
-        favicon: 'https://placehold.co/32',
+        logo: 'https://placehold.co/600x400.png',
+        favicon: 'https://placehold.co/32.png',
+        instagram: '',
+        facebook: '',
+        tiktok: '',
+        telegram: '',
+        phoneNumber: '',
+        email: '',
       });
     }
     return settings;

@@ -37,6 +37,9 @@ export class GeneralSettings {
 
   @Prop({ type: String, required: false })
   phoneNumber: string;
+
+  @Prop({ type: String, required: false })
+  email: string;
 }
 
 export const GeneralSettingsSchema =
