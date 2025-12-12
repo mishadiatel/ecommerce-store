@@ -6,7 +6,6 @@ import {
   AcceptLanguageResolver,
   HeaderResolver,
   I18nModule,
-  I18nYamlLoader,
   QueryResolver,
 } from 'nestjs-i18n';
 import { YcI18nModule } from './yc-i18n/yc-i18n.module';
@@ -27,7 +26,7 @@ import { GeneralModule } from './general/general.module';
       envFilePath: `.${process.env.NODE_ENV}.env`,
     }),
     I18nModule.forRoot({
-      fallbackLanguage: 'en',
+      fallbackLanguage: 'ua',
       loaderOptions: {
         path: path.join(__dirname, '/locales'),
         watch: true,
@@ -49,7 +48,7 @@ import { GeneralModule } from './general/general.module';
     UploadModule,
     PagesModule,
     BlockModule,
-    GeneralModule
+    GeneralModule,
   ],
   controllers: [AppController],
   providers: [AppService],
