@@ -30,7 +30,7 @@ export default function FileInput<T extends FieldValues>({
     setUploading(true);
 
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_PROJECT_API_URL}/upload`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_PROJECT_API_URL}/api/upload`, {
         method: 'POST',
         body: formData,
       });

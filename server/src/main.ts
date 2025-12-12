@@ -14,6 +14,8 @@ async function bootstrap() {
       detailedErrors: true,
     }),
   );
+
+  app.setGlobalPrefix('api');
   app.useGlobalFilters(new MongoExceptionFilter());
   // app.useGlobalPipes(new ValidationPipe());
   await app.listen(PORT, () => {
