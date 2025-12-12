@@ -36,7 +36,7 @@ export default function SettingsTranslationsList({ translations }: SettingsTrans
           </DialogContent>
         </Dialog>
       </div>
-      <div className={'flex gap-6'}>
+      <div className={'flex flex-col sm:flex-row gap-6'}>
         {translationsState && translationsState.length > 0 ? translationsState.map(translationItem => (
           <SettingsTranslationCard key={translationItem._id} settingsTranslation={translationItem} />
         )) : <div>Not found translations</div>}
