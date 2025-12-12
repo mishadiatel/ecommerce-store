@@ -13,3 +13,12 @@ export interface GeneralSettings {
   createdAt: string;
   updatedAt: string;
 }
+
+export interface GeneralSettingsTranslation {
+  _id: string;
+  generalID: string;
+  language: string;
+  schedule: string;
+  createdAt: string;
+  updatedAt: string;
+}

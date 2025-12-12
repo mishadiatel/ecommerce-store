@@ -13,7 +13,6 @@ export const getBlocks = async (queryParams?: Record<string, string | number>): 
 
 export const createBlock = async (pageData: Partial<Block<object>>): Promise<Block<object> | undefined> => {
   try {
-    console.log('create block function call');
     const { data } = await projectApi.post('/api/block', pageData);
     return data;
   } catch (error) {
