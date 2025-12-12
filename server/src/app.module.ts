@@ -19,6 +19,7 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { UploadModule } from './upload/upload.module';
 import { PagesModule } from './pages/pages.module';
 import { BlockModule } from './block/block.module';
+import { GeneralModule } from './general/general.module';
 
 @Module({
   imports: [
@@ -47,7 +48,8 @@ import { BlockModule } from './block/block.module';
     FaqModule,
     UploadModule,
     PagesModule,
-    BlockModule
+    BlockModule,
+    GeneralModule
   ],
   controllers: [AppController],
   providers: [AppService],
