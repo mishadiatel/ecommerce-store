@@ -1,28 +1,83 @@
-import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
-import { Request } from 'express';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Req,
+  Res,
+  UseGuards,
+} from '@nestjs/common';
+import { Request, Response } from 'express';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { AuthService } from './auth.service';
 import { AuthDto } from './dto/auth.dto';
 import { AccessTokenGuard } from './guards/accessToken.guard';
 import { RefreshTokenGuard } from './guards/refreshToken.guard';
+import * as process from 'node:process';
 
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
 
   @Post('signup')
-  signup(@Body() createUserDto: CreateUserDto) {
-    return this.authService.signUp(createUserDto);
+  async signup(
+    @Body() createUserDto: CreateUserDto,
+    @Res({ passthrough: true }) response: Response,
+  ) {
+    const data = await this.authService.signUp(createUserDto);
+    const {
+      tokens: { accessToken, refreshToken },
+      userData,
+    } = data;
+    response.cookie('refreshToken', refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+    });
+    response.cookie('accessToken', accessToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      expires: new Date(Date.now() + 15 * 60 * 1000),
+    });
+
+    return {
+      accessToken,
+      userData,
+    };
   }
 
   @Post('signin')
-  signin(@Body() data: AuthDto) {
-    return this.authService.signIn(data);
+  async signin(
+    @Body() dto: AuthDto,
+    @Res({ passthrough: true }) response: Response,
+  ) {
+    const data = await this.authService.signIn(dto);
+    const {
+      tokens: { accessToken, refreshToken },
+      userData,
+    } = data;
+    response.cookie('refreshToken', refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+    });
+    response.cookie('accessToken', accessToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      expires: new Date(Date.now() + 15 * 60 * 1000),
+    });
+
+    return {
+      accessToken,
+      userData,
+    };
   }
 
   @UseGuards(AccessTokenGuard)
   @Get('logout')
-  logout(@Req() req: Request) {
+  logout(@Req() req: Request, @Res({ passthrough: true }) response: Response) {
+    response.clearCookie('refreshToken');
+    response.clearCookie('accessToken');
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-expect-error
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
@@ -30,8 +85,11 @@ export class AuthController {
   }
 
   @UseGuards(RefreshTokenGuard)
-  @Get('refresh')
-  refreshTokens(@Req() req: Request) {
+  @Post('refresh')
+  async refreshTokens(
+    @Req() req: Request,
+    @Res({ passthrough: true }) response: Response,
+  ) {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-expect-error
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -39,7 +97,26 @@ export class AuthController {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-expect-error
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const refreshToken = req.user['refreshToken'];
-    return this.authService.refreshTokens(userId, refreshToken);
+    const userRefreshToken = req.user['refreshToken'];
+    const data = await this.authService.refreshTokens(userId, userRefreshToken);
+    const {
+      tokens: { accessToken, refreshToken },
+      userData,
+    } = data;
+    response.cookie('refreshToken', refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+    });
+    response.cookie('accessToken', accessToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      expires: new Date(Date.now() + 15 * 60 * 1000),
+    });
+
+    return {
+      accessToken,
+      userData,
+    };
   }
 }

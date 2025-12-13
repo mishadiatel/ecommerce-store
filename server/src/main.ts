@@ -3,6 +3,7 @@ import { AppModule } from './app.module';
 import { ValidationPipe } from './pipes/validation.pipe';
 import { I18nValidationExceptionFilter, I18nValidationPipe } from 'nestjs-i18n';
 import { MongoExceptionFilter } from './filters/mongodb.filter';
+import * as cookieParser from 'cookie-parser';
 
 async function bootstrap() {
   const PORT = process.env.PORT || 5000;
@@ -16,6 +17,7 @@ async function bootstrap() {
   );
 
   app.setGlobalPrefix('api');
+  app.use(cookieParser());
   app.useGlobalFilters(new MongoExceptionFilter());
   // app.useGlobalPipes(new ValidationPipe());
   await app.listen(PORT, () => {

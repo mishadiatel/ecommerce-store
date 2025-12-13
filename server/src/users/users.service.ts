@@ -22,8 +22,18 @@ export class UsersService {
     return this.userModel.findById(id);
   }
 
+  async findByIdFullFields(id: string) {
+    return this.userModel.findById(id).select('+password +refreshToken');
+  }
+
   async findByUsername(username: string) {
     return this.userModel.findOne({ username }).exec();
+  }
+
+  async findByUsernameFullFields(username: string) {
+    return this.userModel
+      .findOne({ username })
+      .select('+password +refreshToken');
   }
 
   async update(id: string, updateUserDto: UpdateUserDto) {
