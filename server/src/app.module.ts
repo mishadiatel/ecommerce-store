@@ -19,10 +19,13 @@ import { UploadModule } from './upload/upload.module';
 import { PagesModule } from './pages/pages.module';
 import { BlockModule } from './block/block.module';
 import { GeneralModule } from './general/general.module';
+import { UsersModule } from './users/users.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
+      isGlobal: true,
       envFilePath: `.${process.env.NODE_ENV}.env`,
     }),
     I18nModule.forRoot({
@@ -49,6 +52,8 @@ import { GeneralModule } from './general/general.module';
     PagesModule,
     BlockModule,
     GeneralModule,
+    UsersModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
