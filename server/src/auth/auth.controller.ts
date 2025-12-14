@@ -2,29 +2,36 @@ import {
   Body,
   Controller,
   Get,
+  Param,
+  Patch,
   Post,
   Req,
   Res,
   UseGuards,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
-import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { AuthService } from './auth.service';
 import { AuthDto } from './dto/auth.dto';
 import { AccessTokenGuard } from './guards/accessToken.guard';
 import { RefreshTokenGuard } from './guards/refreshToken.guard';
 import * as process from 'node:process';
+import { UsersService } from '../users/users.service';
+import { ForgotPasswordDto } from './dto/forgot-password.dto';
+import { ResetPasswordDto } from './dto/reset-password.dto';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private usersService: UsersService,
+  ) {}
 
   @Post('signup')
   async signup(
-    @Body() createUserDto: CreateUserDto,
+    @Body() dto: AuthDto,
     @Res({ passthrough: true }) response: Response,
   ) {
-    const data = await this.authService.signUp(createUserDto);
+    const data = await this.authService.signUp(dto);
     const {
       tokens: { accessToken, refreshToken },
       userData,
@@ -118,5 +125,25 @@ export class AuthController {
       accessToken,
       userData,
     };
+  }
+
+  @UseGuards(AccessTokenGuard)
+  @Get('/me')
+  getMe(@Req() req: Request) {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-expect-error
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const userId = req.user['sub'];
+    return this.usersService.findById(userId);
+  }
+
+  @Post('forgotPassword')
+  forgotPassword(@Body() dto: ForgotPasswordDto) {
+    return this.authService.forgotPassword(dto);
+  }
+
+  @Patch('resetPassword/:token')
+  resetPassword(@Param('token') token: string, @Body() dto: ResetPasswordDto) {
+    return this.authService.resetPassword(token, dto);
   }
 }

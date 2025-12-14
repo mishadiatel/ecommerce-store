@@ -5,13 +5,15 @@ import {
   HttpStatus,
   Injectable,
 } from '@nestjs/common';
-import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { UsersService } from 'src/users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { AuthDto } from './dto/auth.dto';
 import * as bcrypt from 'bcrypt';
+import * as crypto from 'crypto';
 import { safeUser } from '../utils/safe-user';
+import { ForgotPasswordDto } from './dto/forgot-password.dto';
+import { ResetPasswordDto } from './dto/reset-password.dto';
 
 @Injectable()
 export class AuthService {
@@ -20,19 +22,17 @@ export class AuthService {
     private jwtService: JwtService,
     private configService: ConfigService,
   ) {}
-  async signUp(createUserDto: CreateUserDto) {
+  async signUp(dto: AuthDto) {
     // Check if user exists
-    const userExists = await this.usersService.findByUsername(
-      createUserDto.username,
-    );
+    const userExists = await this.usersService.findByEmail(dto.email);
     if (userExists) {
       throw new BadRequestException('User already exists');
     }
 
     // Hash password
-    const hash = await this.hashData(createUserDto.password);
+    const hash = await this.hashData(dto.password);
     const newUser = await this.usersService.create({
-      ...createUserDto,
+      ...dto,
       password: hash,
     });
 
@@ -42,21 +42,19 @@ export class AuthService {
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
-    const tokens = await this.getTokens(String(newUser._id), newUser.username);
+    const tokens = await this.getTokens(String(newUser._id), newUser.email);
     await this.updateRefreshToken(String(newUser._id), tokens.refreshToken);
     return { tokens, userData: safeUser(newUser) };
   }
 
   async signIn(data: AuthDto) {
     // Check if user exists
-    const user = await this.usersService.findByUsernameFullFields(
-      data.username,
-    );
+    const user = await this.usersService.findByEmailFullFields(data.email);
     if (!user) throw new BadRequestException('User does not exist');
     const passwordMatches = await bcrypt.compare(data.password, user.password);
     if (!passwordMatches)
       throw new BadRequestException('Password is incorrect');
-    const tokens = await this.getTokens(String(user._id), user.username);
+    const tokens = await this.getTokens(String(user._id), user.email);
     await this.updateRefreshToken(String(user._id), tokens.refreshToken);
     return { tokens, userData: safeUser(user) };
   }
@@ -77,12 +75,12 @@ export class AuthService {
     });
   }
 
-  async getTokens(userId: string, username: string) {
+  async getTokens(userId: string, email: string) {
     const [accessToken, refreshToken] = await Promise.all([
       this.jwtService.signAsync(
         {
           sub: userId,
-          username,
+          email,
         },
         {
           secret: this.configService.get<string>('JWT_ACCESS_SECRET'),
@@ -92,7 +90,7 @@ export class AuthService {
       this.jwtService.signAsync(
         {
           sub: userId,
-          username,
+          email,
         },
         {
           secret: this.configService.get<string>('JWT_REFRESH_SECRET'),
@@ -116,8 +114,59 @@ export class AuthService {
       user.refreshToken,
     );
     if (!refreshTokenMatches) throw new ForbiddenException('Access Denied');
-    const tokens = await this.getTokens(String(user._id), user.username);
+    const tokens = await this.getTokens(String(user._id), user.email);
     await this.updateRefreshToken(String(user._id), tokens.refreshToken);
     return { tokens, userData: safeUser(user) };
+  }
+
+  async forgotPassword(dto: ForgotPasswordDto) {
+    const user = await this.usersService.findByEmailFullFields(dto.email);
+    if (!user) {
+      throw new BadRequestException('User does not exist');
+    }
+
+    const resetToken = crypto.randomBytes(32).toString('hex');
+    user.passwordResetToken = crypto
+      .createHash('sha256')
+      .update(resetToken)
+      .digest('hex');
+    // console.log({resetToken}, this.passwordResetToken);
+    user.passwordResetExpires = new Date(Date.now() + 10 * 60 * 1000);
+    await user.save({ validateBeforeSave: true });
+
+    try {
+      // const resetURL = `${process.env.FRNTEND_URL}/${resetToken}`;
+      // await new Email(user, resetURL).sendPasswordReset();
+      return {
+        resetToken,
+      };
+    } catch (err) {
+      user.passwordResetToken = undefined;
+      user.passwordResetExpires = undefined;
+      await user.save({ validateBeforeSave: false });
+      throw new HttpException(
+        'errot sending reset link',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
+  async resetPassword(token: string, dto: ResetPasswordDto) {
+    const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
+    const user = await this.usersService.findByResetToken(hashedToken);
+    if (!user) {
+      throw new HttpException(
+        'reset link is invalid or get expired, try arain',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+    const hashedPassword = await this.hashData(dto.password);
+    user.password = hashedPassword;
+    user.passwordResetToken = undefined;
+    user.passwordResetExpires = undefined;
+    await user.save();
+    return {
+      message: 'Password updated successfully',
+    };
   }
 }

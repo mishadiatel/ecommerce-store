@@ -5,17 +5,44 @@ export type UserDocument = User & Document;
 
 @Schema()
 export class User {
-  @Prop({ required: true })
-  name: string;
+  @Prop({ type: String, required: false })
+  firstName: string;
 
-  @Prop({ required: true, unique: true })
-  username: string;
+  @Prop({ type: String, required: false })
+  lastName: string;
 
-  @Prop({ required: true, select: false })
+  @Prop({ type: String, required: false })
+  phoneNumber: string;
+
+  @Prop({ type: Date, required: false })
+  birthDay: Date;
+
+  @Prop({ type: Boolean, required: true, default: false })
+  isActivated: boolean;
+
+  @Prop({ type: String, required: true, unique: true })
+  email: string;
+
+  @Prop({ type: String, required: true, select: false })
   password: string;
 
-  @Prop({ select: false })
-  refreshToken: string;
+  @Prop({ type: String, select: false })
+  refreshToken?: string;
+
+  @Prop({ type: Date, required: false })
+  passwordChangedAt?: Date;
+
+  @Prop({ type: String, required: false })
+  passwordResetToken?: string;
+
+  @Prop({ type: Date, required: false })
+  passwordResetExpires?: Date;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
+
+UserSchema.pre('save', function (this: UserDocument, next) {
+  if (!this.isModified('password') || this.isNew) return next();
+  this.passwordChangedAt = new Date(Date.now() - 1000);
+  next();
+});

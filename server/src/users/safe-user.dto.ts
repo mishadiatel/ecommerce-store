@@ -1,5 +1,9 @@
 export class SafeUserDto {
   _id: string;
-  name: string;
-  username: string;
+  firstName: string;
+  lastName: string;
+  birthDay: Date;
+  phoneNumber: string;
+  email: string;
+  isActivated: boolean;
 }
