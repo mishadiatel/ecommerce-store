@@ -50,4 +50,12 @@ export class UpdateUserDto {
   @IsOptional()
   @IsDateString()
   passwordResetExpires?: string;
+
+  @IsOptional()
+  @IsString()
+  activationToken?: string;
+
+  @IsOptional()
+  @IsString()
+  role?: string;
 }

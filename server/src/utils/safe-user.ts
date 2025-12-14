@@ -9,4 +9,5 @@ export const safeUser = (user: UserDocument): SafeUserDto => ({
   phoneNumber: user.phoneNumber,
   isActivated: user.isActivated,
   email: user.email,
+  role: user.role,
 });

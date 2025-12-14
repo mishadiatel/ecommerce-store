@@ -6,7 +6,8 @@ import {
   HttpStatus,
   HttpCode,
   Post,
-  Param, Delete,
+  Param,
+  Delete,
 } from '@nestjs/common';
 import { GeneralService } from './general.service';
 import { UpdateGeneralDto } from './dto/update-general.dto';

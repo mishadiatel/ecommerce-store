@@ -6,4 +6,5 @@ export class SafeUserDto {
   phoneNumber: string;
   email: string;
   isActivated: boolean;
+  role: string;
 }

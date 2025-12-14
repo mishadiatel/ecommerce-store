@@ -5,11 +5,10 @@ import {
   Param,
   Patch,
   Post,
-  Req,
   Res,
   UseGuards,
 } from '@nestjs/common';
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import { AuthService } from './auth.service';
 import { AuthDto } from './dto/auth.dto';
 import { AccessTokenGuard } from './guards/accessToken.guard';
@@ -18,6 +17,11 @@ import * as process from 'node:process';
 import { UsersService } from '../users/users.service';
 import { ForgotPasswordDto } from './dto/forgot-password.dto';
 import { ResetPasswordDto } from './dto/reset-password.dto';
+import { UpdateMyPasswordDto } from './dto/update-my-password.dto';
+import { UpdateUserDto } from '../users/dto/update-user.dto';
+import { ResendActivationDto } from './dto/resend-activation.dto';
+import { CurrentUser } from './decorators/current-user.decorator';
+import { JwtUser } from './interfaces/jwt-user.interface';
 
 @Controller('auth')
 export class AuthController {
@@ -27,30 +31,18 @@ export class AuthController {
   ) {}
 
   @Post('signup')
-  async signup(
-    @Body() dto: AuthDto,
-    @Res({ passthrough: true }) response: Response,
-  ) {
-    const data = await this.authService.signUp(dto);
-    const {
-      tokens: { accessToken, refreshToken },
-      userData,
-    } = data;
-    response.cookie('refreshToken', refreshToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
-    });
-    response.cookie('accessToken', accessToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      expires: new Date(Date.now() + 15 * 60 * 1000),
-    });
+  signup(@Body() dto: AuthDto) {
+    return this.authService.signUp(dto);
+  }
 
-    return {
-      accessToken,
-      userData,
-    };
+  @Get('activateAccount/:token')
+  activate(@Param('token') token: string) {
+    return this.authService.activateAccount(token);
+  }
+
+  @Post('resendActivationToken')
+  resendActivation(@Body() dto: ResendActivationDto) {
+    return this.authService.resendActivation(dto);
   }
 
   @Post('signin')
@@ -82,29 +74,23 @@ export class AuthController {
 
   @UseGuards(AccessTokenGuard)
   @Get('logout')
-  logout(@Req() req: Request, @Res({ passthrough: true }) response: Response) {
+  logout(
+    @Res({ passthrough: true }) response: Response,
+    @CurrentUser() user: JwtUser,
+  ) {
     response.clearCookie('refreshToken');
     response.clearCookie('accessToken');
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-expect-error
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-    return this.authService.logout(req.user['sub']);
+    return this.authService.logout(user['sub']);
   }
 
   @UseGuards(RefreshTokenGuard)
   @Post('refresh')
   async refreshTokens(
-    @Req() req: Request,
     @Res({ passthrough: true }) response: Response,
+    @CurrentUser() user: JwtUser,
   ) {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-expect-error
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const userId = req.user['sub'];
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-expect-error
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const userRefreshToken = req.user['refreshToken'];
+    const userId = user['sub'];
+    const userRefreshToken = user['refreshToken']!;
     const data = await this.authService.refreshTokens(userId, userRefreshToken);
     const {
       tokens: { accessToken, refreshToken },
@@ -129,11 +115,8 @@ export class AuthController {
 
   @UseGuards(AccessTokenGuard)
   @Get('/me')
-  getMe(@Req() req: Request) {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-expect-error
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const userId = req.user['sub'];
+  getMe(@CurrentUser() user: JwtUser) {
+    const userId = user['sub'];
     return this.usersService.findById(userId);
   }
 
@@ -145,5 +128,42 @@ export class AuthController {
   @Patch('resetPassword/:token')
   resetPassword(@Param('token') token: string, @Body() dto: ResetPasswordDto) {
     return this.authService.resetPassword(token, dto);
+  }
+
+  @UseGuards(AccessTokenGuard)
+  @Patch('/updateMyPassword')
+  async updateMyPassword(
+    @Body() dto: UpdateMyPasswordDto,
+    @Res({ passthrough: true }) response: Response,
+    @CurrentUser() user: JwtUser,
+  ) {
+    const userId = user['sub'];
+    const data = await this.authService.updateMyPassword(String(userId), dto);
+    const {
+      tokens: { accessToken, refreshToken },
+      userData,
+    } = data;
+    response.cookie('refreshToken', refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+    });
+    response.cookie('accessToken', accessToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      expires: new Date(Date.now() + 15 * 60 * 1000),
+    });
+
+    return {
+      accessToken,
+      userData,
+    };
+  }
+
+  @UseGuards(AccessTokenGuard)
+  @Patch('/updateMe')
+  udpateMe(@Body() dto: UpdateUserDto, @CurrentUser() user: JwtUser) {
+    const userId = user['sub'];
+    return this.usersService.update(userId, dto);
   }
 }

@@ -21,6 +21,9 @@ import { BlockModule } from './block/block.module';
 import { GeneralModule } from './general/general.module';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
+import { AccessTokenGuard } from './auth/guards/accessToken.guard';
+import { RolesGuard } from './auth/guards/roles.guard';
+import { APP_GUARD } from '@nestjs/core';
 
 @Module({
   imports: [

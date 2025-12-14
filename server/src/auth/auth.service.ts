@@ -14,6 +14,8 @@ import * as crypto from 'crypto';
 import { safeUser } from '../utils/safe-user';
 import { ForgotPasswordDto } from './dto/forgot-password.dto';
 import { ResetPasswordDto } from './dto/reset-password.dto';
+import { UpdateMyPasswordDto } from './dto/update-my-password.dto';
+import { ResendActivationDto } from './dto/resend-activation.dto';
 
 @Injectable()
 export class AuthService {
@@ -34,6 +36,7 @@ export class AuthService {
     const newUser = await this.usersService.create({
       ...dto,
       password: hash,
+      activationToken: crypto.randomUUID(),
     });
 
     if (!newUser) {
@@ -42,9 +45,30 @@ export class AuthService {
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
-    const tokens = await this.getTokens(String(newUser._id), newUser.email);
-    await this.updateRefreshToken(String(newUser._id), tokens.refreshToken);
-    return { tokens, userData: safeUser(newUser) };
+    return { activationToken: newUser.activationToken };
+  }
+
+  async activateAccount(token: string) {
+    const user = await this.usersService.findByActivationToken(token);
+    if (!user) {
+      throw new BadRequestException('User does not exist');
+    }
+    user.isActivated = true;
+    user.activationToken = undefined;
+    await user.save();
+    return {
+      message: 'user activated successfully please login',
+    };
+  }
+
+  async resendActivation(dto: ResendActivationDto) {
+    const user = await this.usersService.findByEmail(dto.email);
+    if (!user) {
+      throw new BadRequestException('User does not exist');
+    }
+    user.activationToken = crypto.randomUUID();
+    await user.save();
+    return { activationToken: user.activationToken };
   }
 
   async signIn(data: AuthDto) {
@@ -54,7 +78,17 @@ export class AuthService {
     const passwordMatches = await bcrypt.compare(data.password, user.password);
     if (!passwordMatches)
       throw new BadRequestException('Password is incorrect');
-    const tokens = await this.getTokens(String(user._id), user.email);
+    if (!user.isActivated) {
+      throw new HttpException(
+        'user not activated chack you email anc activate user',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+    const tokens = await this.getTokens(
+      String(user._id),
+      user.email,
+      user.role,
+    );
     await this.updateRefreshToken(String(user._id), tokens.refreshToken);
     return { tokens, userData: safeUser(user) };
   }
@@ -75,12 +109,13 @@ export class AuthService {
     });
   }
 
-  async getTokens(userId: string, email: string) {
+  async getTokens(userId: string, email: string, role: string) {
     const [accessToken, refreshToken] = await Promise.all([
       this.jwtService.signAsync(
         {
           sub: userId,
           email,
+          role,
         },
         {
           secret: this.configService.get<string>('JWT_ACCESS_SECRET'),
@@ -91,6 +126,7 @@ export class AuthService {
         {
           sub: userId,
           email,
+          role,
         },
         {
           secret: this.configService.get<string>('JWT_REFRESH_SECRET'),
@@ -114,7 +150,11 @@ export class AuthService {
       user.refreshToken,
     );
     if (!refreshTokenMatches) throw new ForbiddenException('Access Denied');
-    const tokens = await this.getTokens(String(user._id), user.email);
+    const tokens = await this.getTokens(
+      String(user._id),
+      user.email,
+      user.role,
+    );
     await this.updateRefreshToken(String(user._id), tokens.refreshToken);
     return { tokens, userData: safeUser(user) };
   }
@@ -141,6 +181,7 @@ export class AuthService {
         resetToken,
       };
     } catch (err) {
+      console.error(err);
       user.passwordResetToken = undefined;
       user.passwordResetExpires = undefined;
       await user.save({ validateBeforeSave: false });
@@ -168,5 +209,35 @@ export class AuthService {
     return {
       message: 'Password updated successfully',
     };
+  }
+
+  async updateMyPassword(id: string, dto: UpdateMyPasswordDto) {
+    const user = await this.usersService.findByIdFullFields(id);
+    if (!user) {
+      throw new HttpException('User does not exist', HttpStatus.NOT_FOUND);
+    }
+
+    const passwordMatches = await bcrypt.compare(
+      dto.currentPassword,
+      user.password,
+    );
+
+    if (!passwordMatches) {
+      throw new HttpException(
+        'Current password is wrong',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    const hashesPassword = await this.hashData(dto.newPassword);
+    user.password = hashesPassword;
+    await user.save();
+    const tokens = await this.getTokens(
+      String(user._id),
+      user.email,
+      user.role,
+    );
+    await this.updateRefreshToken(String(user._id), tokens.refreshToken);
+    return { tokens, userData: safeUser(user) };
   }
 }

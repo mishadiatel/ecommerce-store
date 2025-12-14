@@ -2,26 +2,21 @@ import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { Request } from 'express';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import * as process from 'node:process';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class RefreshTokenStrategy extends PassportStrategy(
   Strategy,
   'jwt-refresh',
 ) {
-  constructor() {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-expect-error
+  constructor(configService: ConfigService) {
     super({
       jwtFromRequest: ExtractJwt.fromExtractors([
-        // 1️⃣ Authorization header
         ExtractJwt.fromAuthHeaderAsBearerToken(),
-
-        // 2️⃣ Cookies fallback
         // eslint-disable-next-line @typescript-eslint/no-unsafe-return
         (req: Request) => req?.cookies?.refreshToken,
       ]),
-      secretOrKey: process.env.JWT_REFRESH_SECRET,
+      secretOrKey: configService.getOrThrow<string>('JWT_REFRESH_SECRET'),
       passReqToCallback: true,
     });
   }
