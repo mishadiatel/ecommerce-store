@@ -38,13 +38,10 @@ export default function GeneralForm({generalSettings}: GeneralFormProps) {
     telegram: z.string().optional(),
     phoneNumber: z.string().optional(),
     instagram: z.string().optional(),
-    email: z.preprocess(
-      (val) => {
-        if (typeof val === 'string' && val.trim() === '') return undefined;
-        return val;
-      },
-      z.string().email().optional()
-    )
+    email: z.union([
+      z.string().email(),
+      z.literal(''),
+    ]).optional(),
   });
   type EditGenealSettingsData = z.infer<typeof editGeneralSettingsSchema>
 

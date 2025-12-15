@@ -59,11 +59,13 @@ export class AuthController {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
     });
     response.cookie('accessToken', accessToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       expires: new Date(Date.now() + 15 * 60 * 1000),
+      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
     });
 
     return {
@@ -100,11 +102,13 @@ export class AuthController {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
     });
     response.cookie('accessToken', accessToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       expires: new Date(Date.now() + 15 * 60 * 1000),
+      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
     });
 
     return {
@@ -147,11 +151,13 @@ export class AuthController {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
     });
     response.cookie('accessToken', accessToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       expires: new Date(Date.now() + 15 * 60 * 1000),
+      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
     });
 
     return {

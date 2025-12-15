@@ -13,14 +13,12 @@ import { getBlocks } from '@/services/blocks';
 import BlockCard from '@/components/admin/blocks/card/BlockCard';
 import AddBlockForm from '@/components/admin/blocks/forms/AddBlock';
 
-interface BlocksListProps {
-  blocks?: Block<object>[];
-}
-
-export default function BlocksList ({blocks}: BlocksListProps) {
+export default function BlocksList () {
   const isFirstRender = useRef(true);
-  const [blocksState, setBlocksState] = useState<Block<object>[] | undefined>(blocks);
+  const [blocksState, setBlocksState] = useState<Block<object>[] | undefined>([]);
   const [searchWord, setSearchWord] = useState('');
+
+
 
   const updateBlocksList = () => {
     if (isFirstRender.current) {
@@ -33,7 +31,9 @@ export default function BlocksList ({blocks}: BlocksListProps) {
       toast.error('error loading pages.');
     })
   }
-
+  useEffect(() => {
+    updateBlocksList();
+  }, []);
   useEffect(() => {
     const handler = setTimeout(() => {
       updateBlocksList();

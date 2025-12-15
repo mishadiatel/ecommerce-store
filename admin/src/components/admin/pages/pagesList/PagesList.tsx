@@ -13,13 +13,11 @@ import { Input } from '@/components/admin/shadcnuiComponents/input';
 import { getPages } from '@/services/pages';
 import { toast } from 'react-toastify';
 
-interface PagesListProps {
-  pages?: Page[];
-}
 
-export default function PagesList ({pages}: PagesListProps) {
+
+export default function PagesList () {
   const isFirstRender = useRef(true);
-  const [pagesState, setPagesState] = useState<Page[] | undefined>(pages);
+  const [pagesState, setPagesState] = useState<Page[] | undefined>([]);
   const [searchWord, setSearchWord] = useState('');
 
   const updatePagesList = () => {
@@ -33,6 +31,10 @@ export default function PagesList ({pages}: PagesListProps) {
       toast.error('error loading pages.');
     })
   }
+
+  useEffect(() => {
+    updatePagesList();
+  }, []);
 
   useEffect(() => {
     const handler = setTimeout(() => {

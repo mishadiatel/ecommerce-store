@@ -1,17 +1,19 @@
-import { getSettings, getSettingsTranslations } from '@/services/general';
-import GeneralForm from '@/components/admin/general/form/GeneralForm';
-import SettingsTranslationsList from '@/components/admin/general/settingsTranslationsList/SettingsTranslationsList';
+'use client'
+import GeneralContent from '@/components/admin/general/generalContent';
+import { useAuth } from '@/components/admin/authProvider/AdminAuthProvider';
+import { useRouter } from '@/i18n/navigation';
 
-export default async function AdminDashboardPage() {
-  const generalSettings = await getSettings();
-  const settingsTranslations = await getSettingsTranslations();
-  console.log(settingsTranslations);
+export default function AdminDashboardPage() {
+  const { isAuthenticated } = useAuth();
+  const router = useRouter()
+
+  if (!isAuthenticated) {
+    router.replace('/adminPanel/login');
+    return <div>Access Denied</div>;
+  }
   return (
     <div className={'flex flex-col gap-8'}>
-      <div>General settings</div>
-      <GeneralForm generalSettings={generalSettings} />
-      <div>Translations</div>
-      <SettingsTranslationsList translations={settingsTranslations} />
+      <GeneralContent />
     </div>
   )
 }
