@@ -8,20 +8,21 @@ import {
   Delete,
   HttpCode,
   HttpStatus,
-  Query, UseGuards,
+  Query,
+  UseGuards,
 } from '@nestjs/common';
 import { PagesService } from './pages.service';
 import { CreatePageDto } from './dto/create-page.dto';
 import { UpdatePageDto } from './dto/update-page.dto';
-import { AccessTokenGuard } from '../auth/guards/accessToken.guard';
 import { RolesGuard } from '../auth/guards/roles.guard';
 import { Roles } from '../auth/decorators/roles.decorator';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 
 @Controller('pages')
 export class PagesController {
   constructor(private readonly pagesService: PagesService) {}
 
-  @UseGuards(AccessTokenGuard, RolesGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('admin')
   @Post()
   @HttpCode(HttpStatus.CREATED)
@@ -29,7 +30,7 @@ export class PagesController {
     return this.pagesService.create(createPageDto);
   }
 
-  @UseGuards(AccessTokenGuard, RolesGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('admin')
   @Get()
   @HttpCode(HttpStatus.OK)
@@ -43,7 +44,7 @@ export class PagesController {
     return this.pagesService.findPublicPage(slug);
   }
 
-  @UseGuards(AccessTokenGuard, RolesGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('admin')
   @Get(':id')
   @HttpCode(HttpStatus.OK)
@@ -51,7 +52,7 @@ export class PagesController {
     return this.pagesService.findOne(id);
   }
 
-  @UseGuards(AccessTokenGuard, RolesGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('admin')
   @Patch(':id')
   @HttpCode(HttpStatus.OK)
@@ -59,7 +60,7 @@ export class PagesController {
     return this.pagesService.update(id, updatePageDto);
   }
 
-  @UseGuards(AccessTokenGuard, RolesGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('admin')
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
