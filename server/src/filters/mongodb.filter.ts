@@ -34,7 +34,7 @@ export class MongoExceptionFilter implements ExceptionFilter {
       // Cast error (e.g. invalid ObjectId)
       case exception instanceof MongooseError.CastError:
         status = HttpStatus.BAD_REQUEST;
-        message = `Invalid value for field: ${(exception as MongooseError.CastError).path}`;
+        message = `Invalid value for field: ${exception.path}`;
         break;
 
       // Mongo connection error

@@ -3,12 +3,10 @@ import { BlockService } from './block.service';
 import { BlockController } from './block.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Block, BlockSchema } from './schemas/block.schema';
-import { AuthModule } from '../auth/auth.module';
 
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: Block.name, schema: BlockSchema }]),
-    AuthModule,
   ],
   controllers: [BlockController],
   providers: [BlockService],

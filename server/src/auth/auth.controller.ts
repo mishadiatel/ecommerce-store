@@ -11,6 +11,8 @@ import {
 import { Response } from 'express';
 import { AuthService } from './auth.service';
 import { AuthDto } from './dto/auth.dto';
+import { AccessTokenGuard } from './guards/accessToken.guard';
+import { RefreshTokenGuard } from './guards/refreshToken.guard';
 import * as process from 'node:process';
 import { UsersService } from '../users/users.service';
 import { ForgotPasswordDto } from './dto/forgot-password.dto';
@@ -20,7 +22,6 @@ import { UpdateUserDto } from '../users/dto/update-user.dto';
 import { ResendActivationDto } from './dto/resend-activation.dto';
 import { CurrentUser } from './decorators/current-user.decorator';
 import { JwtUser } from './interfaces/jwt-user.interface';
-import { JwtAuthGuard } from './guards/jwt-auth.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -73,7 +74,7 @@ export class AuthController {
     };
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(AccessTokenGuard)
   @Get('logout')
   logout(
     @Res({ passthrough: true }) response: Response,
@@ -84,39 +85,39 @@ export class AuthController {
     return this.authService.logout(user['sub']);
   }
 
-  // @UseGuards(RefreshTokenGuard)
-  // @Post('refresh')
-  // async refreshTokens(
-  //   @Res({ passthrough: true }) response: Response,
-  //   @CurrentUser() user: JwtUser,
-  // ) {
-  //   const userId = user['sub'];
-  //   const userRefreshToken = user['refreshToken']!;
-  //   const data = await this.authService.refreshTokens(userId, userRefreshToken);
-  //   const {
-  //     tokens: { accessToken, refreshToken },
-  //     userData,
-  //   } = data;
-  //   response.cookie('refreshToken', refreshToken, {
-  //     httpOnly: true,
-  //     secure: process.env.NODE_ENV === 'production',
-  //     expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
-  //     sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-  //   });
-  //   response.cookie('accessToken', accessToken, {
-  //     httpOnly: true,
-  //     secure: process.env.NODE_ENV === 'production',
-  //     expires: new Date(Date.now() + 15 * 60 * 1000),
-  //     sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-  //   });
-  //
-  //   return {
-  //     accessToken,
-  //     userData,
-  //   };
-  // }
+  @UseGuards(RefreshTokenGuard)
+  @Post('refresh')
+  async refreshTokens(
+    @Res({ passthrough: true }) response: Response,
+    @CurrentUser() user: JwtUser,
+  ) {
+    const userId = user['sub'];
+    const userRefreshToken = user['refreshToken']!;
+    const data = await this.authService.refreshTokens(userId, userRefreshToken);
+    const {
+      tokens: { accessToken, refreshToken },
+      userData,
+    } = data;
+    response.cookie('refreshToken', refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+    });
+    response.cookie('accessToken', accessToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      expires: new Date(Date.now() + 15 * 60 * 1000),
+      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+    });
 
-  @UseGuards(JwtAuthGuard)
+    return {
+      accessToken,
+      userData,
+    };
+  }
+
+  @UseGuards(AccessTokenGuard)
   @Get('/me')
   getMe(@CurrentUser() user: JwtUser) {
     const userId = user['sub'];
@@ -133,7 +134,7 @@ export class AuthController {
     return this.authService.resetPassword(token, dto);
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(AccessTokenGuard)
   @Patch('/updateMyPassword')
   async updateMyPassword(
     @Body() dto: UpdateMyPasswordDto,
@@ -165,7 +166,7 @@ export class AuthController {
     };
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(AccessTokenGuard)
   @Patch('/updateMe')
   udpateMe(@Body() dto: UpdateUserDto, @CurrentUser() user: JwtUser) {
     const userId = user['sub'];

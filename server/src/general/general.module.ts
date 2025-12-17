@@ -10,7 +10,6 @@ import {
   GeneralSettingsTranslation,
   GeneralSettingsTranslationSchema,
 } from './schemas/generalTranslation.schema';
-import { AuthModule } from '../auth/auth.module';
 
 @Module({
   imports: [
@@ -21,7 +20,6 @@ import { AuthModule } from '../auth/auth.module';
         schema: GeneralSettingsTranslationSchema,
       },
     ]),
-    AuthModule,
   ],
   controllers: [GeneralController],
   providers: [GeneralService],
