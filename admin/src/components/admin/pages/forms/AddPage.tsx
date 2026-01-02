@@ -23,7 +23,6 @@ export default function AddPageForm({updatePagesList}: AddPageFormProps) {
     slug: z.string({ error: 'slug is required' }).min(1, { message: 'slug is required' }),
     title: z.string({ error: 'title is required' }).min(1, { message: 'title is required' }),
     description: z.string({ error: 'description is required' }).min(1, { message: 'description is required' }),
-    robots: z.string({ error: 'robots is required' }).min(1, { message: 'robots is required' }),
     language: z.string({ error: 'language is required' }).min(1, { message: 'language is required' }),
     index: z.boolean(),
     follow: z.boolean(),
@@ -40,7 +39,6 @@ export default function AddPageForm({updatePagesList}: AddPageFormProps) {
       slug: '',
       title: '',
       description: '',
-      robots: '',
       language: '',
       index: false,
       follow: false

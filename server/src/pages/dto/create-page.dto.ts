@@ -11,9 +11,6 @@ export class CreatePageDto {
   description: string;
 
   @IsString()
-  robots: string;
-
-  @IsString()
   @IsOptional()
   language?: string;
 
