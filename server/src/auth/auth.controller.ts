@@ -82,7 +82,18 @@ export class AuthController {
   ) {
     response.clearCookie('refreshToken');
     response.clearCookie('accessToken');
-    return this.authService.logout(user['sub']);
+    return this.authService.logout(user['sub'], String(user.jti));
+  }
+
+  @UseGuards(AccessTokenGuard)
+  @Get('logoutAll')
+  logoutAll(
+    @Res({ passthrough: true }) response: Response,
+    @CurrentUser() user: JwtUser,
+  ) {
+    response.clearCookie('refreshToken');
+    response.clearCookie('accessToken');
+    return this.authService.logoutAll(user['sub']);
   }
 
   @UseGuards(RefreshTokenGuard)

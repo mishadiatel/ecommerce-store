@@ -16,6 +16,8 @@ import { ForgotPasswordDto } from './dto/forgot-password.dto';
 import { ResetPasswordDto } from './dto/reset-password.dto';
 import { UpdateMyPasswordDto } from './dto/update-my-password.dto';
 import { ResendActivationDto } from './dto/resend-activation.dto';
+import { UserDocument } from '../users/schemas/user.schema';
+import { JwtUser } from './interfaces/jwt-user.interface';
 
 @Injectable()
 export class AuthService {
@@ -89,13 +91,35 @@ export class AuthService {
       user.email,
       user.role,
     );
-    await this.updateRefreshToken(String(user._id), tokens.refreshToken);
+    await this.addSession(user, tokens.refreshToken, tokens.jti);
     return { tokens, userData: safeUser(user) };
   }
 
-  async logout(userId: string) {
-    await this.usersService.update(userId, { refreshToken: null });
-    return null;
+  async addSession(user: UserDocument, refreshToken: string, jti: string) {
+    const hash = await bcrypt.hash(refreshToken, 12);
+
+    user.sessions.push({
+      jti,
+      refreshTokenHash: hash,
+      userAgent: 'TODO',
+      ip: 'TODO',
+      createdAt: new Date(),
+      expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+    });
+
+    await user.save();
+  }
+
+  async logout(userId: string, jti: string) {
+    await this.usersService.update(userId, {
+      $pull: { sessions: { jti } },
+    });
+  }
+
+  async logoutAll(userId: string) {
+    await this.usersService.update(userId, {
+      sessions: [],
+    });
   }
 
   hashData(data: string) {
@@ -110,12 +134,14 @@ export class AuthService {
   }
 
   async getTokens(userId: string, email: string, role: string) {
+    const refreshJti = crypto.randomUUID();
     const [accessToken, refreshToken] = await Promise.all([
       this.jwtService.signAsync(
         {
           sub: userId,
           email,
           role,
+          jti: refreshJti,
         },
         {
           secret: this.configService.get<string>('JWT_ACCESS_SECRET'),
@@ -127,6 +153,7 @@ export class AuthService {
           sub: userId,
           email,
           role,
+          jti: refreshJti,
         },
         {
           secret: this.configService.get<string>('JWT_REFRESH_SECRET'),
@@ -138,25 +165,41 @@ export class AuthService {
     return {
       accessToken,
       refreshToken,
+      jti: refreshJti,
     };
   }
 
   async refreshTokens(userId: string, refreshToken: string) {
     const user = await this.usersService.findByIdFullFields(userId);
-    if (!user || !user.refreshToken)
-      throw new ForbiddenException('Access Denied');
-    const refreshTokenMatches = await bcrypt.compare(
-      refreshToken,
-      user.refreshToken,
-    );
-    if (!refreshTokenMatches) throw new ForbiddenException('Access Denied');
-    const tokens = await this.getTokens(
-      String(user._id),
-      user.email,
-      user.role,
-    );
-    await this.updateRefreshToken(String(user._id), tokens.refreshToken);
-    return { tokens, userData: safeUser(user) };
+    if (!user) throw new ForbiddenException('Access Denied');
+
+    const payload: JwtUser = await this.jwtService.verifyAsync(refreshToken, {
+      secret: this.configService.get('JWT_REFRESH_SECRET'),
+    });
+
+    const session = user.sessions.find((s) => s.jti === payload.jti);
+    if (!session) throw new ForbiddenException('Session not found');
+
+    const ok = await bcrypt.compare(refreshToken, session.refreshTokenHash);
+    if (!ok) throw new ForbiddenException('Token mismatch');
+
+    // issue new tokens
+    const {
+      accessToken,
+      refreshToken: newRT,
+      jti,
+    } = await this.getTokens(userId, user.email, user.role);
+
+    // remove old session
+    user.sessions = user.sessions.filter((s) => s.jti !== payload.jti);
+
+    // add new
+    await this.addSession(user, newRT, jti);
+
+    return {
+      tokens: { accessToken, refreshToken: newRT },
+      userData: safeUser(user),
+    };
   }
 
   async forgotPassword(dto: ForgotPasswordDto) {
@@ -170,7 +213,6 @@ export class AuthService {
       .createHash('sha256')
       .update(resetToken)
       .digest('hex');
-    // console.log({resetToken}, this.passwordResetToken);
     user.passwordResetExpires = new Date(Date.now() + 10 * 60 * 1000);
     await user.save({ validateBeforeSave: true });
 

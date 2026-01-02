@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { FilterQuery, Model } from 'mongoose';
 import { User, UserDocument } from './schemas/user.schema';
 import * as bcrypt from 'bcrypt';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -27,7 +26,7 @@ export class UsersService {
     return this.userModel
       .findById(id)
       .select(
-        '+password +refreshToken +passwordChangedAt +passwordResetToken +passwordResetExpires +activationToken',
+        '+password +sessions +passwordChangedAt +passwordResetToken +passwordResetExpires +activationToken',
       );
   }
 
@@ -39,7 +38,7 @@ export class UsersService {
     return this.userModel
       .findOne({ email })
       .select(
-        '+password +refreshToken +passwordChangedAt +passwordResetToken +passwordResetExpires +activationToken',
+        '+password +sessions +passwordChangedAt +passwordResetToken +passwordResetExpires +activationToken',
       );
   }
 
@@ -50,7 +49,7 @@ export class UsersService {
         passwordResetExpires: { $gt: Date.now() },
       })
       .select(
-        '+password +refreshToken +passwordChangedAt +passwordResetToken +passwordResetExpires +activationToken',
+        '+password +sessions +passwordChangedAt +passwordResetToken +passwordResetExpires +activationToken',
       );
   }
 
@@ -58,11 +57,11 @@ export class UsersService {
     return this.userModel
       .findOne({ activationToken })
       .select(
-        '+password +refreshToken +passwordChangedAt +passwordResetToken +passwordResetExpires +activationToken',
+        '+password +sessions +passwordChangedAt +passwordResetToken +passwordResetExpires +activationToken',
       );
   }
 
-  async update(id: string, updateUserDto: UpdateUserDto) {
+  async update(id: string, updateUserDto: FilterQuery<UserDocument>) {
     const updateBody = { ...updateUserDto };
     if (updateUserDto.password) {
       updateBody.password = await bcrypt.hash(updateUserDto.password, 12);

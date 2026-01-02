@@ -1,6 +1,7 @@
 export interface JwtUser {
   sub: string;
-  username: string;
+  email: string;
   role: 'user' | 'admin';
+  jti: string;
   refreshToken?: string;
 }

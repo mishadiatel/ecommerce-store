@@ -4,6 +4,16 @@ import { Document } from 'mongoose';
 export type UserDocument = User & Document;
 
 @Schema()
+export class Session {
+  @Prop() jti: string;
+  @Prop() refreshTokenHash: string;
+  @Prop() userAgent: string;
+  @Prop() ip: string;
+  @Prop() createdAt: Date;
+  @Prop() expiresAt: Date;
+}
+
+@Schema()
 export class User {
   @Prop({ type: String, required: false })
   firstName: string;
@@ -33,8 +43,8 @@ export class User {
   @Prop({ type: String, required: true, select: false })
   password: string;
 
-  @Prop({ type: String, select: false })
-  refreshToken?: string;
+  // @Prop({ type: String, select: false })
+  // refreshToken?: string;
 
   @Prop({ type: Date, required: false, select: false })
   passwordChangedAt?: Date;
@@ -47,6 +57,9 @@ export class User {
 
   @Prop({ type: String, required: false, select: false })
   activationToken?: string;
+
+  @Prop({ type: [Session], default: [], select: false })
+  sessions: Session[];
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
