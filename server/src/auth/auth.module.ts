@@ -7,9 +7,10 @@ import { RefreshTokenStrategy } from './strategies/refreshToken.strategy';
 import { UsersModule } from '../users/users.module';
 import { AccessTokenGuard } from './guards/accessToken.guard';
 import { RolesGuard } from './guards/roles.guard';
+import { MailModule } from '../mail/mail.module';
 
 @Module({
-  imports: [JwtModule.register({}), UsersModule],
+  imports: [JwtModule.register({}), UsersModule, MailModule],
   controllers: [AuthController],
   providers: [
     AuthService,

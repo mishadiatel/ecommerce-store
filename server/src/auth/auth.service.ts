@@ -18,6 +18,8 @@ import { UpdateMyPasswordDto } from './dto/update-my-password.dto';
 import { ResendActivationDto } from './dto/resend-activation.dto';
 import { UserDocument } from '../users/schemas/user.schema';
 import { JwtUser } from './interfaces/jwt-user.interface';
+import { MailService } from '../mail/mail.service';
+import { Request } from 'express';
 
 @Injectable()
 export class AuthService {
@@ -25,8 +27,9 @@ export class AuthService {
     private usersService: UsersService,
     private jwtService: JwtService,
     private configService: ConfigService,
+    private mailService: MailService,
   ) {}
-  async signUp(dto: AuthDto) {
+  async signUp(dto: AuthDto, req: Request) {
     // Check if user exists
     const userExists = await this.usersService.findByEmail(dto.email);
     if (userExists) {
@@ -47,7 +50,15 @@ export class AuthService {
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
-    return { activationToken: newUser.activationToken };
+    const protocol = req.protocol;
+    const host = req.get('host');
+    const activateUrl = `${protocol}://${host}/api/auth/activateAccount/${newUser.activationToken}`;
+    await this.mailService.sendActivationEmail(newUser.email, activateUrl);
+    return {
+      activationToken: newUser.activationToken,
+      success: true,
+      message: `sent activation mail to ${newUser.email} please activate your account`,
+    };
   }
 
   async activateAccount(token: string) {
@@ -63,14 +74,23 @@ export class AuthService {
     };
   }
 
-  async resendActivation(dto: ResendActivationDto) {
+  async resendActivation(dto: ResendActivationDto, req: Request) {
     const user = await this.usersService.findByEmail(dto.email);
+    const token = crypto.randomUUID()
     if (!user) {
       throw new BadRequestException('User does not exist');
     }
-    user.activationToken = crypto.randomUUID();
+    user.activationToken = token;
     await user.save();
-    return { activationToken: user.activationToken };
+    const protocol = req.protocol;
+    const host = req.get('host');
+    const activateUrl = `${protocol}://${host}/api/auth/activateAccount/${token}`;
+    await this.mailService.sendActivationEmail(user.email, activateUrl);
+    return {
+      activationToken: token,
+      success: true,
+      message: `sent activation mail to ${user.email} please activate your account`,
+    };
   }
 
   async signIn(data: AuthDto) {

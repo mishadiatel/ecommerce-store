@@ -5,10 +5,11 @@ import {
   Param,
   Patch,
   Post,
+  Req,
   Res,
   UseGuards,
 } from '@nestjs/common';
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import { AuthService } from './auth.service';
 import { AuthDto } from './dto/auth.dto';
 import { AccessTokenGuard } from './guards/accessToken.guard';
@@ -31,8 +32,8 @@ export class AuthController {
   ) {}
 
   @Post('signup')
-  signup(@Body() dto: AuthDto) {
-    return this.authService.signUp(dto);
+  signup(@Body() dto: AuthDto, @Req() request: Request) {
+    return this.authService.signUp(dto, request);
   }
 
   @Get('activateAccount/:token')
@@ -41,8 +42,8 @@ export class AuthController {
   }
 
   @Post('resendActivationToken')
-  resendActivation(@Body() dto: ResendActivationDto) {
-    return this.authService.resendActivation(dto);
+  resendActivation(@Body() dto: ResendActivationDto, @Req() request: Request) {
+    return this.authService.resendActivation(dto, request);
   }
 
   @Post('signin')
