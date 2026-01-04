@@ -43,6 +43,8 @@ export class GeneralService {
         telegram: '',
         phoneNumber: '',
         email: '',
+        mailjetName: '',
+        mailjetEmail: '',
       });
     }
     return settings;

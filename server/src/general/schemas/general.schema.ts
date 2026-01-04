@@ -40,6 +40,12 @@ export class GeneralSettings {
 
   @Prop({ type: String, required: false })
   email: string;
+
+  @Prop({ type: String, required: false })
+  mailjetEmail: string;
+
+  @Prop({ type: String, required: false })
+  mailjetName: string;
 }
 
 export const GeneralSettingsSchema =

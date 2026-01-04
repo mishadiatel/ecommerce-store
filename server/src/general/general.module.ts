@@ -23,5 +23,6 @@ import {
   ],
   controllers: [GeneralController],
   providers: [GeneralService],
+  exports: [GeneralService],
 })
 export class GeneralModule {}

@@ -36,4 +36,12 @@ export class UpdateGeneralDto {
   @IsString()
   @IsOptional()
   email?: string;
+
+  @IsString()
+  @IsOptional()
+  mailjetEmail?: string;
+
+  @IsString()
+  @IsOptional()
+  mailjetName?: string;
 }

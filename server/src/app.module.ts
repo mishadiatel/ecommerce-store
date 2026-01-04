@@ -25,6 +25,7 @@ import { AccessTokenGuard } from './auth/guards/accessToken.guard';
 import { RolesGuard } from './auth/guards/roles.guard';
 import { APP_GUARD } from '@nestjs/core';
 import { MailModule } from './mail/mail.module';
+import { MailTemplateModule } from './mail-template/mail-template.module';
 
 @Module({
   imports: [
@@ -59,6 +60,7 @@ import { MailModule } from './mail/mail.module';
     UsersModule,
     AuthModule,
     MailModule,
+    MailTemplateModule,
   ],
   controllers: [AppController],
   providers: [AppService],
