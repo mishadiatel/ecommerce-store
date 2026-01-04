@@ -36,7 +36,7 @@ export default function SettingsTranslationForm ({settingsTranslation, onSuccess
 
   const onSubmit = (data: EditSettingsTranslationData) => {
     const action = isEdit
-      ? updateSettingsTranslations(settingsTranslation._id, data)
+      ? updateSettingsTranslations(settingsTranslation!._id, data)
       : createSettingsTranslations(data);
 
     action

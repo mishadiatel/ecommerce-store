@@ -42,6 +42,12 @@ export default function GeneralForm({generalSettings}: GeneralFormProps) {
       z.string().email(),
       z.literal(''),
     ]).optional(),
+
+    mailjetName: z.string().optional(),
+    mailjetEmail: z.union([
+      z.string().email(),
+      z.literal(''),
+    ]).optional(),
   });
   type EditGenealSettingsData = z.infer<typeof editGeneralSettingsSchema>
 
@@ -61,6 +67,8 @@ export default function GeneralForm({generalSettings}: GeneralFormProps) {
       telegram: generalSettings?.telegram || '',
       phoneNumber: generalSettings?.phoneNumber || '',
       email: generalSettings?.email || '',
+      mailjetName: generalSettings?.mailjetName || '',
+      mailjetEmail: generalSettings?.mailjetEmail || '',
     },
   });
 
@@ -93,6 +101,8 @@ export default function GeneralForm({generalSettings}: GeneralFormProps) {
         <InputGroup control={control} name={'telegram'} label={'telegram'} placeholder={'telegram'} />
         <InputGroup control={control} name={'phoneNumber'} label={'phoneNumber'} placeholder={'phoneNumber'} />
         <InputGroup control={control} name={'email'} label={'email'} placeholder={'email'} />
+        <InputGroup control={control} name={'mailjetEmail'} label={'mailjetEmail'} placeholder={'mailjetEmail'} />
+        <InputGroup control={control} name={'mailjetName'} label={'mailjetName'} placeholder={'mailjetName'} />
       </div>
       <Button type="submit" className={'w-fit'}>Save changes</Button>
 

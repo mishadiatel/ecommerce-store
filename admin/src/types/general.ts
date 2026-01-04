@@ -10,6 +10,8 @@ export interface GeneralSettings {
   telegram?: string;
   phoneNumber?: string;
   email?: string;
+  mailjetName?: string;
+  mailjetEmail?: string;
   createdAt: string;
   updatedAt: string;
 }
