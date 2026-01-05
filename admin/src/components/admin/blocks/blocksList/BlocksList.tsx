@@ -1,4 +1,4 @@
-'use client'
+'use client';
 import {
   Dialog,
   DialogContent,
@@ -12,12 +12,16 @@ import { Block } from '@/types/blocks';
 import { getBlocks } from '@/services/blocks';
 import BlockCard from '@/components/admin/blocks/card/BlockCard';
 import AddBlockForm from '@/components/admin/blocks/forms/AddBlock';
+import PageControl from '@/components/admin/ui/pageControl';
 
-export default function BlocksList () {
+export default function BlocksList() {
   const isFirstRender = useRef(true);
   const [blocksState, setBlocksState] = useState<Block<object>[] | undefined>([]);
   const [searchWord, setSearchWord] = useState('');
-
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [totalPages, setTotalPages] = useState<number | undefined>(undefined);
+  const [totalDocuments, setTotalDocuments] = useState<number | undefined>(undefined);
+  const [limit, setLimit] = useState<number>(10);
 
 
   const updateBlocksList = () => {
@@ -25,15 +29,27 @@ export default function BlocksList () {
       isFirstRender.current = false;
       return;
     }
-    getBlocks(searchWord ? {search: searchWord.toString()} : {}).then((pagesResult) => {
-      setBlocksState(pagesResult);
+
+    const query: Record<string, string | number> = {
+      page: currentPage,
+      limit: limit,
+    };
+    if (searchWord.trim()) {
+      query.search = searchWord.trim();
+    }
+
+    getBlocks(query).then((blocksResult) => {
+      setBlocksState(blocksResult?.data);
+      setTotalPages(blocksResult?.totalPages);
+      setTotalDocuments(blocksResult?.totalDocuments);
+
     }).catch((err) => {
       toast.error('error loading pages.');
-    })
-  }
+    });
+  };
   useEffect(() => {
     updateBlocksList();
-  }, []);
+  }, [currentPage]);
   useEffect(() => {
     const handler = setTimeout(() => {
       updateBlocksList();
@@ -62,12 +78,23 @@ export default function BlocksList () {
       />
 
       <div className={'flex flex-col gap-5'}>
-        {blocksState && blocksState.length > 0 ? blocksState.map((block) => (
-          <BlockCard block={block} updateBlocksList={updateBlocksList} key={block._id} />
-        )) : (
+        {blocksState && blocksState.length > 0 ? (
+          <>
+            {blocksState.map((block) => (
+              <BlockCard block={block} updateBlocksList={updateBlocksList} key={block._id} />
+            ))}
+            {totalPages && totalDocuments && (
+              <PageControl currentPage={currentPage} limit={limit} totalDocuments={totalDocuments}
+                           setCurrentPage={setCurrentPage} totalPages={totalPages}
+                           documentsLength={blocksState.length} />
+            )}
+
+          </>
+
+        ) : (
           <div>not found pages</div>
         )}
       </div>
     </>
-  )
+  );
 }

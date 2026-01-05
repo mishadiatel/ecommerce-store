@@ -1,4 +1,4 @@
-'use client'
+'use client';
 import {
   Dialog,
   DialogContent,
@@ -12,29 +12,42 @@ import { useEffect, useRef, useState } from 'react';
 import { Input } from '@/components/admin/shadcnuiComponents/input';
 import { getPages } from '@/services/pages';
 import { toast } from 'react-toastify';
+import PageControl from '@/components/admin/ui/pageControl';
 
 
-
-export default function PagesList () {
+export default function PagesList() {
   const isFirstRender = useRef(true);
   const [pagesState, setPagesState] = useState<Page[] | undefined>([]);
   const [searchWord, setSearchWord] = useState('');
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [totalPages, setTotalPages] = useState<number | undefined>(undefined);
+  const [totalDocuments, setTotalDocuments] = useState<number | undefined>(undefined);
+  const [limit, setLimit] = useState<number>(10);
 
   const updatePagesList = () => {
     if (isFirstRender.current) {
       isFirstRender.current = false;
       return;
     }
-    getPages(searchWord ? {search: searchWord.toString()} : {}).then((pagesResult) => {
-      setPagesState(pagesResult);
+    const query: Record<string, string | number> = {
+      page: currentPage,
+      limit: limit,
+    };
+    if (searchWord.trim()) {
+      query.search = searchWord.trim();
+    }
+    getPages(query).then((pagesResult) => {
+      setPagesState(pagesResult?.data);
+      setTotalPages(pagesResult?.totalPages);
+      setTotalDocuments(pagesResult?.totalDocuments);
     }).catch((err) => {
       toast.error('error loading pages.');
-    })
-  }
+    });
+  };
 
   useEffect(() => {
     updatePagesList();
-  }, []);
+  }, [currentPage]);
 
   useEffect(() => {
     const handler = setTimeout(() => {
@@ -63,12 +76,21 @@ export default function PagesList () {
       />
 
       <div className={'flex flex-col gap-5'}>
-        {pagesState && pagesState.length > 0 ? pagesState.map((page) => (
-          <PageCard page={page} key={page._id} updatePagesList={updatePagesList} />
-        )) : (
+        {pagesState && pagesState.length > 0 ? (
+          <>
+            {pagesState.map((page) => (
+              <PageCard page={page} key={page._id} updatePagesList={updatePagesList} />
+            ))}
+            {totalPages && totalDocuments && (
+              <PageControl currentPage={currentPage} limit={limit} totalDocuments={totalDocuments}
+                           setCurrentPage={setCurrentPage} totalPages={totalPages}
+                           documentsLength={pagesState.length} />
+            )}
+          </>
+        ) : (
           <div>not found pages</div>
         )}
       </div>
     </>
-  )
+  );
 }

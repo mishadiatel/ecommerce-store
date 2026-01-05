@@ -17,6 +17,7 @@ import { RolesGuard } from '../auth/guards/roles.guard';
 import { Roles } from '../auth/decorators/roles.decorator';
 import { CreateMailTemplateDto } from './dto/create-mail-template.dto';
 import { UpdateMailTemplateDto } from './dto/update-mail-template.dto';
+import { BaseQueryDto } from '../utils/base-query.dto';
 
 @Controller('mail-template')
 export class MailTemplateController {
@@ -33,7 +34,7 @@ export class MailTemplateController {
   @Roles('admin')
   @Get()
   @HttpCode(HttpStatus.OK)
-  findAll(@Query() query: any) {
+  findAll(@Query() query: BaseQueryDto) {
     return this.mailTemplateService.findAll(query);
   }
 

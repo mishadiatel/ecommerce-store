@@ -9,6 +9,7 @@ import {
 import { APIFeatures } from '../utils/APIFeature';
 import { CreateMailTemplateDto } from './dto/create-mail-template.dto';
 import { UpdateMailTemplateDto } from './dto/update-mail-template.dto';
+import { BaseQueryDto } from '../utils/base-query.dto';
 
 @Injectable()
 export class MailTemplateService {
@@ -31,7 +32,7 @@ export class MailTemplateService {
     return mailTemplate;
   }
 
-  async findAll(query: any) {
+  async findAll(query: BaseQueryDto) {
     const mailTemplateQuery = new APIFeatures(
       this.mailTemplateModel.find(),
       query,
@@ -39,8 +40,19 @@ export class MailTemplateService {
       .search(['slug', 'language', 'subject'])
       .filter()
       .sort();
+    const totalDocuments = await this.mailTemplateModel.countDocuments(
+      mailTemplateQuery.query.getQuery(),
+    );
+    const paginatedQuery = mailTemplateQuery.paginate();
+    const mailTemplatesData = await paginatedQuery.query;
+    const limit = query.limit ? parseInt(query.limit, 10) : 10;
+    const totalPages = Math.ceil(totalDocuments / limit);
 
-    return mailTemplateQuery.query;
+    return {
+      data: mailTemplatesData,
+      totalPages,
+      totalDocuments,
+    };
   }
 
   async findOne(id: string) {

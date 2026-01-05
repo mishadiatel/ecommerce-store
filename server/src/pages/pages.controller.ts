@@ -17,6 +17,7 @@ import { UpdatePageDto } from './dto/update-page.dto';
 import { AccessTokenGuard } from '../auth/guards/accessToken.guard';
 import { RolesGuard } from '../auth/guards/roles.guard';
 import { Roles } from '../auth/decorators/roles.decorator';
+import { BaseQueryDto } from '../utils/base-query.dto';
 
 @Controller('pages')
 export class PagesController {
@@ -34,7 +35,7 @@ export class PagesController {
   @Roles('admin')
   @Get()
   @HttpCode(HttpStatus.OK)
-  findAll(@Query() query: any) {
+  findAll(@Query() query: BaseQueryDto) {
     return this.pagesService.findAll(query);
   }
 

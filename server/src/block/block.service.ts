@@ -6,6 +6,7 @@ import { Block, BlockDocument } from './schemas/block.schema';
 import { Model, Types } from 'mongoose';
 import { YcI18nService } from '../yc-i18n/yc-i18n.service';
 import { APIFeatures } from '../utils/APIFeature';
+import { BaseQueryDto } from '../utils/base-query.dto';
 
 @Injectable()
 export class BlockService {
@@ -26,12 +27,24 @@ export class BlockService {
     return block;
   }
 
-  async findAll(query: any) {
+  async findAll(query: BaseQueryDto) {
     const blocksQuery = new APIFeatures(this.blockModel.find(), query)
       .search(['pages', 'languages', 'blockType'])
       .filter()
       .sort();
-    return blocksQuery.query;
+    const totalDocuments = await this.blockModel.countDocuments(
+      blocksQuery.query.getQuery(),
+    );
+    const paginatedQuery = blocksQuery.paginate();
+    const blocks = await paginatedQuery.query;
+    const limit = query.limit ? parseInt(query.limit, 10) : 10;
+    const totalPages = Math.ceil(totalDocuments / limit);
+
+    return {
+      data: blocks,
+      totalPages,
+      totalDocuments,
+    };
   }
 
   async findOne(id: string) {

@@ -1,7 +1,8 @@
 import { projectApi } from '@/lib/axios';
 import { MailTemplate } from '@/types/mailTemplate';
+import { GetItemsResponse } from '@/types/getItemsResponse';
 
-export const getMailTemplate = async (queryParams?: Record<string, string | number>): Promise<MailTemplate[] | undefined> => {
+export const getMailTemplate = async (queryParams?: Record<string, string | number>): Promise<GetItemsResponse<MailTemplate> | undefined> => {
   try {
     const { data } = await projectApi.get('/api/mail-template', { params: queryParams });
     return data;

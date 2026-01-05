@@ -1,7 +1,8 @@
 import { projectApi } from '@/lib/axios';
 import { Page } from '@/types/pages';
+import { GetItemsResponse } from '@/types/getItemsResponse';
 
-export const getPages = async (queryParams?: Record<string, string | number>): Promise<Page[] | undefined> => {
+export const getPages = async (queryParams?: Record<string, string | number>): Promise<GetItemsResponse<Page> | undefined> => {
   try {
     const { data } = await projectApi.get('/api/pages', { params: queryParams });
     return data;

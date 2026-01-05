@@ -17,6 +17,7 @@ import { UpdateBlockDto } from './dto/update-block.dto';
 import { AccessTokenGuard } from '../auth/guards/accessToken.guard';
 import { RolesGuard } from '../auth/guards/roles.guard';
 import { Roles } from '../auth/decorators/roles.decorator';
+import { BaseQueryDto } from '../utils/base-query.dto';
 
 @Controller('block')
 export class BlockController {
@@ -34,7 +35,7 @@ export class BlockController {
   @Roles('admin')
   @Get()
   @HttpCode(HttpStatus.OK)
-  findAll(@Query() query: any) {
+  findAll(@Query() query: BaseQueryDto) {
     return this.blockService.findAll(query);
   }
 

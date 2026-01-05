@@ -6,6 +6,7 @@ import { Model, Types } from 'mongoose';
 import { Page, PageDocument } from './schemas/page.schema';
 import { YcI18nService } from '../yc-i18n/yc-i18n.service';
 import { APIFeatures } from '../utils/APIFeature';
+import { BaseQueryDto } from '../utils/base-query.dto';
 
 @Injectable()
 export class PagesService {
@@ -25,13 +26,24 @@ export class PagesService {
     return page;
   }
 
-  async findAll(query: any) {
+  async findAll(query: BaseQueryDto) {
     const pagesQuery = new APIFeatures(this.pageModel.find(), query)
       .search(['slug', 'language', 'title'])
       .filter()
       .sort();
+    const totalDocuments = await this.pageModel.countDocuments(
+      pagesQuery.query.getQuery(),
+    );
+    const paginatedQuery = pagesQuery.paginate();
+    const pagesData = await paginatedQuery.query;
+    const limit = query.limit ? parseInt(query.limit, 10) : 10;
+    const totalPages = Math.ceil(totalDocuments / limit);
 
-    return pagesQuery.query;
+    return {
+      data: pagesData,
+      totalPages,
+      totalDocuments,
+    };
   }
 
   async findOne(id: string) {
