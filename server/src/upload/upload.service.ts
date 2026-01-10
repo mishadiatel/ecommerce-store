@@ -13,9 +13,10 @@ export class UploadService {
         HttpStatus.BAD_REQUEST,
       );
     }
-    const protocol = req.protocol;
-    const host = req.get('host');
-    const fileUrl = `${protocol}://${host}/files/${file.filename}`;
-    return { fileUrl };
+    // const protocol = req.protocol;
+    // const host = req.get('host');
+    // const fileUrl = `${protocol}://${host}/files/${file.filename}`;
+    const fileName = file.filename;
+    return { fileName };
   }
 }

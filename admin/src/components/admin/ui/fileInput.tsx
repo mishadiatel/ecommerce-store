@@ -40,7 +40,7 @@ export default function FileInput<T extends FieldValues>({
       const data = await res.json();
 
       // must return URL string
-      return data.fileUrl;
+      return data.fileName;
     } finally {
       setUploading(false);
     }
@@ -74,8 +74,8 @@ export default function FileInput<T extends FieldValues>({
                   const file = e.target.files[0];
 
                   try {
-                    const url = await uploadFile(file);
-                    field.onChange(url); // set returned url
+                    const fileName = await uploadFile(file);
+                    field.onChange(fileName); // set returned url
                     toast.success('upload successfully')
                   } catch (err) {
                     console.error(err);
@@ -83,7 +83,7 @@ export default function FileInput<T extends FieldValues>({
                   }
                 }}
               />
-              <FilePreview fileUrl={field.value} />
+              <FilePreview fileName={field.value} />
 
               {uploading && <span className="text-sm opacity-70">Uploading…</span>}
             </div>

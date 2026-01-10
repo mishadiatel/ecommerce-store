@@ -18,19 +18,17 @@ export default function GeneralForm({generalSettings}: GeneralFormProps) {
   const editGeneralSettingsSchema = z.object({
     companyName: z.string({ error: 'companyName is required' }).min(1, { message: 'companyName is required' }),
     logo:  z.string({ error: 'logo is required' }).min(1, { message: 'logo is required' })
-    .url("Image must be a valid URL")
     .refine(
       (val) => /\.(jpg|jpeg|png|webp|avif|gif|svg)$/.test(val.split("?")[0]),
       {
-        message: "Image URL must end with a valid image extension",
+        message: "Image name must end with a valid image extension",
       }
     ),
     favicon: z.string({ error: 'favicon is required' }).min(1, { message: 'favicon is required' })
-      .url("Image must be a valid URL")
       .refine(
         (val) => /\.(jpg|jpeg|png|webp|avif|gif|svg)$/.test(val.split("?")[0]),
         {
-          message: "Image URL must end with a valid image extension",
+          message: "Image name must end with a valid image extension",
         }
       ),
     facebook: z.string().optional(),

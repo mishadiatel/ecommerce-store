@@ -35,11 +35,10 @@ export default function BlockForm({
     title: z.string().min(1),
     text: z.string().min(1),
     image: z.string().min(1)
-      .url("Image must be a valid URL")
       .refine(
         (val) => /\.(jpg|jpeg|png|webp|avif|gif|svg)$/.test(val.split("?")[0]),
         {
-          message: "Image URL must end with a valid image extension",
+          message: "Image name must end with a valid image extension",
         }
       ),
     buttonText: z.string().min(1),

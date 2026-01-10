@@ -2,16 +2,20 @@ import { getFileType, isValidUrl } from '@/lib/utils';
 import Image from 'next/image';
 
 interface FilePreviewProps {
-  fileUrl: string;
+  fileName: string;
 }
 
-export default function FilePreview({ fileUrl }: FilePreviewProps) {
-
-  if (!isValidUrl(fileUrl)) {
-    return;
+export default function FilePreview({ fileName }: FilePreviewProps) {
+  let fileUrl = fileName;
+  if (!isValidUrl(fileName)) {
+    fileUrl = `${process.env.NEXT_PUBLIC_PROJECT_API_URL}/files/${fileName}`;
   }
 
-  const fileType = getFileType(fileUrl);
+  if(!isValidUrl(fileUrl)) {
+    return ;
+  }
+
+  const fileType = getFileType(fileName);
 
   return (
     <>
