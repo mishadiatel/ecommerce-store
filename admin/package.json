@@ -27,6 +27,7 @@
     "react-dom": "19.1.0",
     "react-hook-form": "^7.68.0",
     "react-icons": "^5.5.0",
+    "react-quill-new": "^3.7.0",
     "react-simple-wysiwyg": "^3.4.1",
     "react-slick": "^0.31.0",
     "react-toastify": "^11.0.5",

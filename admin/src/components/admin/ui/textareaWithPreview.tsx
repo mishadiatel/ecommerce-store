@@ -1,11 +1,8 @@
 import { Control, Controller, FieldValues, Path } from 'react-hook-form';
 import { Field, FieldError, FieldGroup, FieldLabel } from '@/components/admin/shadcnuiComponents/field';
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import { Button } from '@/components/admin/shadcnuiComponents/button';
 import IframePreview from '@/components/admin/ui/iframePreview';
-import Editor, { EditorProvider } from 'react-simple-wysiwyg';
-import ReactQuill from 'react-quill-new';
-import type ReactQuillType from 'react-quill-new';
 
 
 type EditorInputProps<T extends FieldValues> = {
@@ -16,7 +13,7 @@ type EditorInputProps<T extends FieldValues> = {
 
 };
 
-export default function EditorInput<T extends FieldValues>({
+export default function TextareaWithPreview<T extends FieldValues>({
                                                              control,
                                                              name,
                                                              placeholder,
@@ -24,20 +21,9 @@ export default function EditorInput<T extends FieldValues>({
 
                                                            }: EditorInputProps<T>) {
   const [showPreview, setShowPreview] = useState(false);
-  const [htmlMode, setHtmlMode] = useState(false);
-  const quillRef = useRef<ReactQuillType | null>(null);
 
-  function toggleHtmlMode(value: string, onChange: (v: string) => void) {
-    if (!htmlMode && quillRef.current) {
-      // Save current editor HTML before switching
-      const html = quillRef.current.getEditor().root.innerHTML;
-      onChange(html);
-    }
-    setHtmlMode(prev => !prev);
-  }
 
   return (
-    // <EditorProvider>
     <FieldGroup>
       <Controller
         name={name}
@@ -47,44 +33,17 @@ export default function EditorInput<T extends FieldValues>({
             <FieldLabel>
               {label}
             </FieldLabel>
-            {/*<Editor  {...field} placeholder={placeholder} />*/}
-            <div className="flex gap-2 mb-2">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => toggleHtmlMode(field.value, field.onChange)}
-              >
-                {htmlMode ? 'Visual' : 'HTML'}
-              </Button>
-            </div>
 
             <div>
-              {/* Editor */}
-              {htmlMode ? (
+
                 <textarea
                   className="w-full min-h-[220px] border rounded-md p-3 font-mono text-sm"
                   value={field.value || ''}
                   placeholder={placeholder}
                   onChange={(e) => field.onChange(e.target.value)}
                 />
-              ) : (
-                <ReactQuill
-                  ref={quillRef}
-                  theme="snow"
-                  value={field.value || ''}
-                  onChange={field.onChange}
-                  placeholder={placeholder}
-                />
-              )}
-            </div>
 
-            {/*<IframeEditor value={field.value} onChange={field.onChange} />*/}
-            {/*<Input*/}
-            {/*  {...field}*/}
-            {/*  aria-invalid={fieldState.invalid}*/}
-            {/*  placeholder={placeholder}*/}
-            {/*  autoComplete="off"*/}
-            {/*/>*/}
+            </div>
             {fieldState.invalid && (
               <FieldError errors={[fieldState.error]} />
             )}
@@ -100,7 +59,6 @@ export default function EditorInput<T extends FieldValues>({
         )}
       />
     </FieldGroup>
-    // </EditorProvider>
 
   );
 }

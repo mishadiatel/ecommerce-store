@@ -11,7 +11,7 @@ import InputGroup from '@/components/admin/ui/inputGroup';
 import { LANGUAGES_LIST } from '@/variables/languages';
 import { MailTemplate } from '@/types/mailTemplate';
 import { createMailTemplate, updateMailTemplate } from '@/services/mailTemplate';
-import EditorInput from '@/components/admin/ui/editorInput';
+import TextareaWithPreview from '@/components/admin/ui/textareaWithPreview';
 
 interface MailTemplateFormProps {
   mailTemplate?: MailTemplate;
@@ -79,7 +79,7 @@ export default function MailTemplateForm({ mailTemplate, onSuccess }: MailTempla
         />
         <InputGroup control={control} name={'slug'} label={'slug'} placeholder={'slug'} />
         <InputGroup control={control} name={'subject'} label={'subject'} placeholder={'subject'} />
-        <EditorInput control={control} name={'html'} label={'html'} placeholder={'html'} />
+        <TextareaWithPreview control={control} name={'html'} label={'html'} placeholder={'html'} />
 
 
         <DialogFooter>

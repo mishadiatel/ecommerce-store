@@ -7,6 +7,7 @@ import {hasLocale, NextIntlClientProvider} from "next-intl";
 import {routing} from "@/i18n/routing";
 import {notFound} from "next/navigation";
 import { ToastContainer } from 'react-toastify';
+import 'react-quill-new/dist/quill.snow.css';
 
 
 const openSansFont = Open_Sans({

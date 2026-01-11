@@ -6,6 +6,11 @@ interface FilePreviewProps {
 }
 
 export default function FilePreview({ fileName }: FilePreviewProps) {
+
+  if(!fileName) {
+    return ;
+  }
+
   let fileUrl = fileName;
   if (!isValidUrl(fileName)) {
     fileUrl = `${process.env.NEXT_PUBLIC_PROJECT_API_URL}/files/${fileName}`;
