@@ -12,6 +12,7 @@ export default function AdminAside() {
       <Link href="/adminPanel/admin823479234/pagesControl" className={`w-full p-4 rounded-md ${lastPathnameSegment === 'pagesControl' ? 'bg-gray-100 ' : ''}`}>Pages</Link>
       <Link href="/adminPanel/admin823479234/blocks" className={`w-full p-4 rounded-md ${lastPathnameSegment === 'blocks' ? 'bg-gray-100 ' : ''}`}>Blocks</Link>
       <Link href="/adminPanel/admin823479234/mailTemplates" className={`w-full p-4 rounded-md ${lastPathnameSegment === 'mailTemplates' ? 'bg-gray-100 ' : ''}`}>Mail templates</Link>
+      <Link href="/adminPanel/admin823479234/category" className={`w-full p-4 rounded-md ${lastPathnameSegment === 'category' ? 'bg-gray-100 ' : ''}`}>Category</Link>
     </aside>
   )
 }

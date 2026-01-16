@@ -27,3 +27,13 @@ export const getFileType = (url: string) =>  {
   if (videoExts.includes(extension)) return 'video';
   return 'other';
 }
+
+
+export const generateFileUrl = (fileName: string) => {
+  let fileUrl = fileName;
+  if (!isValidUrl(fileName)) {
+    fileUrl = `${process.env.NEXT_PUBLIC_PROJECT_API_URL}/files/${fileName}`;
+  }
+
+  return fileUrl;
+}

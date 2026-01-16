@@ -1,4 +1,4 @@
-import { getFileType, isValidUrl } from '@/lib/utils';
+import { generateFileUrl, getFileType, isValidUrl } from '@/lib/utils';
 import Image from 'next/image';
 
 interface FilePreviewProps {
@@ -11,10 +11,7 @@ export default function FilePreview({ fileName }: FilePreviewProps) {
     return ;
   }
 
-  let fileUrl = fileName;
-  if (!isValidUrl(fileName)) {
-    fileUrl = `${process.env.NEXT_PUBLIC_PROJECT_API_URL}/files/${fileName}`;
-  }
+  const fileUrl = generateFileUrl(fileName);
 
   if(!isValidUrl(fileUrl)) {
     return ;
