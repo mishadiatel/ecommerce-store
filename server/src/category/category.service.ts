@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Category, CategoryDocument } from './schema/category.schema';
 import { Model, Types } from 'mongoose';
@@ -18,6 +18,7 @@ import { BaseQueryDto } from '../utils/base-query.dto';
 import { AggregateFinalResult } from '../utils/aggregate-result';
 import { FullCategoryWithTranslation } from './interface/category.interface';
 import { YcI18nService } from '../yc-i18n/yc-i18n.service';
+import { Product, ProductDocument } from '../product/schema/product.schema';
 
 @Injectable()
 export class CategoryService {
@@ -26,6 +27,8 @@ export class CategoryService {
     private readonly categoryModel: Model<CategoryDocument>,
     @InjectModel(CategoryTranslation.name)
     private readonly translationModel: Model<CategoryTranslationDocument>,
+    @InjectModel(Product.name)
+    private readonly productModel: Model<ProductDocument>,
     private readonly i18n: YcI18nService,
   ) {}
 
@@ -37,7 +40,6 @@ export class CategoryService {
     const page = Number(query.page) > 0 ? Number(query.page) : 1;
     const limit = Number(query.limit) > 0 ? Number(query.limit) : 10;
     const skip = (page - 1) * limit;
-    console.log(query);
 
     const match: {
       slug?: {
@@ -88,6 +90,36 @@ export class CategoryService {
       totalDocuments: total,
       totalPages,
     };
+  }
+
+  async findAllAdminCategories() {
+    const data: FullCategoryWithTranslation[] =
+      await this.categoryModel.aggregate([
+        {
+          $lookup: {
+            from: 'categorytranslations',
+            let: { categoryId: '$_id' },
+            pipeline: [
+              {
+                $match: {
+                  $expr: {
+                    $and: [
+                      { $eq: ['$categoryId', '$$categoryId'] },
+                      { $eq: ['$lang', this.i18n.lang()] },
+                    ],
+                  },
+                },
+              },
+            ],
+            as: 'translations',
+          },
+        },
+      ]);
+
+    if (!data) {
+      throw new NotFoundException('not found category');
+    }
+    return data;
   }
 
   async findAdminCategoryById(id: string) {
@@ -230,6 +262,15 @@ export class CategoryService {
   }
 
   async deleteCategory(id: string) {
+    const productsCount = await this.productModel.countDocuments({
+      categoryId: new Types.ObjectId(id),
+    });
+
+    if (productsCount > 0) {
+      throw new BadRequestException(
+        'Cannot delete category with assigned products',
+      );
+    }
     await this.translationModel.deleteMany({
       categoryId: new Types.ObjectId(id),
     });

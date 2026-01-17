@@ -21,12 +21,10 @@ import { BlockModule } from './block/block.module';
 import { GeneralModule } from './general/general.module';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
-import { AccessTokenGuard } from './auth/guards/accessToken.guard';
-import { RolesGuard } from './auth/guards/roles.guard';
-import { APP_GUARD } from '@nestjs/core';
 import { MailModule } from './mail/mail.module';
 import { MailTemplateModule } from './mail-template/mail-template.module';
 import { CategoryModule } from './category/category.module';
+import { ProductModule } from './product/product.module';
 
 @Module({
   imports: [
@@ -63,6 +61,7 @@ import { CategoryModule } from './category/category.module';
     MailModule,
     MailTemplateModule,
     CategoryModule,
+    ProductModule,
   ],
   controllers: [AppController],
   providers: [AppService],

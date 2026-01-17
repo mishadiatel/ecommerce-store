@@ -7,6 +7,7 @@ import {
   CategoryTranslationSchema,
 } from './schema/category-translation.schema';
 import { Category, CategorySchema } from './schema/category.schema';
+import { ProductModule } from '../product/product.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { Category, CategorySchema } from './schema/category.schema';
         schema: CategoryTranslationSchema,
       },
     ]),
+    ProductModule,
   ],
   controllers: [CategoryController],
   providers: [CategoryService],
