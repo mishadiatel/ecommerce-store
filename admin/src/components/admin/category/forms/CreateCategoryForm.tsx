@@ -50,10 +50,10 @@ export default function CreateCategoryForm({updateCategoriesList}: CreateCategor
   const onSubmit = (data: CreateCategoryData) => {
     createCategory(data)
       .then(data => {
-        toast.success('Successfully created page');
+        toast.success('Successfully created category');
         updateCategoriesList()
       }).catch(error => {
-      toast.error('Error while creating page, try again letter');
+      toast.error('Error while creating category, try again letter');
     }).finally(() => {
       closeRef.current?.click();
     });

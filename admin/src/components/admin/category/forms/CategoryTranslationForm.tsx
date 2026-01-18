@@ -13,10 +13,11 @@ import { Dispatch, SetStateAction } from 'react';
 interface CategoryTranslationFormProps {
   categoryTranslation: CategoryTranslation | null,
   categoryId: string,
-  setTranslations: Dispatch<SetStateAction<(CategoryTranslation | null)[]>>
+  setTranslations: Dispatch<SetStateAction<(CategoryTranslation | null)[]>>;
+  updateCategoriesList: () => void;
 }
 
-export default function CategoryTranslationForm({categoryTranslation, categoryId, setTranslations}: CategoryTranslationFormProps) {
+export default function CategoryTranslationForm({categoryTranslation, categoryId, setTranslations, updateCategoriesList}: CategoryTranslationFormProps) {
   // const closeRef = useRef<HTMLButtonElement>(null);
   const isEditMode = Boolean(categoryTranslation);
   const categoryTranslationFormSchema = z.object({
@@ -74,6 +75,7 @@ export default function CategoryTranslationForm({categoryTranslation, categoryId
             item && item._id === response._id ? response : item,
           );
         });
+        updateCategoriesList();
       })
       .catch(error => {
         toast.error(`Error while ${isEditMode ? 'updating' : 'creating'} category translation, try again letter`);

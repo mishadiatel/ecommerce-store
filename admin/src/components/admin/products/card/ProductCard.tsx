@@ -1,7 +1,5 @@
-import { FullCategoryWithTranslation } from '@/types/category';
 import { useRef } from 'react';
 import { toast } from 'react-toastify';
-import { deleteCategory } from '@/services/category';
 import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai';
 import Image from 'next/image';
 import { generateFileUrl } from '@/lib/utils';
@@ -16,20 +14,23 @@ import { FaEdit } from 'react-icons/fa';
 import { MdDelete } from 'react-icons/md';
 import { DialogClose } from '@radix-ui/react-dialog';
 import { Button } from '@/components/admin/shadcnuiComponents/button';
-import UpdateCategoryForm from '@/components/admin/category/forms/UpdateCategoryForm';
+import { FullProductWithTranslations } from '@/types/product';
+import { deleteProduct } from '@/services/product';
+import UpdateProductForm from '@/components/admin/products/forms/UpdateProductForm';
 
-interface CategoryCardProps {
-  category: FullCategoryWithTranslation,
-  updateCategoriesList: () => void;
+interface ProductCardProps {
+  product: FullProductWithTranslations,
+  updateProductList: () => void;
+  categoriesList: Array<{ _id: string, text: string }>;
 }
 
-export default function CategoryCard({category, updateCategoriesList}: CategoryCardProps) {
+export default function ProductCard({product, updateProductList, categoriesList}: ProductCardProps) {
   const closeRemoveModalRef = useRef<HTMLButtonElement>(null);
-  const onRemoveCategoryClick = () => {
-    deleteCategory(category._id)
+  const onRemoveProductClick = () => {
+    deleteProduct(product._id)
       .then(data => {
         toast.success('successfully removed');
-        updateCategoriesList();
+        updateProductList()
       }).catch(error => {
       toast.error(error?.response?.data?.message || 'problem with removing, try again letter');
     }).finally(() => {
@@ -39,18 +40,13 @@ export default function CategoryCard({category, updateCategoriesList}: CategoryC
 
   return (
     <div className={'flex justify-between'}>
-      <div>{category.slug}</div>
-      <div>{category.order}</div>
-      <div>{category.isVisible ? <AiFillEye /> : <AiFillEyeInvisible />}</div>
+      <div>{product.slug}</div>
+      <div>{product.order}</div>
+      <div>{product.isVisible ? <AiFillEye /> : <AiFillEyeInvisible />}</div>
 
       <div>
-        {category.image && (
-          <Image src={generateFileUrl(category.image)} alt={category.slug} width={30} height={30} className={'w-[30px] max-h-[30px]'} />
-        )}
-      </div>
-      <div>
-        {category.backgroundColor && (
-          <div className={'w-[30px] h-[30px]'} style={{backgroundColor: category.backgroundColor}}></div>
+        {product.cardImage && (
+          <Image src={generateFileUrl(product.cardImage)} alt={product.slug} width={30} height={30} className={'w-[30px] max-h-[30px]'} />
         )}
       </div>
 
@@ -62,7 +58,7 @@ export default function CategoryCard({category, updateCategoriesList}: CategoryC
             </div>
           </DialogTrigger>
           <DialogContent className={'max-w-[1000px] sm:max-w-[1000px] max-h-screen overflow-y-auto'}>
-            <UpdateCategoryForm updateCategoriesList={updateCategoriesList} category={category} />
+            <UpdateProductForm updateProductsList={updateProductList} product={product} categoriesList={categoriesList} />
           </DialogContent>
         </Dialog>
         <Dialog>
@@ -75,14 +71,14 @@ export default function CategoryCard({category, updateCategoriesList}: CategoryC
             <DialogHeader>
               <DialogTitle>Are you absolutely sure?</DialogTitle>
               <DialogDescription>
-                You will delete category {category.slug}
+                You will delete product {product.slug}
               </DialogDescription>
             </DialogHeader>
             <DialogFooter>
               <DialogClose asChild>
                 <Button variant="outline" ref={closeRemoveModalRef}>Cancel</Button>
               </DialogClose>
-              <Button type="button" onClick={onRemoveCategoryClick}>Delete</Button>
+              <Button type="button" onClick={onRemoveProductClick}>Delete</Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>

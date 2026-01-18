@@ -73,3 +73,13 @@ export const deleteCategoryTranslation = async (id: string): Promise<null | unde
     throw error;
   }
 };
+
+export const getAllAdminCategories = async (): Promise<FullCategoryWithTranslation[] | undefined> => {
+  try {
+    const { data } = await projectApi.get('/api/category/allAdmin');
+    return data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};

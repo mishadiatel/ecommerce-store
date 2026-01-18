@@ -95,6 +95,7 @@ export default function UpdateCategoryForm({updateCategoriesList, category}: Upd
               categoryTranslation={translation}
               categoryId={category._id}
               setTranslations={setTranslations}
+              updateCategoriesList={updateCategoriesList}
             />
           ))}
         </div>
