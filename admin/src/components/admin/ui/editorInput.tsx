@@ -3,7 +3,6 @@ import { Field, FieldError, FieldGroup, FieldLabel } from '@/components/admin/sh
 import { useRef, useState } from 'react';
 import { Button } from '@/components/admin/shadcnuiComponents/button';
 import IframePreview from '@/components/admin/ui/iframePreview';
-import Editor, { EditorProvider } from 'react-simple-wysiwyg';
 import ReactQuill from 'react-quill-new';
 import type ReactQuillType from 'react-quill-new';
 
@@ -65,14 +64,21 @@ export default function EditorInput<T extends FieldValues>({
                   className="w-full min-h-[220px] border rounded-md p-3 font-mono text-sm"
                   value={field.value || ''}
                   placeholder={placeholder}
-                  onChange={(e) => field.onChange(e.target.value)}
+                  onChange={field.onChange}
                 />
               ) : (
                 <ReactQuill
                   ref={quillRef}
                   theme="snow"
                   value={field.value || ''}
-                  onChange={field.onChange}
+                  onChange={(content, _, __, editor) => {
+                    const text = editor.getText().trim();
+                    if (!text) {
+                      field.onChange('');
+                    } else {
+                      field.onChange(content);
+                    }
+                  }}
                   placeholder={placeholder}
                 />
               )}
