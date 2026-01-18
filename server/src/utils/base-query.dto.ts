@@ -1,4 +1,4 @@
-import { IsOptional, IsString } from 'class-validator';
+import { IsMongoId, IsOptional, IsString } from 'class-validator';
 
 export class BaseQueryDto {
   @IsOptional()
@@ -20,4 +20,8 @@ export class BaseQueryDto {
   @IsOptional()
   @IsString()
   sortBy?: string;
+
+  @IsOptional()
+  @IsMongoId()
+  category?: string;
 }

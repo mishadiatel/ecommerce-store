@@ -49,6 +49,7 @@ export class ProductService {
         $regex?: string;
         $options?: string;
       };
+      categoryId?: Types.ObjectId;
     } = {};
 
     /* 🔍 SEARCH BY SLUG */
@@ -59,7 +60,9 @@ export class ProductService {
       };
     }
 
-    /* 🔃 SORT */
+    if (query.category) {
+      match.categoryId = new Types.ObjectId(query.category);
+    }
 
     // const pipeline = ;
     const result: AggregateFinalResult<FullProductWithTranslations> =
@@ -200,23 +203,27 @@ export class ProductService {
         $options?: string;
       };
       isVisible?: boolean;
+      categoryId?: Types.ObjectId;
     } = {
       isVisible: true,
     };
 
     /* 🔍 SEARCH BY SLUG */
-    if (query.search) {
-      match.slug = {
-        $regex: query.search.trim().toLowerCase(),
-        $options: 'i',
-      };
+    // if (query.search) {
+    //   match.slug = {
+    //     $regex: query.search.trim().toLowerCase(),
+    //     $options: 'i',
+    //   };
+    // }
+
+    if (query.category) {
+      match.categoryId = new Types.ObjectId(query.category);
     }
+
     const result: AggregateFinalResult<FullProductWithTranslations> =
       await this.productModel.aggregate([
         {
-          $match: {
-            isVisible: true,
-          },
+          $match: match,
         },
         {
           $lookup: {
@@ -233,8 +240,27 @@ export class ProductService {
                   },
                 },
               },
+              // 🔍 ПОШУК ПО НАЗВІ
+              ...(query.search
+                ? [
+                    {
+                      $match: {
+                        title: {
+                          $regex: query.search.trim(),
+                          $options: 'i',
+                        },
+                      },
+                    },
+                  ]
+                : []),
             ],
             as: 'translations',
+          },
+        },
+
+        {
+          $match: {
+            translations: { $ne: [] },
           },
         },
 
