@@ -14,6 +14,7 @@ import { DialogFooter, DialogHeader, DialogTitle } from '@/components/admin/shad
 import HeroBlockForm from '@/components/admin/blocks/forms/hero/AddHeroBlockForm';
 import { DialogClose } from '@radix-ui/react-dialog';
 import { toast } from 'react-toastify';
+import NotFoundBlockForm from '@/components/admin/blocks/forms/notFound/NotFoundBlockForm';
 
 interface BlockFormProps {
   initialData?: any;
@@ -52,6 +53,20 @@ export default function BlockForm({
     }),
   });
 
+  const notFoundBlockSchema = z.object({
+    blockData: z.object({
+      text: z.string().min(1),
+      buttonText: z.string().min(1),
+      backgroundImage: z.string().min(1)
+        .refine(
+          (val) => /\.(jpg|jpeg|png|webp|avif|gif|svg)$/.test(val.split("?")[0]),
+          {
+            message: "Image name must end with a valid image extension",
+          }
+        ),
+    })
+  })
+
   const baseBlockSchema = z.object({
     pages: z.string().min(1),
     languages: z.string().min(1),
@@ -63,6 +78,7 @@ export default function BlockForm({
 
   const blockSchemas: Record<string, z.ZodType<any>> = {
     hero: heroBlockSchema,
+    ['not-found']: notFoundBlockSchema
   };
 
   const methods = useForm<any>({
@@ -154,6 +170,7 @@ export default function BlockForm({
           <CheckboxInput control={control} name="visible" label="Visible" />
 
           {selectedType === 'hero' && <HeroBlockForm />}
+          {selectedType === 'not-found' && <NotFoundBlockForm />}
 
           <DialogFooter>
             <DialogClose asChild>
