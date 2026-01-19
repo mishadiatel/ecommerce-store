@@ -25,6 +25,7 @@ import { MailModule } from './mail/mail.module';
 import { MailTemplateModule } from './mail-template/mail-template.module';
 import { CategoryModule } from './category/category.module';
 import { ProductModule } from './product/product.module';
+import { LoggerModule } from 'nestjs-pino';
 
 @Module({
   imports: [
@@ -50,6 +51,32 @@ import { ProductModule } from './product/product.module';
     }),
     YcI18nModule,
     MongooseModule.forRoot(process.env.MONGODB_URI || ''),
+    LoggerModule.forRoot({
+      pinoHttp: {
+        transport: {
+          target: 'pino-pretty',
+          options: {
+            colorize: true,
+            translateTime: 'HH:MM:ss',
+            singleLine: true,
+            ignore: 'pid,hostname,req.headers,res.headers',
+          },
+        },
+
+        // 🔥 custom message
+        customLogLevel: (req, res) => {
+          if (res.statusCode >= 500) return 'error';
+          if (res.statusCode >= 400) return 'warn';
+          return 'info';
+        },
+
+        customSuccessMessage: (req, res) =>
+          `${req.method} ${req.url} ${res.statusCode}`,
+
+        customErrorMessage: (req, res, err) =>
+          `${req.method} ${req.url} ${res.statusCode} - ${err.message}`,
+      },
+    }),
     BannerModule,
     FaqModule,
     UploadModule,
