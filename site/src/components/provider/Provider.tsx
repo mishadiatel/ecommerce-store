@@ -9,9 +9,7 @@ export default function Provider({children, settings}: {
   return (
     <NextIntlClientProvider>
       <SettingsProvider settings={settings} >
-        <main>
-          {children}
-        </main>
+        {children}
       </SettingsProvider>
     </NextIntlClientProvider>
   )

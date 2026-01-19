@@ -37,3 +37,11 @@ export const generateFileUrl = (fileName: string) => {
 
   return fileUrl;
 }
+
+
+export const cleanHtmlString = (html: string) => {
+  if (!html) return '';
+  return html
+    .replace(/&nbsp;/g, ' ')
+    .trim();
+}

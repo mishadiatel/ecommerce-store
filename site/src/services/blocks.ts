@@ -1,13 +1,14 @@
-import { projectApi } from '@/lib/axios';
 import { Block } from '@/types/blocks';
-import { GetItemsResponse } from '@/types/getItemsResponse';
 
-export const getPublicBlocks = async (slug: string, queryParams?: Record<string, string | number>): Promise<Block<object>[] | undefined> => {
-  try {
-    const { data } = await projectApi.get(`/api/block/public/${slug}`, { params: queryParams });
-    return data;
-  } catch (error) {
-    console.error(error);
-    throw error;
+export async function getPageBlocks(slug: string, lang: string): Promise<Block<object>[]> {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_PROJECT_API_URL}/api/block/public/${slug}?lang=${lang}`, {
+    next: { tags: ['blocks'], revalidate: 3600 },
+    cache: 'no-store'
+  });
+
+  if (!res.ok) {
+    throw new Error('Failed to fetch page blocks');
   }
-};
+
+  return res.json();
+}

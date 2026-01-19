@@ -1,21 +1,24 @@
 import type {Metadata} from "next";
-import {Open_Sans} from "next/font/google";
+import { Mulish } from 'next/font/google';
+import Provider from '@/components/provider/Provider';
+import { getGeneralSettings } from '@/services/generalSettings';
+import { generateFileUrl } from '@/lib/utils';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import '@/style/icomoon/style.min.css';
 import '../global.css';
+import '@/style/style.scss';
 import {hasLocale} from "next-intl";
 import {routing} from "@/i18n/routing";
 import {notFound} from "next/navigation";
 // import { ToastContainer } from 'react-toastify';
-import Provider from '@/components/provider/Provider';
-import { getGeneralSettings } from '@/services/generalSettings';
-import { generateFileUrl } from '@/lib/utils';
 
 
-const openSansFont = Open_Sans({
+const mulishFont = Mulish({
     subsets: ['latin', 'cyrillic'],
-    variable: '--font-open-sans',
-});
+    variable: '--font-mulish',
+})
+
 
 
 export async function generateMetadata({ params }: {params: Promise<{locale: string}>}): Promise<Metadata> {
@@ -51,7 +54,7 @@ export default async function RootLayout({
     return (
         <html lang={locale}>
         <body
-            className={`${openSansFont.variable} antialiased`}
+            className={`${mulishFont.variable} antialiased`}
         >
         <Provider settings={settings}>
             <main>
