@@ -1,0 +1,17 @@
+body {
+  font-family: 'Open Sans', sans-serif; // equivalent to font-sans
+  font-size: 1.125rem; // text-lg → 18px
+
+  &:has(.header-burger-menu.open) {
+    overflow: hidden;
+  }
+}
+
+.container {
+  width: 1169px;
+  max-width: 100%;
+  padding-left: 1rem;  // px-4 → 16px
+  padding-right: 1rem;
+  margin-left: auto;   // mx-auto → center horizontally
+  margin-right: auto;
+}

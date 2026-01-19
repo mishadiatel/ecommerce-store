@@ -1,0 +1,39 @@
+.header {
+  background-color: var(--dark-gray); // bg-dark-gray
+
+  @include media-breakpoint-up(lg) {
+
+
+    &::before {
+      position: absolute;
+      top: 0;
+      left: 0;
+      content: '';
+      width: 40%;
+      height: calc(100% + 1px);
+      background-color: var(--white-2); // bg-dark-gray
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+    }
+  }
+
+  &-burger-menu {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 50;
+    width: 100%;
+    height: 100%;
+    transform: translateX(100%);
+    transition: all 0.3s ease;
+    background-color: var(--dark-gray); // bg-dark-gray
+    overflow-x: auto;
+
+    &.open {
+      transform: translateX(0);
+    }
+  }
+}
