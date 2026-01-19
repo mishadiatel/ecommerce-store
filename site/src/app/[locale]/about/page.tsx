@@ -1,14 +1,12 @@
 import type { Metadata } from 'next';
 import { getPublicPageInfo } from '@/services/pages';
-import { getGeneralSettings } from '@/services/generalSettings';
 
 export async function generateMetadata({ params }: {params: Promise<{locale: string}>}): Promise<Metadata> {
   const {locale} = await params;
-  const pageInfo = await getPublicPageInfo('home', locale);
-  const settings = await getGeneralSettings(locale);
+  const pageInfo = await getPublicPageInfo('about', locale);
 
   return {
-    title: `${pageInfo.title} | ${settings.companyName}`,
+    title: `${pageInfo.title}`,
     description: pageInfo.description,
     robots: {
       follow: pageInfo.index,
@@ -17,10 +15,10 @@ export async function generateMetadata({ params }: {params: Promise<{locale: str
   };
 }
 
-export default function Home() {
-    return (
-        <div>
-          homepage
-        </div>
-    );
+export default function AboutPage() {
+  return (
+    <div>
+      about
+    </div>
+  );
 }

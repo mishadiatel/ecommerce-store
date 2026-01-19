@@ -1,13 +1,15 @@
-import { projectApi } from '@/lib/axios';
 import { Page } from '@/types/pages';
 
-export const getPublicPage = async (slug: string): Promise<Page | undefined> => {
-  try {
-    const { data } = await projectApi.get(`/api/pages/getPublicPage/${slug}`);
-    return data;
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
-};
+export async function getPublicPageInfo(slug: string, lang: string): Promise<Page> {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_PROJECT_API_URL}/api/pages/getPublicPage/${slug}?lang=${lang}`, {
+    next: { tags: ['page-info'], revalidate: 3600 },
+  });
 
+  if (!res.ok) {
+    throw new Error('Failed to fetch page info');
+  }
+
+  const pageInfo: Array<Page> = await res.json();
+
+  return pageInfo[0];
+}
