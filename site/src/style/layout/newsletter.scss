@@ -1,0 +1,11 @@
+/*** Newsletter ***/
+.newsletter-block.bg-primary-green .text-white,
+.newsletter-block.bg-transparent .text-white {
+    color: var(--black);
+}
+
+.newsletter-block.bg-primary-green .button-main,
+.newsletter-block.bg-transparent .button-main {
+    background-color: var(--primary-green);
+    color: var(--white);
+}

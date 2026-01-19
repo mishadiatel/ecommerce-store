@@ -1,0 +1,100 @@
+.category-item {
+  background-color: var(--light-beige);
+  padding: 20px;
+  border-radius: 16px;
+  pointer-events: auto;
+  position: relative;
+  @media (max-width: 408px) {
+    height: calc((100vw - 320px) / (408 - 320) * (290 - 208) + 208px);
+  }
+  @media (min-width: 409px) {
+    height: 260px;
+  }
+  @media (min-width: 640px) {
+    height: calc((100vw - 640px) / (793 - 640) * (260 - 210) + 210px);
+  }
+  @media (min-width: 793px) {
+    height: 260px;
+  }
+  @media (min-width: 1024px) {
+    height: calc((100vw - 1024px) / (1310 - 1024) * (320 - 240) + 240px);
+  }
+  @media(min-width: 1310px) {
+    height: 320px;
+  }
+
+  &__button-mobile {
+    display: none;
+    @media (max-width: 1023px) {
+      display: inline-flex;
+      position: relative;
+      z-index: 5;
+    }
+  }
+
+  &__image {
+    position: absolute;
+    transition: all 0.3s ease;
+    top: 50%;
+    left: 50%;
+    z-index: 1;
+    transform: translate(-50%, -50%);
+    max-width: none;
+    @media (max-width: 408px) {
+      width: calc((100vw - 320px) / (408 - 320) * (390 - 280) + 280px);
+    }
+    @media (min-width: 409px) {
+      width: 390px;
+    }
+    @media (min-width: 640px) {
+      width: calc((100vw - 640px) / (793 - 640) * (390 - 290) + 290px);
+    }
+    @media (min-width: 793px) {
+      width: 390px;
+    }
+    @media (min-width: 1024px) {
+      width: calc((100vw - 1024px) / (1310 - 1024) * (456 - 340) + 340px);
+    }
+    @media(min-width: 1310px) {
+      width: 456px;
+    }
+  }
+
+  &__title {
+    font-size: 26px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 120%;
+  }
+
+  &__title-wrap {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  &__button-desktop {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    z-index: -5;
+    @media (max-width: 1023px) {
+      display: none;
+    }
+  }
+
+  &:hover {
+    .category-item__button-desktop {
+      opacity: 1;
+      z-index: 5;
+    }
+
+    .category-item__image {
+      transform: translate(-50%, -50%) scale(1.05);
+    }
+  }
+
+}

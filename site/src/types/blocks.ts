@@ -21,3 +21,9 @@ export interface HeroBlockData {
     order: number;
   }>
 }
+
+export interface NotFoundBlockData {
+  text: string;
+  buttonText: string;
+  backgroundImage: string;
+}
