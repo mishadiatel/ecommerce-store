@@ -20,6 +20,12 @@ export class Block {
   @Prop({ type: Boolean, default: true })
   visible: boolean;
 
+  @Prop({ type: Boolean, default: false })
+  isTop: boolean;
+
+  @Prop({ type: Boolean, default: false })
+  isBottom: boolean;
+
   @Prop({ type: MongooseSchema.Types.Mixed, required: true })
   blockData: Record<string, any>;
 }

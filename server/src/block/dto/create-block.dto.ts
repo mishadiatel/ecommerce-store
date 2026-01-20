@@ -26,6 +26,14 @@ export class CreateBlockDto {
   @IsOptional()
   visible?: boolean;
 
+  @IsBoolean()
+  @IsOptional()
+  isTop?: boolean;
+
+  @IsBoolean()
+  @IsOptional()
+  isBottom?: boolean;
+
   @IsObject()
   blockData: Record<string, any>;
 }

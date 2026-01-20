@@ -24,4 +24,12 @@ export class BaseQueryDto {
   @IsOptional()
   @IsMongoId()
   category?: string;
+
+  @IsOptional()
+  @IsString()
+  isTop?: string;
+
+  @IsOptional()
+  @IsString()
+  isBottom?: string;
 }

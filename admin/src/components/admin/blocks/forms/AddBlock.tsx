@@ -37,10 +37,10 @@ export default function BlockForm({
     text: z.string().min(1),
     image: z.string().min(1)
       .refine(
-        (val) => /\.(jpg|jpeg|png|webp|avif|gif|svg)$/.test(val.split("?")[0]),
+        (val) => /\.(jpg|jpeg|png|webp|avif|gif|svg)$/.test(val.split('?')[0]),
         {
-          message: "Image name must end with a valid image extension",
-        }
+          message: 'Image name must end with a valid image extension',
+        },
       ),
     buttonText: z.string().min(1),
     buttonLink: z.string().min(1),
@@ -59,13 +59,13 @@ export default function BlockForm({
       buttonText: z.string().min(1),
       backgroundImage: z.string().min(1)
         .refine(
-          (val) => /\.(jpg|jpeg|png|webp|avif|gif|svg)$/.test(val.split("?")[0]),
+          (val) => /\.(jpg|jpeg|png|webp|avif|gif|svg)$/.test(val.split('?')[0]),
           {
-            message: "Image name must end with a valid image extension",
-          }
+            message: 'Image name must end with a valid image extension',
+          },
         ),
-    })
-  })
+    }),
+  });
 
   const baseBlockSchema = z.object({
     pages: z.string().min(1),
@@ -73,12 +73,14 @@ export default function BlockForm({
     order: z.number(),
     blockType: z.string().min(1),
     visible: z.boolean(),
+    isTop: z.boolean(),
+    isBottom: z.boolean(),
     blockData: z.object({}).passthrough(),
   });
 
   const blockSchemas: Record<string, z.ZodType<any>> = {
     hero: heroBlockSchema,
-    ['not-found']: notFoundBlockSchema
+    ['not-found']: notFoundBlockSchema,
   };
 
   const methods = useForm<any>({
@@ -89,13 +91,15 @@ export default function BlockForm({
     ),
     mode: 'onChange',
     defaultValues: {
-        pages: initialData?.pages.join(',') || '',
-        languages: initialData?.languages.join(',') || '',
-        order: initialData?.order || 0,
-        visible: initialData?.visible || true,
-        blockType: initialData?.blockType || '',
-        blockData: initialData?.blockType || {},
-      },
+      pages: initialData?.pages.join(',') || '',
+      languages: initialData?.languages.join(',') || '',
+      order: initialData?.order || 0,
+      visible: initialData?.visible || true,
+      blockType: initialData?.blockType || '',
+      isTop: initialData?.isTop || false,
+      isBottom: initialData?.isBottom || false,
+      blockData: initialData?.blockType || {},
+    },
   });
 
   const { handleSubmit, control, watch, reset } = methods;
@@ -121,7 +125,7 @@ export default function BlockForm({
         ...(data.blockData.items
           ? {
             items: [...data.blockData.items].sort(
-              (a, b) => Number(a.order) - Number(b.order),
+              (a, b) => Number(a.order ?? 0) - Number(b.order ?? 0),
             ),
           }
           : {}),
@@ -168,6 +172,8 @@ export default function BlockForm({
           <InputGroup control={control} name="pages" label="Pages" />
           <InputGroup control={control} name="order" type="number" label="Order" />
           <CheckboxInput control={control} name="visible" label="Visible" />
+          <CheckboxInput control={control} name="isTop" label="Top" />
+          <CheckboxInput control={control} name="isBottom" label="Bottom" />
 
           {selectedType === 'hero' && <HeroBlockForm />}
           {selectedType === 'not-found' && <NotFoundBlockForm />}

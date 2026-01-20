@@ -5,6 +5,8 @@ export interface Block<T> {
   order: number;
   blockType: string;
   visible: boolean;
+  isTop?: boolean;
+  isBottom?: boolean;
   blockData: T;
   updatedAt: string;
   createdAt: string;

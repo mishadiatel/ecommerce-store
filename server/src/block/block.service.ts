@@ -14,7 +14,8 @@ export class BlockService {
     @InjectModel(Block.name)
     private readonly blockModel: Model<BlockDocument>,
     private readonly i18n: YcI18nService,
-  ) {}
+  ) {
+  }
 
   async create(createDto: CreateBlockDto) {
     const block = await this.blockModel.create(createDto);
@@ -81,7 +82,7 @@ export class BlockService {
     return null;
   }
 
-  async findPublicBlocks(page: string) {
+  async findPublicBlocks(page: string, query: BaseQueryDto) {
     const lang = this.i18n.lang();
 
     return this.blockModel
@@ -89,6 +90,8 @@ export class BlockService {
         pages: page,
         languages: lang,
         visible: true,
+        ...(query.isTop === 'true' ? { isTop: true } : {}),
+        ...(query.isBottom === 'true' ? { isBottom: true } : {}),
       })
       .sort({ order: 1 });
   }

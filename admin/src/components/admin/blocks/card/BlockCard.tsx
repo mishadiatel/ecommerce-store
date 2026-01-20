@@ -42,6 +42,7 @@ export default function BlockCard({block, updateBlocksList}: BlockCardProps) {
       <div> {block.languages.join(',')}</div>
       <div>{block.pages.join(',')}</div>
       <div>{block.order}</div>
+      <div>{block.isTop ? 'top' : block.isBottom ? 'bottom' : 'default'}</div>
       <div>{block.visible ? <AiFillEye /> : <AiFillEyeInvisible />}</div>
       <div className={'flex gap-5'}>
         <Dialog>

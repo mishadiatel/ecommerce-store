@@ -41,8 +41,8 @@ export class BlockController {
 
   @Get('/public/:page')
   @HttpCode(HttpStatus.OK)
-  findPublicBlocks(@Param('page') page: string) {
-    return this.blockService.findPublicBlocks(page);
+  findPublicBlocks(@Param('page') page: string, @Query() query: BaseQueryDto) {
+    return this.blockService.findPublicBlocks(page, query);
   }
 
   @UseGuards(AccessTokenGuard, RolesGuard)
