@@ -15,5 +15,27 @@
     "register": "Реєстрація",
     "cart": "Корзина",
     "searchInputLabel": "Пошук"
+  },
+  "Footer": {
+    "scheduleLabel": "Графік обробки замовлень ",
+    "emailLabel": "Написати",
+    "pagesAbout": "Про нас",
+    "pagesContacts": "Контакти",
+    "pagesCooperation": "Співпраця",
+    "pagesDelivery": "Доставка і оплата",
+    "pagesWhereBuy": "Де нас знайти?",
+    "pagesAgreement": "Договір публічної оферти",
+    "categoriesTitle": "Продукція",
+    "newsTitle": "Новинки",
+    "newsMessage": "Будьте завжди в курсі наших акцій та оновлень",
+    "rightsReversedText": "Всі права захищені."
+  },
+
+  "Subscribe": {
+    "agreeText": "Даю згоду на <link>обробку персональних даних</link>",
+    "agreeRequiredMessage": "Ви повинні погодитись на обробку даних",
+    "buttonText": "Підписатись",
+    "emailRequiredMessage": "Введіть електронну пошту",
+    "emailNotValidMessage": "Не коректна електронна пошта"
   }
 }

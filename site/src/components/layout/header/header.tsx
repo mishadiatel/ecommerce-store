@@ -57,7 +57,7 @@ export default function Header() {
   return (
     <>
       <div id="top-nav"
-           className="top-nav style-one bg-white border-b border-gray-20 md:h-[44px] h-[30px] hidden sm:block">
+           className="top-nav style-one bg-white border-b border-gray-20 md:h-[44px] md:min-h-[44px] h-[30px] min-h-[30px] hidden sm:block">
         <div className="container mx-auto h-full">
           <div className="top-nav-main flex justify-between max-md:justify-center h-full">
             <div className="left-content flex items-center gap-5 max-md:hidden">

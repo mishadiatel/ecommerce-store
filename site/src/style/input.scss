@@ -230,7 +230,7 @@
 
   &.error {
     .input {
-      border: 1.5px solid var(--semantic-red);
+      border: 1.5px solid var(--semantic-red) !important;
     }
 
     .select2-container .select2-selection--single {

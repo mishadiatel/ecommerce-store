@@ -14,6 +14,7 @@ import {notFound} from "next/navigation";
 import Header from '@/components/layout/header/header';
 import Setup from '@/components/setup/Setup';
 import { getPublicCategories } from '@/services/category';
+import Footer from '@/components/layout/footer/footer';
 // import { ToastContainer } from 'react-toastify';
 
 
@@ -61,11 +62,14 @@ export default async function RootLayout({
             className={`${mulishFont.variable} antialiased`}
         >
         <Provider settings={settings} categories={categories}>
-            <Header />
-            <main>
-                {children}
-                <Setup />
-            </main>
+            <div className={'flex flex-col h-full'}>
+                <Header />
+                <main>
+                    {children}
+                    <Setup />
+                </main>
+                <Footer />
+            </div>
         </Provider>
         {/*<ToastContainer />*/}
         </body>

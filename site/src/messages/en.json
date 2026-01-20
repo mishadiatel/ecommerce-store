@@ -15,5 +15,27 @@
     "register": "Register",
     "cart": "Cart",
     "searchInputLabel": "Search"
+  },
+  "Footer": {
+    "scheduleLabel": "Order processing schedule",
+    "emailLabel": "Contact us",
+    "pagesAbout": "About us",
+    "pagesContacts": "Contacts",
+    "pagesCooperation": "Cooperation",
+    "pagesDelivery": "Delivery & Payment",
+    "pagesWhereBuy": "Where to buy?",
+    "pagesAgreement": "Public offer agreement",
+    "categoriesTitle": "Products",
+    "newsTitle": "New arrivals",
+    "newsMessage": "Stay up to date with our promotions and updates",
+    "rightsReversedText": "All rights reserved."
+  },
+
+  "Subscribe": {
+    "agreeText": "I agree to the <link>processing of personal data</link>",
+    "agreeRequiredMessage": "You must agree to the processing of personal data",
+    "buttonText": "Subscribe",
+    "emailRequiredMessage": "Please enter your email address",
+    "emailNotValidMessage": "Invalid email address"
   }
 }
