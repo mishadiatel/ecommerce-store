@@ -238,7 +238,7 @@
     position: fixed;
     top: 0;
     left: 0;
-    height: 100vh;
+    height: 100%;
     overflow: auto;
     width: 0;
     background-color: var(--white);
@@ -269,6 +269,10 @@
             display: inline-block;
             padding-bottom: 6px;
         }
+    }
+
+    .choose-language .dropdown ul {
+        flex-direction: row;
     }
 
     &.open {

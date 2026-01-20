@@ -1,3 +1,19 @@
 {
-
+  "Header": {
+    "menuAbout": "Про нас",
+    "menuProducts": "Продукція",
+    "menuContacts": "Контакти",
+    "menuCooperation": "Співпраця",
+    "contactsLabel": "Контакти:",
+    "socialsLabel": "Соціальні мережі:",
+    "loginPopupButton": "Увійти в кабінет",
+    "loginPopupHaveAccount": "Ще не маєте акаунту?",
+    "loginPopupSignupButton": "Зареєструватись",
+    "wishlist": "Вибране",
+    "personalAccount": "Особистий кабінет",
+    "login": "Вхід",
+    "register": "Реєстрація",
+    "cart": "Корзина",
+    "searchInputLabel": "Пошук"
+  }
 }

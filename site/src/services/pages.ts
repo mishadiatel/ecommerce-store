@@ -2,7 +2,8 @@ import { Page } from '@/types/pages';
 
 export async function getPublicPageInfo(slug: string, lang: string): Promise<Page> {
   const res = await fetch(`${process.env.NEXT_PUBLIC_PROJECT_API_URL}/api/pages/getPublicPage/${slug}?lang=${lang}`, {
-    next: { tags: ['page-info'], revalidate: 3600 },
+    next: { tags: ['page-info'] },
+    cache: 'no-store'
   });
 
   if (!res.ok) {

@@ -11,6 +11,9 @@ import '@/style/style.scss';
 import {hasLocale} from "next-intl";
 import {routing} from "@/i18n/routing";
 import {notFound} from "next/navigation";
+import Header from '@/components/layout/header/header';
+import Setup from '@/components/setup/Setup';
+import { getPublicCategories } from '@/services/category';
 // import { ToastContainer } from 'react-toastify';
 
 
@@ -51,14 +54,17 @@ export default async function RootLayout({
         notFound();
     }
     const settings = await getGeneralSettings(locale);
+    const categories = await getPublicCategories(locale);
     return (
         <html lang={locale}>
         <body
             className={`${mulishFont.variable} antialiased`}
         >
-        <Provider settings={settings}>
+        <Provider settings={settings} categories={categories}>
+            <Header />
             <main>
                 {children}
+                <Setup />
             </main>
         </Provider>
         {/*<ToastContainer />*/}

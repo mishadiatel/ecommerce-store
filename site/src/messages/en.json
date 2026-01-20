@@ -1,3 +1,19 @@
 {
-
+  "Header": {
+    "menuAbout": "About us",
+    "menuProducts": "Products",
+    "menuContacts": "Contacts",
+    "menuCooperation": "Cooperation",
+    "contactsLabel": "Contacts:",
+    "socialsLabel": "Social networks:",
+    "loginPopupButton": "Login",
+    "loginPopupHaveAccount": "Don't have an account yet?",
+    "loginPopupSignupButton": "Sign up",
+    "wishlist": "Wishlist",
+    "personalAccount": "Personal account",
+    "login": "Sign in",
+    "register": "Register",
+    "cart": "Cart",
+    "searchInputLabel": "Search"
+  }
 }
