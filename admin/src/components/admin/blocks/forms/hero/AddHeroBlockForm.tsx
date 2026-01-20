@@ -18,6 +18,7 @@ export default function HeroBlockForm() {
 
       {fields.map((item, index) => (
         <div key={item.id} className="border p-4 rounded-md grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <InputGroup control={control} name={`blockData.items.${index}._id`} label="Id" />
           <InputGroup control={control} name={`blockData.items.${index}.title`} label="Title" />
           <InputGroup control={control} name={`blockData.items.${index}.text`} label="Text" />
           <FileInput control={control} name={`blockData.items.${index}.image`} label="Image URL" placeholder={'load image'} />
@@ -34,6 +35,7 @@ export default function HeroBlockForm() {
         variant="outline"
         onClick={() =>
           append({
+            id: `${Date.now()}_${Math.random()}`,
             title: '',
             text: '',
             image: '',

@@ -1,7 +1,7 @@
 
 import { getLocale } from 'next-intl/server';
 import { getPageBlocks } from '@/services/blocks';
-import BlockRender from '@/components/blocks/BlockRender';
+import BlocksList from '@/components/blocks/BlocksList';
 
 
 
@@ -11,9 +11,7 @@ export default async function NotFound() {
 
   return (
    <>
-     {pageBlocks && pageBlocks.length > 0 && pageBlocks.map(pageBlock => (
-       <BlockRender block={pageBlock} key={pageBlock._id} />
-     ))}
+     <BlocksList blocks={pageBlocks} />
    </>
   )
 

@@ -15,6 +15,7 @@ import HeroBlockForm from '@/components/admin/blocks/forms/hero/AddHeroBlockForm
 import { DialogClose } from '@radix-ui/react-dialog';
 import { toast } from 'react-toastify';
 import NotFoundBlockForm from '@/components/admin/blocks/forms/notFound/NotFoundBlockForm';
+import RunningLineForm from '@/components/admin/blocks/forms/runningLine/RunningLineForm';
 
 interface BlockFormProps {
   initialData?: any;
@@ -33,6 +34,7 @@ export default function BlockForm({
   );
 
   const heroItemSchema = z.object({
+    _id: z.string().min(1),
     title: z.string().min(1),
     text: z.string().min(1),
     image: z.string().min(1)
@@ -67,6 +69,17 @@ export default function BlockForm({
     }),
   });
 
+  const runningLineItemSchema = z.object({
+    _id: z.string().min(1),
+    text: z.string().min(1),
+  })
+
+  const runningLineBlockSchema = z.object({
+    blockData: z.object({
+      items: z.array(runningLineItemSchema).min(1),
+    }),
+  });
+
   const baseBlockSchema = z.object({
     pages: z.string().min(1),
     languages: z.string().min(1),
@@ -81,6 +94,8 @@ export default function BlockForm({
   const blockSchemas: Record<string, z.ZodType<any>> = {
     hero: heroBlockSchema,
     ['not-found']: notFoundBlockSchema,
+    ['running-line-1']: runningLineBlockSchema,
+    ['running-line-2']: runningLineBlockSchema,
   };
 
   const methods = useForm<any>({
@@ -98,7 +113,7 @@ export default function BlockForm({
       blockType: initialData?.blockType || '',
       isTop: initialData?.isTop || false,
       isBottom: initialData?.isBottom || false,
-      blockData: initialData?.blockType || {},
+      blockData: initialData?.blockData || {},
     },
   });
 
@@ -177,6 +192,8 @@ export default function BlockForm({
 
           {selectedType === 'hero' && <HeroBlockForm />}
           {selectedType === 'not-found' && <NotFoundBlockForm />}
+          {selectedType === 'running-line-1' && <RunningLineForm />}
+          {selectedType === 'running-line-2' && <RunningLineForm />}
 
           <DialogFooter>
             <DialogClose asChild>

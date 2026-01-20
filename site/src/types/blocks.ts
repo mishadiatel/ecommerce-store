@@ -13,6 +13,7 @@ export interface Block<T> {
 
 export interface HeroBlockData {
   items: Array<{
+    _id: string;
     title: string;
     text: string;
     image: string;
@@ -26,4 +27,11 @@ export interface NotFoundBlockData {
   text: string;
   buttonText: string;
   backgroundImage: string;
+}
+
+export interface RunningLineBlockData {
+  items: Array<{
+    _id: string;
+    text: string;
+  }>
 }

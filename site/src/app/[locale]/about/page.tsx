@@ -1,5 +1,7 @@
 import type { Metadata } from 'next';
 import { getPublicPageInfo } from '@/services/pages';
+import { getPageBlocks } from '@/services/blocks';
+import BlocksList from '@/components/blocks/BlocksList';
 
 export async function generateMetadata({ params }: {params: Promise<{locale: string}>}): Promise<Metadata> {
   const {locale} = await params;
@@ -15,10 +17,12 @@ export async function generateMetadata({ params }: {params: Promise<{locale: str
   };
 }
 
-export default function AboutPage() {
+export default async function AboutPage({ params }: Readonly<{
+  params: Promise<{ locale: string }>;
+}>) {
+  const { locale } = await params;
+  const pageBlocks = await getPageBlocks('about', locale);
   return (
-    <div>
-      about
-    </div>
+   <BlocksList blocks={pageBlocks} />
   );
 }
