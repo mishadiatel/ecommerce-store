@@ -12,6 +12,10 @@ export class CreatePageDto {
 
   @IsString()
   @IsOptional()
+  breadcrumbTitle?: string;
+
+  @IsString()
+  @IsOptional()
   language?: string;
 
   @IsBoolean()

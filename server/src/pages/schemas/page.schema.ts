@@ -14,6 +14,9 @@ export class Page {
   @Prop({ type: String, required: true })
   description: string;
 
+  @Prop({ type: String, required: false })
+  breadcrumbTitle: string;
+
   @Prop({ type: String, required: true, default: 'ua' })
   language: string;
 

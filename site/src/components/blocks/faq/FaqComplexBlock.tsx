@@ -16,7 +16,7 @@ export default function FaqComplexBlock({ blockData }: FaqComplexBlockProps) {
       <div className="container">
         <div className="flex max-lg:flex-col justify-between gap-y-8">
           <div className="left w-full lg:w-[32%]">
-            <div className="menu-tab flex flex-col gap-6 bg-extra-light-gray rounded-2xl p-5">
+            <div className="menu-tab flex flex-col gap-6 bg-extra-light-gray rounded-2xl p-5 !sticky top-[90px]">
               {blockData.items.map((item) => (
                 <h2
                   key={`${item._id}-${item.title}`}

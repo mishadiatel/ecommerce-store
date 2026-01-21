@@ -23,6 +23,7 @@ export default function AddPageForm({updatePagesList}: AddPageFormProps) {
     slug: z.string({ error: 'slug is required' }).min(1, { message: 'slug is required' }),
     title: z.string({ error: 'title is required' }).min(1, { message: 'title is required' }),
     description: z.string({ error: 'description is required' }).min(1, { message: 'description is required' }),
+    breadcrumbTitle: z.string().optional(),
     language: z.string({ error: 'language is required' }).min(1, { message: 'language is required' }),
     index: z.boolean(),
     follow: z.boolean(),
@@ -40,6 +41,7 @@ export default function AddPageForm({updatePagesList}: AddPageFormProps) {
       title: '',
       description: '',
       language: '',
+      breadcrumbTitle: '',
       index: false,
       follow: false
     },
@@ -66,6 +68,7 @@ export default function AddPageForm({updatePagesList}: AddPageFormProps) {
         <InputGroup control={control} name={'slug'} label={'page slug'} placeholder={'slug'} />
         <InputGroup control={control} name={'title'} label={'page title'} placeholder={'title'} />
         <InputGroup control={control} name={'description'} label={'page description'} placeholder={'description'} />
+        <InputGroup control={control} name={'breadcrumbTitle'} label={'breadcrumb title'} placeholder={'breadcrumb title'} />
         <CheckboxInput control={control} name={'index'} label={'index'} />
         <CheckboxInput control={control} name={'follow'} label={'follow'} />
         <GroupSelect control={control} name={'language'} values={LANGUAGES_LIST} label={'page language'}

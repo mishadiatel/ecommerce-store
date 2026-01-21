@@ -3,6 +3,7 @@ export interface Page {
   slug: string;
   title: string;
   description: string;
+  breadcrumbTitle?: string;
   language: string;
   index: boolean;
   follow: boolean;
