@@ -14,6 +14,10 @@ export const BLOCKS_TYPES = [
   {
     _id: 'running-line-2',
     text: 'Running line 2',
+  },
+  {
+    _id: 'sticky-cards',
+    text: 'Sticky cards block',
   }
   // {
   //   _id: 'faq',

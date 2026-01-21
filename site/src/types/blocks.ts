@@ -35,3 +35,14 @@ export interface RunningLineBlockData {
     text: string;
   }>
 }
+
+export interface StickyCardBlockData {
+  title: string;
+  items: Array<{
+    _id: string;
+    title: string;
+    text: string;
+    icon: string;
+    order: number;
+  }>
+}

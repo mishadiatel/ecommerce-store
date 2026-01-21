@@ -4,7 +4,7 @@ import InputGroup from '@/components/admin/ui/inputGroup';
 import { Button } from '@/components/admin/shadcnuiComponents/button';
 import FileInput from '@/components/admin/ui/fileInput';
 
-export default function HeroBlockForm() {
+export default function StickeCardsForm() {
   const { control } = useFormContext();
 
   const { fields, append, remove } = useFieldArray({
@@ -14,18 +14,17 @@ export default function HeroBlockForm() {
 
   return (
     <div className="flex flex-col gap-4 border p-4 rounded-xl bg-muted">
-      <h3 className="font-semibold text-lg">Hero items</h3>
+      <InputGroup control={control} name={`blockData.title`} label="title" />
+
+      <h3 className="font-semibold text-lg">Items</h3>
 
       {fields.map((item, index) => (
         <div key={item.id} className="border p-4 rounded-md grid grid-cols-1 sm:grid-cols-2 gap-3">
           <InputGroup control={control} name={`blockData.items.${index}._id`} label="Id" />
           <InputGroup control={control} name={`blockData.items.${index}.title`} label="Title" />
           <InputGroup control={control} name={`blockData.items.${index}.text`} label="Text" />
-          <FileInput control={control} name={`blockData.items.${index}.image`} label="Image URL" placeholder={'load image'} />
-          <InputGroup control={control} name={`blockData.items.${index}.buttonText`} label="Button Text" />
-          <InputGroup control={control} name={`blockData.items.${index}.buttonLink`} label="Button Link" />
+          <FileInput control={control} name={`blockData.items.${index}.icon`} label={'Icon'} />
           <InputGroup control={control} name={`blockData.items.${index}.order`} label="Order" type={'number'} />
-
           <Button variant="destructive" className={'sm:col-span-2'} onClick={() => remove(index)}>Remove</Button>
         </div>
       ))}
@@ -38,9 +37,7 @@ export default function HeroBlockForm() {
             _id: `${Date.now()}_${Math.random()}`,
             title: '',
             text: '',
-            image: '',
-            buttonText: '',
-            buttonLink: '',
+           icon: '',
             order: fields.length,
           })
         }

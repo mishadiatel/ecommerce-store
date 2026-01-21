@@ -16,6 +16,7 @@ import { DialogClose } from '@radix-ui/react-dialog';
 import { toast } from 'react-toastify';
 import NotFoundBlockForm from '@/components/admin/blocks/forms/notFound/NotFoundBlockForm';
 import RunningLineForm from '@/components/admin/blocks/forms/runningLine/RunningLineForm';
+import StickeCardsForm from '@/components/admin/blocks/forms/stickyCards/StickeCardsForm';
 
 interface BlockFormProps {
   initialData?: any;
@@ -80,6 +81,27 @@ export default function BlockForm({
     }),
   });
 
+  const stiskyCardItemSchema = z.object({
+    _id: z.string().min(1),
+    icon: z.string().min(1)
+      .refine(
+        (val) => /\.(jpg|jpeg|png|webp|avif|gif|svg)$/.test(val.split('?')[0]),
+        {
+          message: 'Image name must end with a valid image extension',
+        },
+      ),
+    title: z.string().min(1),
+    text: z.string().min(1),
+    order: z.number(),
+  })
+
+  const stiskyCardsBlockSchema = z.object({
+    blockData: z.object({
+      title: z.string().min(1),
+      items: z.array(stiskyCardItemSchema).min(1),
+    }),
+  });
+
   const baseBlockSchema = z.object({
     pages: z.string().min(1),
     languages: z.string().min(1),
@@ -96,6 +118,7 @@ export default function BlockForm({
     ['not-found']: notFoundBlockSchema,
     ['running-line-1']: runningLineBlockSchema,
     ['running-line-2']: runningLineBlockSchema,
+    ['sticky-cards']: stiskyCardsBlockSchema
   };
 
   const methods = useForm<any>({
@@ -194,6 +217,7 @@ export default function BlockForm({
           {selectedType === 'not-found' && <NotFoundBlockForm />}
           {selectedType === 'running-line-1' && <RunningLineForm />}
           {selectedType === 'running-line-2' && <RunningLineForm />}
+          {selectedType === 'sticky-cards' && <StickeCardsForm />}
 
           <DialogFooter>
             <DialogClose asChild>

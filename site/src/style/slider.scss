@@ -362,3 +362,19 @@
     }
   }
 }
+
+.features-slider {
+  @media (max-width: 1023px) {
+    padding-bottom: 72px;
+    &:not(.slick-initialized) {
+      display: flex;
+      align-items: flex-start;
+      flex-wrap: nowrap;
+      overflow: hidden;
+      flex-direction: row;
+      & > div {
+        min-width: 100%;
+      }
+    }
+  }
+}
