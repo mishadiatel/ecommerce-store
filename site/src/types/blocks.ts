@@ -47,12 +47,24 @@ export interface StickyCardBlockData {
   }>
 }
 
+export interface FaqItem {
+  _id: string;
+  title: string;
+  text: string;
+  order: number;
+}
+
 export interface FaqSmallBlockData {
   title: string;
-  items: Array<{
-    _id: string;
-    title: string;
-    text: string;
-    order: number;
-  }>
+  items: FaqItem[];
+}
+
+export interface FaqCategory {
+  _id: string;
+  title: string;
+  items: FaqItem[];
+}
+
+export interface FaqComplexBlockData {
+  items: FaqCategory[]
 }

@@ -36,7 +36,6 @@ export default function HeaderMenu({ closeMobileMenu }: HeaderMenuProps) {
             {({
                 isOpen,
                 toggle,
-                selected,
                 listRef,
               }) => (
               <>
@@ -94,14 +93,14 @@ export default function HeaderMenu({ closeMobileMenu }: HeaderMenuProps) {
       </li>
       <li className="h-full max-lg:h-fit  ">
         <Link
-          href={'/cooperation'}
+          href={'/faq'}
           className="link text-secondary duration-300 h-full flex items-center justify-center"
           onClick={() => {
             if (closeMobileMenu) {
               closeMobileMenu();
             }
           }}>
-          {t('menuCooperation')} </Link>
+          {t('menuFaq')} </Link>
 
       </li>
     </ul>

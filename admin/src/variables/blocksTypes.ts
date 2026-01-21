@@ -22,6 +22,10 @@ export const BLOCKS_TYPES = [
   {
     _id: 'faq-small',
     text: 'FAQ Small block',
+  },
+  {
+    _id: 'faq-complex',
+    text: 'Faq complex block',
   }
   // {
   //   _id: 'faq',

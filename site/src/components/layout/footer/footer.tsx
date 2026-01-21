@@ -67,8 +67,8 @@ export default function Footer() {
                         className="caption1 has-line-before duration-300 w-fit pt-4">{t('pagesAbout')}</Link>
                   <Link href={'/contacts'}
                         className="caption1 has-line-before duration-300 w-fit pt-4">{t('pagesContacts')}</Link>
-                  <Link href={'/cooperation'}
-                        className="caption1 has-line-before duration-300 w-fit pt-4">{t('pagesCooperation')}</Link>
+                  <Link href={'/faq'}
+                        className="caption1 has-line-before duration-300 w-fit pt-4">{t('pagesFaq')}</Link>
                   <Link href={'/delivery-and-payment'}
                         className="caption1 has-line-before duration-300 w-fit pt-4">{t('pagesDelivery')}</Link>
                   <Link href={'/where-to-buy'}

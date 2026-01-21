@@ -1,12 +1,8 @@
 import { Dispatch, SetStateAction } from 'react';
+import { FaqItem } from '@/types/blocks';
 
 interface FaqItemProps {
-  item: {
-    _id: string;
-    title: string;
-    text: string;
-    order: number;
-  }
+  item: FaqItem
   openElement: string | null;
   setOpenElement:  Dispatch<SetStateAction<string | null>>
 }

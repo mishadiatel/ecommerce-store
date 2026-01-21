@@ -18,6 +18,7 @@ import NotFoundBlockForm from '@/components/admin/blocks/forms/notFound/NotFound
 import RunningLineForm from '@/components/admin/blocks/forms/runningLine/RunningLineForm';
 import StickeCardsForm from '@/components/admin/blocks/forms/stickyCards/StickeCardsForm';
 import FaqSmallForm from '@/components/admin/blocks/forms/faqSmall/FaqSmallForm';
+import FaqComplexForm from '@/components/admin/blocks/forms/faqComplex/FaqComplexForm';
 
 interface BlockFormProps {
   initialData?: any;
@@ -117,6 +118,18 @@ export default function BlockForm({
     }),
   });
 
+  const faqCategorySchema = z.object({
+    _id: z.string().min(1),
+    title: z.string().min(1),
+    items: z.array(faqSmallItemSchema).min(1),
+  });
+
+  const faqComplexBlockSchema = z.object({
+    blockData: z.object({
+      items: z.array(faqCategorySchema).min(1),
+    }),
+  });
+
   const baseBlockSchema = z.object({
     pages: z.string().min(1),
     languages: z.string().min(1),
@@ -135,6 +148,7 @@ export default function BlockForm({
     ['running-line-2']: runningLineBlockSchema,
     ['sticky-cards']: stiskyCardsBlockSchema,
     ['faq-small']: faqSmallBlockSchema,
+    ['faq-complex']: faqComplexBlockSchema,
   };
 
   const methods = useForm<any>({
@@ -235,6 +249,7 @@ export default function BlockForm({
           {selectedType === 'running-line-2' && <RunningLineForm />}
           {selectedType === 'sticky-cards' && <StickeCardsForm />}
           {selectedType === 'faq-small' && <FaqSmallForm />}
+          {selectedType === 'faq-complex' && <FaqComplexForm />}
 
           <DialogFooter>
             <DialogClose asChild>
