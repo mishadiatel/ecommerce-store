@@ -19,6 +19,7 @@ import RunningLineForm from '@/components/admin/blocks/forms/runningLine/Running
 import StickeCardsForm from '@/components/admin/blocks/forms/stickyCards/StickeCardsForm';
 import FaqSmallForm from '@/components/admin/blocks/forms/faqSmall/FaqSmallForm';
 import FaqComplexForm from '@/components/admin/blocks/forms/faqComplex/FaqComplexForm';
+import InstaBlockForm from '@/components/admin/blocks/forms/instaBlock/InstaBlockForm';
 
 interface BlockFormProps {
   initialData?: any;
@@ -130,6 +131,25 @@ export default function BlockForm({
     }),
   });
 
+  const instaItemSchema = z.object({
+    _id: z.string().min(1),
+    image: z.string().min(1)
+      .refine(
+        (val) => /\.(jpg|jpeg|png|webp|avif|gif|svg)$/.test(val.split('?')[0]),
+        {
+          message: 'Image name must end with a valid image extension',
+        },
+      ),
+    order: z.number(),
+  })
+
+  const instaBlockSchema = z.object({
+    blockData: z.object({
+      title: z.string().optional(),
+      items: z.array(instaItemSchema).min(1),
+    }),
+  });
+
   const baseBlockSchema = z.object({
     pages: z.string().min(1),
     languages: z.string().min(1),
@@ -149,6 +169,7 @@ export default function BlockForm({
     ['sticky-cards']: stiskyCardsBlockSchema,
     ['faq-small']: faqSmallBlockSchema,
     ['faq-complex']: faqComplexBlockSchema,
+    ['insta-block']: instaBlockSchema,
   };
 
   const methods = useForm<any>({
@@ -177,8 +198,8 @@ export default function BlockForm({
     if (initialData) {
       reset({
         ...initialData,
-        pages: initialData.pages.join(', '),
-        languages: initialData.languages.join(', '),
+        pages: initialData.pages.join(','),
+        languages: initialData.languages.join(','),
       });
     }
   }, [initialData, reset]);
@@ -250,6 +271,7 @@ export default function BlockForm({
           {selectedType === 'sticky-cards' && <StickeCardsForm />}
           {selectedType === 'faq-small' && <FaqSmallForm />}
           {selectedType === 'faq-complex' && <FaqComplexForm />}
+          {selectedType === 'insta-block' && <InstaBlockForm />}
 
           <DialogFooter>
             <DialogClose asChild>

@@ -68,3 +68,14 @@ export interface FaqCategory {
 export interface FaqComplexBlockData {
   items: FaqCategory[]
 }
+
+export interface InstaItem {
+  _id: string;
+  image: string;
+  order: number;
+}
+
+export interface InstaBlockData {
+  title?: string;
+  items: InstaItem[];
+}

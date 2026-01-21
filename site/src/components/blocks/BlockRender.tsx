@@ -1,7 +1,7 @@
 import {
   Block,
   FaqComplexBlockData,
-  FaqSmallBlockData,
+  FaqSmallBlockData, InstaBlockData,
   NotFoundBlockData,
   RunningLineBlockData,
   StickyCardBlockData,
@@ -12,6 +12,7 @@ import RunningLine2 from '@/components/blocks/runningLine2/RunningLine2';
 import StickeCardsBlock from '@/components/blocks/stickyCards/StickyCards';
 import { FaqSmallBlock } from '@/components/blocks/faq/FaqSmallBlock';
 import FaqComplexBlock from '@/components/blocks/faq/FaqComplexBlock';
+import InstaBlock from '@/components/blocks/instaBlock/InstaBlock';
 
 interface BlockRenderProps {
   block: Block<object>
@@ -45,6 +46,11 @@ export default function BlockRender({block}: BlockRenderProps) {
     case 'faq-complex' :
       return (
         <FaqComplexBlock blockData={block.blockData as FaqComplexBlockData} />
+      )
+
+    case 'insta-block' :
+      return (
+        <InstaBlock blockData={block.blockData as InstaBlockData} />
       )
   }
 
