@@ -17,6 +17,7 @@ import { toast } from 'react-toastify';
 import NotFoundBlockForm from '@/components/admin/blocks/forms/notFound/NotFoundBlockForm';
 import RunningLineForm from '@/components/admin/blocks/forms/runningLine/RunningLineForm';
 import StickeCardsForm from '@/components/admin/blocks/forms/stickyCards/StickeCardsForm';
+import FaqSmallForm from '@/components/admin/blocks/forms/faqSmall/FaqSmallForm';
 
 interface BlockFormProps {
   initialData?: any;
@@ -102,6 +103,20 @@ export default function BlockForm({
     }),
   });
 
+  const faqSmallItemSchema = z.object({
+    _id: z.string().min(1),
+    title: z.string().min(1),
+    text: z.string().min(1),
+    order: z.number(),
+  })
+
+  const faqSmallBlockSchema = z.object({
+    blockData: z.object({
+      title: z.string().min(1),
+      items: z.array(faqSmallItemSchema).min(1),
+    }),
+  });
+
   const baseBlockSchema = z.object({
     pages: z.string().min(1),
     languages: z.string().min(1),
@@ -118,7 +133,8 @@ export default function BlockForm({
     ['not-found']: notFoundBlockSchema,
     ['running-line-1']: runningLineBlockSchema,
     ['running-line-2']: runningLineBlockSchema,
-    ['sticky-cards']: stiskyCardsBlockSchema
+    ['sticky-cards']: stiskyCardsBlockSchema,
+    ['faq-small']: faqSmallBlockSchema,
   };
 
   const methods = useForm<any>({
@@ -218,6 +234,7 @@ export default function BlockForm({
           {selectedType === 'running-line-1' && <RunningLineForm />}
           {selectedType === 'running-line-2' && <RunningLineForm />}
           {selectedType === 'sticky-cards' && <StickeCardsForm />}
+          {selectedType === 'faq-small' && <FaqSmallForm />}
 
           <DialogFooter>
             <DialogClose asChild>

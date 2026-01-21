@@ -46,3 +46,13 @@ export interface StickyCardBlockData {
     order: number;
   }>
 }
+
+export interface FaqSmallBlockData {
+  title: string;
+  items: Array<{
+    _id: string;
+    title: string;
+    text: string;
+    order: number;
+  }>
+}

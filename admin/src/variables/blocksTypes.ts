@@ -18,6 +18,10 @@ export const BLOCKS_TYPES = [
   {
     _id: 'sticky-cards',
     text: 'Sticky cards block',
+  },
+  {
+    _id: 'faq-small',
+    text: 'FAQ Small block',
   }
   // {
   //   _id: 'faq',
