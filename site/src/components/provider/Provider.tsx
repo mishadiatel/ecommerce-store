@@ -1,8 +1,8 @@
 import { NextIntlClientProvider } from 'next-intl';
-import { SettingsProvider } from '@/components/context/generalSettings/GeneralSettingsContext';
+import { SettingsProvider } from '@/context/generalSettings/GeneralSettingsContext';
 import { FullSettingsWithTranslations } from '@/types/general';
 import { FullCategoryWithTranslation } from '@/types/category';
-import { CategoriesProvider } from '@/components/context/categoriesContext/CategoriesContext';
+import { CategoriesProvider } from '@/context/categoriesContext/CategoriesContext';
 
 export default function Provider({children, settings, categories}: {
   children: React.ReactNode;

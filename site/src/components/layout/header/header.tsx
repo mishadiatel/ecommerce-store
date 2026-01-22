@@ -1,6 +1,6 @@
 'use client';
 
-import { useSettings } from '@/components/context/generalSettings/GeneralSettingsContext';
+import { useSettings } from '@/context/generalSettings/GeneralSettingsContext';
 import { Link } from '@/i18n/navigation';
 import LanguageSelect from '@/components/language/languageSelect/LanguageSelect';
 import Image from 'next/image';
@@ -10,6 +10,7 @@ import { useTranslations } from 'next-intl';
 import HeaderMenu from '@/components/layout/header/menu/HeaderMenu';
 import { Dropdown } from '@/components/ui/dropdown/Dropdown';
 import SearchForm from '@/components/search/form/SearchForm';
+import { useModalStore } from '@/stores/useModalStore';
 
 export default function Header() {
   const t = useTranslations('Header');
@@ -18,6 +19,7 @@ export default function Header() {
   const [isOpenMobileMenu, setIsOpenMobileMenu] = useState(false);
   const loginPopupRef = useRef<HTMLDivElement>(null);
   const [isHeaderFixed, setIsHeaderFixed] = useState(false);
+  const openModal = useModalStore(state => state.openModal)
 
   const closeMobileMenu = () => {
     setIsOpenMobileMenu(false);
@@ -112,10 +114,12 @@ export default function Header() {
                 </div>
               </div>
               <div className="right flex gap-12 z-[1]">
-                <div className="max-md:hidden search-icon flex items-center cursor-pointer relative">
+                <button className="max-md:hidden search-icon flex items-center cursor-pointer relative"
+                        onClick={() => openModal('search')}
+                >
                   <i className="icon-search max-lg:text-[28px]"></i>
                   <div className="line absolute bg-gray-20 w-px h-6 -right-6 cursor-default"></div>
-                </div>
+                </button>
                 <div className="list-action flex items-center gap-4">
                   <Link href={'/wishlist'}
                      className="max-md:hidden wishlist-icon flex items-center relative cursor-pointer">

@@ -37,5 +37,9 @@
     "buttonText": "Підписатись",
     "emailRequiredMessage": "Введіть електронну пошту",
     "emailNotValidMessage": "Не коректна електронна пошта"
+  },
+  "Search": {
+    "popupTitle": "Пошук",
+    "popularQueries": "Популярні запити"
   }
 }

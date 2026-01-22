@@ -17,6 +17,7 @@ import Header from '@/components/layout/header/header';
 import Setup from '@/components/setup/Setup';
 import { getPublicCategories } from '@/services/category';
 import Footer from '@/components/layout/footer/footer';
+import ModalsRoot from '@/components/modals/ModalsRoot';
 // import { ToastContainer } from 'react-toastify';
 
 
@@ -72,6 +73,7 @@ export default async function RootLayout({
                 </main>
                 <Footer />
             </div>
+            <ModalsRoot />
         </Provider>
         {/*<ToastContainer />*/}
         </body>

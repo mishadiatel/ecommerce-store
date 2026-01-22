@@ -1,7 +1,7 @@
 'use client';
 
-import { useSettings } from '@/components/context/generalSettings/GeneralSettingsContext';
-import { useCategories } from '@/components/context/categoriesContext/CategoriesContext';
+import { useSettings } from '@/context/generalSettings/GeneralSettingsContext';
+import { useCategories } from '@/context/categoriesContext/CategoriesContext';
 import Image from 'next/image';
 import { generateFileUrl } from '@/lib/utils';
 import { Link } from '@/i18n/navigation';

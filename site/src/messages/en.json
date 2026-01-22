@@ -37,5 +37,9 @@
     "buttonText": "Subscribe",
     "emailRequiredMessage": "Please enter your email address",
     "emailNotValidMessage": "Invalid email address"
+  },
+  "Search": {
+    "popupTitle": "Search",
+    "popularQueries": "Popular queries"
   }
 }
