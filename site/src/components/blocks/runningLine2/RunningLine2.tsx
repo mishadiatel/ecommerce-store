@@ -1,7 +1,4 @@
-'use client'
-
 import { RunningLineBlockData } from '@/types/blocks';
-import Marquee from 'react-fast-marquee';
 import SsrMarquee from '@/components/ui/ssrMarquee/SsrMarquee';
 
 interface RunningLine2Props {

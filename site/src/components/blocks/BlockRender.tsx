@@ -36,7 +36,7 @@ export default function BlockRender({block}: BlockRenderProps) {
 
     case 'sticky-cards' :
       return (
-        <StickeCardsBlock blockData={block.blockData as StickyCardBlockData} />
+        <StickeCardsBlock block={block as Block<StickyCardBlockData>} />
       )
     case 'faq-small' :
       return (
@@ -50,7 +50,7 @@ export default function BlockRender({block}: BlockRenderProps) {
 
     case 'insta-block' :
       return (
-        <InstaBlock blockData={block.blockData as InstaBlockData} />
+        <InstaBlock block={block as Block<InstaBlockData>} />
       )
   }
 

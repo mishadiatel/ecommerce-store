@@ -1,18 +1,25 @@
 'use client'
 
 import { useState, useEffect } from 'react';
-import { StickyCardBlockData } from '@/types/blocks';
+import { Block, StickyCardBlockData } from '@/types/blocks';
 import Image from 'next/image';
 import { generateFileUrl } from '@/lib/utils';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation } from 'swiper/modules';
+import dynamic from 'next/dynamic';
+
+const SwiperSlider = dynamic(
+  () => import('@/components/ui/slider/SwiperSlider')
+);
 
 interface StickeCardsBlockProps {
-  blockData: StickyCardBlockData;
+  block: Block<StickyCardBlockData>;
 }
 
-export default function StickeCardsBlock({ blockData }: StickeCardsBlockProps) {
+export default function StickeCardsBlock({ block }: StickeCardsBlockProps) {
   const [isMobile, setIsMobile] = useState(false);
+  const {blockData} = block;
+  const sliderId = block._id;
 
   useEffect(() => {
     function handleResize() {
@@ -38,33 +45,32 @@ export default function StickeCardsBlock({ blockData }: StickeCardsBlockProps) {
           {/* RIGHT COLUMN */}
           <div className="relative w-full lg:w-[calc(100%-438px)]">
             {isMobile ? (
-              <div className="relative">
-                <button className="js--slider-features-button-prev2 absolute z-[2] mobile-gray-swiper-button bottom-0 left-[calc(50%-60px)] lg:hidden button-main small icon-button bg-white">
+              <SwiperSlider options={{
+                slidesPerView: 1,
+                autoHeight: true,
+                navigation: {
+                  prevEl: `.slider-prev-button-${sliderId}`,
+                  nextEl: `.slider-next-button-${sliderId}`,
+                }
+              }}
+              sliderId={sliderId}
+              className={'features-slider'}
+              >
+                <div className={'swiper-wrapper'}>
+                  {blockData.items.map((item) => (
+                    <div key={item._id} className={'swiper-slide'}>
+                      <FeatureCard item={item} />
+                    </div>
+                  ))}
+                </div>
+                <button className={`slider-prev-button-${sliderId} absolute z-[2] mobile-gray-swiper-button bottom-0 left-[calc(50%-60px)] lg:hidden button-main small icon-button bg-white`}>
                   <i className="icon icon-chevron-right-1"></i>
                 </button>
 
-                <button className="js--slider-features-button-next2 absolute z-[2] mobile-gray-swiper-button bottom-0 right-[calc(50%-60px)] lg:hidden button-main small icon-button bg-white">
+                <button className={`slider-next-button-${sliderId} absolute z-[2] mobile-gray-swiper-button bottom-0 right-[calc(50%-60px)] lg:hidden button-main small icon-button bg-white`}>
                   <i className="icon icon-chevron-right"></i>
                 </button>
-
-                <Swiper
-                  modules={[Navigation]}
-                  slidesPerView={1}
-                  autoHeight={true}
-                  navigation={{
-                    prevEl: '.js--slider-features-button-prev2',
-                    nextEl: '.js--slider-features-button-next2',
-                  }}
-                  className={'features-slider'}
-                >
-                  {blockData.items.map((item) => (
-                    <SwiperSlide key={item._id}>
-                      <FeatureCard item={item} />
-                    </SwiperSlide>
-                  ))}
-                </Swiper>
-              </div>
-
+              </SwiperSlider>
             ) : (
               <div className="flex flex-col gap-6 features-slider">
                 {blockData.items.map((item) => (
