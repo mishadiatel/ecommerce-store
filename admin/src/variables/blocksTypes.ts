@@ -30,6 +30,14 @@ export const BLOCKS_TYPES = [
   {
     _id: 'insta-block',
     text: 'Insta block',
+  },
+  {
+    _id: 'categories-slider',
+    text: 'Categories Slider'
+  },
+  {
+    _id: 'categories-block',
+    text: 'Categories Grid Block'
   }
   // {
   //   _id: 'faq',

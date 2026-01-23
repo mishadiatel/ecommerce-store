@@ -4,8 +4,6 @@ import { useState, useEffect } from 'react';
 import { Block, StickyCardBlockData } from '@/types/blocks';
 import Image from 'next/image';
 import { generateFileUrl } from '@/lib/utils';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation } from 'swiper/modules';
 import dynamic from 'next/dynamic';
 
 const SwiperSlider = dynamic(

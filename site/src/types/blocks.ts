@@ -79,3 +79,7 @@ export interface InstaBlockData {
   title?: string;
   items: InstaItem[];
 }
+
+export interface CategoriesSliderBlockData {
+  title?: string;
+}

@@ -41,5 +41,8 @@
   "Search": {
     "popupTitle": "Search",
     "popularQueries": "Popular queries"
+  },
+  "Categories": {
+    "cardButtonText": "View all"
   }
 }

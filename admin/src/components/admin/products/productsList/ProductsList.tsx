@@ -27,7 +27,7 @@ export default function ProductsList() {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number | undefined>(undefined);
   const [totalDocuments, setTotalDocuments] = useState<number | undefined>(undefined);
-  const [limit, setLimit] = useState<number>(10);
+  const [limit, setLimit] = useState<number>(25);
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
 
   const updateProductsList = () => {
@@ -66,6 +66,10 @@ export default function ProductsList() {
       }
     })
   }, []);
+
+  useEffect(() => {
+    setCurrentPage(1)
+  }, [selectedCategory]);
 
   useEffect(() => {
     updateProductsList();

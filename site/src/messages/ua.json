@@ -41,5 +41,8 @@
   "Search": {
     "popupTitle": "Пошук",
     "popularQueries": "Популярні запити"
+  },
+  "Categories": {
+    "cardButtonText": "Дивитись всі"
   }
 }

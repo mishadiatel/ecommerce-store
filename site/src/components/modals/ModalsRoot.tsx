@@ -6,7 +6,6 @@ import SearchModal from '@/components/modals/searchModal/SearchModal';
 
 export default function ModalsRoot() {
   const activeModal = useModalStore(s => s.modal);
-  console.log(activeModal);
   return (
     <>
       {/*<CartPopup open={activePopup === 'cart'} />*/}

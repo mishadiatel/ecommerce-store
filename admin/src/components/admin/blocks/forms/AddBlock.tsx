@@ -20,6 +20,7 @@ import StickeCardsForm from '@/components/admin/blocks/forms/stickyCards/StickeC
 import FaqSmallForm from '@/components/admin/blocks/forms/faqSmall/FaqSmallForm';
 import FaqComplexForm from '@/components/admin/blocks/forms/faqComplex/FaqComplexForm';
 import InstaBlockForm from '@/components/admin/blocks/forms/instaBlock/InstaBlockForm';
+import CategoriesSliderBlockForm from '@/components/admin/blocks/forms/categoriesSlider/CategoriesSliderBlockForm';
 
 interface BlockFormProps {
   initialData?: any;
@@ -150,6 +151,14 @@ export default function BlockForm({
     }),
   });
 
+  const categoriesSliderSchema = z.object({
+    blockData: z.object({
+      title: z.string().optional(),
+    }),
+  });
+
+  const categoriesGridBlockSchema = z.object({});
+
   const baseBlockSchema = z.object({
     pages: z.string().min(1),
     languages: z.string().min(1),
@@ -170,6 +179,8 @@ export default function BlockForm({
     ['faq-small']: faqSmallBlockSchema,
     ['faq-complex']: faqComplexBlockSchema,
     ['insta-block']: instaBlockSchema,
+    ['categories-slider']: categoriesSliderSchema,
+    ['categories-block']: categoriesGridBlockSchema
   };
 
   const methods = useForm<any>({
@@ -272,6 +283,7 @@ export default function BlockForm({
           {selectedType === 'faq-small' && <FaqSmallForm />}
           {selectedType === 'faq-complex' && <FaqComplexForm />}
           {selectedType === 'insta-block' && <InstaBlockForm />}
+          {selectedType === 'categories-slider' && <CategoriesSliderBlockForm />}
 
           <DialogFooter>
             <DialogClose asChild>

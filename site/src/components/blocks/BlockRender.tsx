@@ -1,5 +1,5 @@
 import {
-  Block,
+  Block, CategoriesSliderBlockData,
   FaqComplexBlockData,
   FaqSmallBlockData, InstaBlockData,
   NotFoundBlockData,
@@ -13,6 +13,8 @@ import StickeCardsBlock from '@/components/blocks/stickyCards/StickyCards';
 import { FaqSmallBlock } from '@/components/blocks/faq/FaqSmallBlock';
 import FaqComplexBlock from '@/components/blocks/faq/FaqComplexBlock';
 import InstaBlock from '@/components/blocks/instaBlock/InstaBlock';
+import CategoriesSlider from '@/components/blocks/categories/CategoriesSlider';
+import CategoriesGridBlock from '@/components/blocks/categories/CategoriesGrid';
 
 interface BlockRenderProps {
   block: Block<object>
@@ -52,6 +54,17 @@ export default function BlockRender({block}: BlockRenderProps) {
       return (
         <InstaBlock block={block as Block<InstaBlockData>} />
       )
+
+    case 'categories-slider' :
+      return (
+        <CategoriesSlider block={block as Block<CategoriesSliderBlockData>} />
+      )
+
+    case 'categories-block' :
+      return (
+        <CategoriesGridBlock />
+      )
+
   }
 
   return ;
