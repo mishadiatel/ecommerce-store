@@ -13,7 +13,7 @@ export async function generateMetadata({ params }: {params: Promise<{locale: str
     title: `${pageInfo.title}`,
     description: pageInfo.description,
     robots: {
-      follow: pageInfo.index,
+      follow: pageInfo.follow,
       index: pageInfo.index
     }
   };
