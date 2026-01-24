@@ -40,9 +40,20 @@
   },
   "Search": {
     "popupTitle": "Пошук",
-    "popularQueries": "Популярні запити"
+    "popularQueries": "Популярні запити",
+    "emptySearchWordMessage": "Ви нічого не ввели для пошуку",
+    "catalogButtonText": "Перейти в каталог",
+    "tryLetter": "Спробуйте ввести іншу назву або скористайтесь пошуком пізніше.",
+    "noResultsFound": "Не знайдено результатів запитом “{query}”",
+    "resultsCount": "Знайдено {count} результати за запитом “{query}”"
   },
   "Categories": {
     "cardButtonText": "Дивитись всі"
+  },
+  "Product": {
+    "currencyUah": "грн.",
+    "saleText": "Знижка",
+    "newText": "Новинка",
+    "limitedText": "Лімітована серія"
   }
 }

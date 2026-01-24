@@ -198,23 +198,11 @@ export class ProductService {
     const skip = (page - 1) * limit;
 
     const match: {
-      slug?: {
-        $regex?: string;
-        $options?: string;
-      };
       isVisible?: boolean;
       categoryId?: Types.ObjectId;
     } = {
       isVisible: true,
     };
-
-    /* 🔍 SEARCH BY SLUG */
-    // if (query.search) {
-    //   match.slug = {
-    //     $regex: query.search.trim().toLowerCase(),
-    //     $options: 'i',
-    //   };
-    // }
 
     if (query.category) {
       match.categoryId = new Types.ObjectId(query.category);
@@ -225,39 +213,45 @@ export class ProductService {
         {
           $match: match,
         },
+
+        /* 🔗 ПІДТЯГУЄМО ВСІ ПЕРЕКЛАДИ */
         {
           $lookup: {
             from: 'producttranslations',
-            let: { productId: '$_id' },
-            pipeline: [
-              {
-                $match: {
-                  $expr: {
-                    $and: [
-                      { $eq: ['$productId', '$$productId'] },
-                      { $eq: ['$lang', this.i18n.lang()] },
-                    ],
-                  },
-                },
-              },
-              // 🔍 ПОШУК ПО НАЗВІ
-              ...(query.search
-                ? [
-                    {
-                      $match: {
-                        title: {
-                          $regex: query.search.trim(),
-                          $options: 'i',
-                        },
-                      },
-                    },
-                  ]
-                : []),
-            ],
+            localField: '_id',
+            foreignField: 'productId',
             as: 'translations',
           },
         },
 
+        /* 🔍 SEARCH ПО ВСІХ ПЕРЕКЛАДАХ */
+        ...(query.search
+          ? [
+              {
+                $match: {
+                  'translations.title': {
+                    $regex: query.search.trim(),
+                    $options: 'i',
+                  },
+                },
+              },
+            ]
+          : []),
+
+        /* 🌍 ЗАЛИШАЄМО ТІЛЬКИ ПЕРЕКЛАД ПОТОЧНОЇ МОВИ */
+        {
+          $addFields: {
+            translations: {
+              $filter: {
+                input: '$translations',
+                as: 't',
+                cond: { $eq: ['$$t.lang', this.i18n.lang()] },
+              },
+            },
+          },
+        },
+
+        /* ❌ ВІДСІКАЄМО БЕЗ ПЕРЕКЛАДУ */
         {
           $match: {
             translations: { $ne: [] },
@@ -279,6 +273,7 @@ export class ProductService {
     const total = result[0]?.meta[0]?.total || 0;
     const data = result[0]?.data || [];
     const totalPages = Math.ceil(total / limit);
+
     return {
       data,
       totalDocuments: total,

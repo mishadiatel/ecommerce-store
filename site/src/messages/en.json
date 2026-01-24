@@ -40,9 +40,20 @@
   },
   "Search": {
     "popupTitle": "Search",
-    "popularQueries": "Popular queries"
+    "popularQueries": "Popular queries",
+    "emptySearchWordMessage": "You didn’t enter anything for the search",
+    "catalogButtonText": "Go to catalog",
+    "tryLetter": "Try entering a different name or search later.",
+    "noResultsFound": "No results found for the query “{query}”",
+    "resultsCount": "{count} results found for the query “{query}”"
   },
   "Categories": {
     "cardButtonText": "View all"
+  },
+  "Product": {
+    "currencyUah": "UAH",
+    "saleText": "Sale",
+    "newText": "New",
+    "limitedText": "Limited edition"
   }
 }
