@@ -35,4 +35,10 @@ export class CreateCategoryTranslationDto {
 
   @IsString()
   name: string;
+
+  @IsString()
+  pageTitle: string;
+
+  @IsString()
+  pageDescription: string;
 }

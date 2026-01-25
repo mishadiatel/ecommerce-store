@@ -23,6 +23,8 @@ export default function CategoryTranslationForm({categoryTranslation, categoryId
   const categoryTranslationFormSchema = z.object({
     lang: z.string({ error: 'lang is required' }).min(1, { message: 'lang is required' }),
     name: z.string({ error: 'name is required' }).min(1, { message: 'name is required' }),
+    pageTitle: z.string({ error: 'pageTitle is required' }).min(1, { message: 'pageTitle is required' }),
+    pageDescription: z.string({ error: 'pageDescription is required' }).min(1, { message: 'pageDescription is required' })
   });
   type CategoryTranslationData = z.infer<typeof categoryTranslationFormSchema>
 
@@ -35,6 +37,8 @@ export default function CategoryTranslationForm({categoryTranslation, categoryId
     defaultValues: {
       lang: categoryTranslation?.lang || '',
       name: categoryTranslation?.name || '',
+      pageTitle: categoryTranslation?.pageTitle || '',
+      pageDescription: categoryTranslation?.pageDescription || ''
     },
   });
 
@@ -87,6 +91,8 @@ export default function CategoryTranslationForm({categoryTranslation, categoryId
       <form className={'flex flex-col gap-4 flex-1'} onSubmit={handleSubmit(onSubmit)}>
         <GroupSelect control={control} name={'lang'} label={'lang'} placeholder={'lang'} values={LANGUAGES_LIST} disabled={isEditMode} />
         <InputGroup control={control} name={'name'} label={'name'} placeholder={'name'} />
+        <InputGroup control={control} name={'pageTitle'} label={'pageTitle'} placeholder={'pageTitle'} />
+        <InputGroup control={control} name={'pageDescription'} label={'pageDescription'} placeholder={'pageDescription'} />
         <div>
           <Button type="submit">{isEditMode ? 'update translation' : 'crete translation'}</Button>
         </div>

@@ -29,7 +29,7 @@ export default function ProductCard({ product }: { product: FullProductWithTrans
 
 
 
-            <div className="product-img">
+            <div className="product-img flex justify-center items-center w-full h-full relative">
               {product.cardImage && (
                 <Image
                   src={generateFileUrl(product.cardImage)}

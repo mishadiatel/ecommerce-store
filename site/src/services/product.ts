@@ -11,6 +11,8 @@ export interface GetProductsParams {
   isOnSale?: boolean;
   isOnePlusOne?: boolean;
   category?: string;
+  sortBy?: string;
+  sortOrder?: string;
 }
 
 export async function getPublicProducts(searchParams: GetProductsParams, cache=false): Promise<GetItemsResponse<FullProductWithTranslations>> {
@@ -24,6 +26,8 @@ export async function getPublicProducts(searchParams: GetProductsParams, cache=f
     isOnSale,
     isOnePlusOne,
     category,
+    sortBy,
+    sortOrder
   } = searchParams
 
   const params = new URLSearchParams();
@@ -40,6 +44,8 @@ export async function getPublicProducts(searchParams: GetProductsParams, cache=f
     params.set('isOnePlusOne', String(isOnePlusOne));
 
   if (category) params.set('category', category);
+  if(sortBy) params.set('sortBy', sortBy);
+  if (sortOrder) params.set('sortOrder', sortOrder);
 
   const requestOptions: RequestInit & {
     next?: {

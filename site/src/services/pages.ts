@@ -1,4 +1,5 @@
 import { Page } from '@/types/pages';
+import { notFound } from 'next/navigation';
 
 export async function getPublicPageInfo(slug: string, lang: string): Promise<Page> {
   const res = await fetch(`${process.env.NEXT_PUBLIC_PROJECT_API_URL}/api/pages/getPublicPage/${slug}?lang=${lang}`, {
@@ -7,7 +8,8 @@ export async function getPublicPageInfo(slug: string, lang: string): Promise<Pag
   });
 
   if (!res.ok) {
-    throw new Error('Failed to fetch page info');
+    // throw new Error('Failed to fetch page info');
+    return notFound();
   }
 
   const pageInfo: Array<Page> = await res.json();

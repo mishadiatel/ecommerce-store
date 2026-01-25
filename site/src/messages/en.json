@@ -54,6 +54,18 @@
     "currencyUah": "UAH",
     "saleText": "Sale",
     "newText": "New",
-    "limitedText": "Limited edition"
+    "limitedText": "Limited edition",
+    "productsCount": "{count, plural, one {{count} product} other {{count} products}}",
+    "filters": "Filters",
+    "applyButtonText": "Apply",
+    "deselectButtonText": "Deselect all",
+    "categories": "Categories",
+    "allCategories": "All categories",
+    "sort": {
+      "label": "Sort",
+      "defaultTypeText": "By popularity",
+      "priceDescText": "By price: high to low",
+      "priceAscText": "By price: low to high"
+    }
   }
 }

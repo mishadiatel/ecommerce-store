@@ -54,6 +54,18 @@
     "currencyUah": "грн.",
     "saleText": "Знижка",
     "newText": "Новинка",
-    "limitedText": "Лімітована серія"
+    "limitedText": "Лімітована серія",
+    "productsCount": "{count, plural, one {{count} товар} few {{count} товари} many {{count} товарів} other {{count} товарів}}",
+    "filters": "Фільтри",
+    "applyButtonText": "Застосувати",
+    "deselectButtonText": "Знаяти все",
+    "categories": "Категорії",
+    "allCategories": "Всі категорії",
+    "sort": {
+      "label": "Сортувати",
+      "defaultTypeText": "За популярністю",
+      "priceDescText": "За спаданням ціни",
+      "priceAscText": "За зростанням ціни"
+    }
   }
 }

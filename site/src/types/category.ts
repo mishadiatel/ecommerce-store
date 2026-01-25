@@ -3,6 +3,8 @@ export interface CategoryTranslation {
   categoryId: string;
   lang: string;
   name: string;
+  pageTitle: string;
+  pageDescription: string;
   createdAt: string;
   updatedAt: string;
   __v: number;

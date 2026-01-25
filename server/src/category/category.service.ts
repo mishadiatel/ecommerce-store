@@ -140,7 +140,7 @@ export class CategoryService {
         },
       ]);
 
-    if (!data) {
+    if (!data || data.length === 0) {
       throw new NotFoundException('not found category');
     }
     return data[0];
@@ -175,7 +175,7 @@ export class CategoryService {
         },
       ]);
 
-    if (!data) {
+    if (!data || data.length == 0) {
       throw new NotFoundException('not found category');
     }
     return data[0];
@@ -210,7 +210,7 @@ export class CategoryService {
         },
       ]);
 
-    if (!data) {
+    if (!data || data.length === 0) {
       throw new NotFoundException('not found category');
     }
     return data[0];

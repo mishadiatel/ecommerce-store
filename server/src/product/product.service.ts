@@ -197,6 +197,12 @@ export class ProductService {
     const limit = Number(query.limit) > 0 ? Number(query.limit) : 10;
     const skip = (page - 1) * limit;
 
+    let sortBy = query.sortBy || 'order';
+    if (sortBy === 'cost') {
+      sortBy = 'newPrice';
+    }
+    const sortOrder = query.sortOrder === 'desc' ? -1 : 1;
+
     const match: {
       isVisible?: boolean;
       categoryId?: Types.ObjectId;
@@ -255,6 +261,12 @@ export class ProductService {
         {
           $match: {
             translations: { $ne: [] },
+          },
+        },
+
+        {
+          $sort: {
+            [sortBy]: sortOrder,
           },
         },
 

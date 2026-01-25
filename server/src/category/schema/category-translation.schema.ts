@@ -16,6 +16,12 @@ export class CategoryTranslation {
 
   @Prop({ type: String, required: true })
   name: string;
+
+  @Prop({ type: String, required: true })
+  pageTitle: string;
+
+  @Prop({ type: String, required: true })
+  pageDescription: string;
 }
 
 export const CategoryTranslationSchema =

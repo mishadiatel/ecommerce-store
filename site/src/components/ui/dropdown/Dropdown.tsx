@@ -18,6 +18,8 @@ type DropdownProps<T> = {
   options: T[];
   initialSelected?: T;
   onSelect?: (item: T) => void;
+  initialOpenState?: boolean;
+  disableAutoClose?: boolean;
 };
 
 export function Dropdown<T>({
@@ -26,8 +28,10 @@ export function Dropdown<T>({
                               initialSelected,
                               onSelect,
   dropdownContainerClass,
+  initialOpenState = false,
+  disableAutoClose = false,
                             }: DropdownProps<T>) {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(initialOpenState);
   const [selected, setSelected] = useState<T | undefined>(initialSelected);
   const [focusedIndex, setFocusedIndex] = useState(-1);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -49,12 +53,16 @@ export function Dropdown<T>({
     function handleScroll() {
       close();
     }
+    if(!disableAutoClose) {
+      document.addEventListener('click', handleClickOutside);
+      window.addEventListener('scroll', handleScroll, { passive: true });
+    }
 
-    document.addEventListener('click', handleClickOutside);
-    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => {
-      document.removeEventListener('click', handleClickOutside);
-      window.removeEventListener('scroll', handleScroll);
+      if(!disableAutoClose) {
+        document.removeEventListener('click', handleClickOutside);
+        window.removeEventListener('scroll', handleScroll);
+      }
     };
   }, []);
 

@@ -32,4 +32,8 @@ export class BaseQueryDto {
   @IsOptional()
   @IsString()
   isBottom?: string;
+
+  @IsOptional()
+  @IsString()
+  sortOrder?: string;
 }
