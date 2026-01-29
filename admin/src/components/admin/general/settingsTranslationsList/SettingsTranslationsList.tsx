@@ -18,7 +18,7 @@ export default function SettingsTranslationsList({ translations }: SettingsTrans
 
   const updateTranslationsList = () => {
     getSettingsTranslations().then((settingsTranslations) => {
-      setTranslationsState(settingsTranslations);
+      setTranslationsState(settingsTranslations!);
     }).catch((err) => {
       toast.error('error loading pages.');
     })

@@ -29,3 +29,17 @@ export async function getPublicCategoryBySlug(slug: string, lang: string): Promi
 
   return res.json();
 }
+
+export async function getPublicCategoryById(id: string, lang: string): Promise<FullCategoryWithTranslation> {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_PROJECT_API_URL}/api/category/${id}/publicById?lang=${lang}`, {
+    next: { tags: ['category-slug'] },
+    cache: 'no-store'
+  });
+
+  if (!res.ok) {
+    // throw new Error('Failed to fetch category');
+    return notFound();
+  }
+
+  return res.json();
+}

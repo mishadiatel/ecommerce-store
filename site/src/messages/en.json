@@ -56,6 +56,7 @@
     "newText": "New",
     "limitedText": "Limited edition",
     "productsCount": "{count, plural, one {{count} product} other {{count} products}}",
+    "reviewsCount": "{count, plural, one {{count} review} other {{count} reviews}}",
     "filters": "Filters",
     "applyButtonText": "Apply",
     "deselectButtonText": "Deselect all",
@@ -66,6 +67,18 @@
       "defaultTypeText": "By popularity",
       "priceDescText": "By price: high to low",
       "priceAscText": "By price: low to high"
-    }
+    },
+    "priceLabel": "Price:",
+    "countMessage": "Price is for {count} pcs",
+    "priceMessage": "Price of 1 pc. – {price}",
+    "countLabel": "Quantity:",
+    "cartButtonText": "Add to cart",
+    "descriptionLabel": "Description",
+    "compositionLabel": "Composition",
+    "nutritionalTableLabel": "Nutritional of the product",
+    "expirationLabel": "Expiration date",
+    "payInfoLabel": "Payment",
+    "deliveryInfoLabel": "Delivery",
+    "otherInThisCategory": "Other products in this category"
   }
 }

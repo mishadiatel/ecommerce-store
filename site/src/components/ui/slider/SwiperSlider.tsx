@@ -1,11 +1,11 @@
 'use client';
 import Swiper from 'swiper';
 import { SwiperOptions } from 'swiper/types';
-import { Autoplay, FreeMode, Navigation, Pagination } from 'swiper/modules';
+import { Autoplay, FreeMode, Navigation, Pagination, Scrollbar } from 'swiper/modules';
 import { useEffect, useRef } from 'react';
 
 // eslint-disable-next-line react-hooks/rules-of-hooks
-Swiper.use([Navigation, Pagination, FreeMode, Autoplay]);
+Swiper.use([Navigation, Pagination, FreeMode, Autoplay, Scrollbar]);
 
 interface Props {
   options?: SwiperOptions;

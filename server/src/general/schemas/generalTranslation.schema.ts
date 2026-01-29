@@ -19,6 +19,12 @@ export class GeneralSettingsTranslation {
 
   @Prop({ type: String, required: true })
   schedule: string;
+
+  @Prop({ type: String, required: false })
+  payInfo: string;
+
+  @Prop({ type: String, required: false })
+  deliveryInfo: string;
 }
 
 export const GeneralSettingsTranslationSchema = SchemaFactory.createForClass(

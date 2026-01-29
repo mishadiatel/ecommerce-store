@@ -21,6 +21,8 @@ export interface GeneralSettingsTranslation {
   generalID: string;
   language: string;
   schedule: string;
+  payInfo?: string;
+  deliveryInfo?: string;
   createdAt: string;
   updatedAt: string;
 }

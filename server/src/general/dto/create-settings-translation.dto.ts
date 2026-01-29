@@ -11,4 +11,12 @@ export class CreateSettingsTranslationDto {
 
   @IsString()
   schedule: string;
+
+  @IsString()
+  @IsOptional()
+  payInfo?: string;
+
+  @IsString()
+  @IsOptional()
+  deliveryInfo?: string;
 }

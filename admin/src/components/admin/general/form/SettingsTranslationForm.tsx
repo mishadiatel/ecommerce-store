@@ -11,6 +11,7 @@ import { useRef } from 'react';
 import GroupSelect from '@/components/admin/ui/selectGroup';
 import InputGroup from '@/components/admin/ui/inputGroup';
 import { LANGUAGES_LIST } from '@/variables/languages';
+import EditorInput from '@/components/admin/ui/editorInput';
 
 interface SettingsTranslationFormProps {
   settingsTranslation?: GeneralSettingsTranslation;
@@ -23,6 +24,8 @@ export default function SettingsTranslationForm ({settingsTranslation, onSuccess
   const editSettingsTranslationSchema = z.object({
     language:z.string({ error: 'language is required' }).min(1, { message: 'language is required' }),
     schedule: z.string({ error: 'schedule is required' }).min(1, { message: 'schedule is required' }),
+    payInfo: z.string().optional(),
+    deliveryInfo: z.string().optional(),
   });
   type EditSettingsTranslationData = z.infer<typeof editSettingsTranslationSchema>
   const { handleSubmit, control } = useForm<EditSettingsTranslationData>({
@@ -30,7 +33,9 @@ export default function SettingsTranslationForm ({settingsTranslation, onSuccess
     mode: 'onChange',
     defaultValues: {
       language: settingsTranslation?.language || '',
-      schedule: settingsTranslation?.schedule || ''
+      schedule: settingsTranslation?.schedule || '',
+      payInfo: settingsTranslation?.payInfo || '',
+      deliveryInfo: settingsTranslation?.deliveryInfo || '',
     },
   });
 
@@ -76,6 +81,9 @@ export default function SettingsTranslationForm ({settingsTranslation, onSuccess
           disabled={isEdit}
         />
         <InputGroup control={control} name={'schedule'} label={'schedule'} placeholder={'schedule'} />
+        <EditorInput control={control} name={'payInfo'} label={'Pay Info'} placeholder={'Pay Info'} />
+        <EditorInput control={control} name={'deliveryInfo'} label={'delivery Info'} placeholder={'delivery Info'} />
+
 
         {!isEdit ? (
           <DialogFooter>

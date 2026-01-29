@@ -291,7 +291,9 @@ export default function ProductsList({ searchData, currentCategory }: ProductsLi
               <div className="fixed bottom-0 left-0 right-0 lg:hidden">
                 <div className="container py-5 flex gap-4 sm:gap-6 bg-white border-t border-t-gray-20">
                   <button type="button"
-                          className="button-main bordered flex-grow !min-w-0 !p-4 w-1/2">
+                          className="button-main bordered flex-grow !min-w-0 !p-4 w-1/2"
+                          onClick={() => setIsOpenMobileFilters(false)}
+                  >
                     {t('deselectButtonText')}
                   </button>
 

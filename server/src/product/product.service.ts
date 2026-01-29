@@ -116,7 +116,7 @@ export class ProductService {
         },
       ]);
 
-    if (!data) {
+    if (!data || data.length === 0) {
       throw new NotFoundException('not found product');
     }
     return data[0];
@@ -151,7 +151,7 @@ export class ProductService {
         },
       ]);
 
-    if (!data) {
+    if (!data || data.length === 0) {
       throw new NotFoundException('not found product');
     }
     return data[0];
@@ -186,7 +186,7 @@ export class ProductService {
         },
       ]);
 
-    if (!data) {
+    if (!data || data.length === 0) {
       throw new NotFoundException('not found product');
     }
     return data[0];

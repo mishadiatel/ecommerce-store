@@ -56,6 +56,7 @@
     "newText": "Новинка",
     "limitedText": "Лімітована серія",
     "productsCount": "{count, plural, one {{count} товар} few {{count} товари} many {{count} товарів} other {{count} товарів}}",
+    "reviewsCount": "{count, plural, one {{count} Відгук} few {{count} відгуки} many {{count} відгуків} other {{count} відгуків}}",
     "filters": "Фільтри",
     "applyButtonText": "Застосувати",
     "deselectButtonText": "Знаяти все",
@@ -66,6 +67,18 @@
       "defaultTypeText": "За популярністю",
       "priceDescText": "За спаданням ціни",
       "priceAscText": "За зростанням ціни"
-    }
+    },
+    "priceLabel": "Вартість:",
+    "countMessage": "Ціна вказана за {count} шт",
+    "priceMessage": "Вартість 1 шт. – {price}",
+    "countLabel": "Кількість:",
+    "cartButtonText": "Додати в кошик",
+    "descriptionLabel": "Опис товару",
+    "compositionLabel": "Cклад",
+    "nutritionalTableLabel": "Поживна цінність продукту",
+    "expirationLabel": "Термін придатності",
+    "payInfoLabel": "Оплата",
+    "deliveryInfoLabel": "Доставка",
+    "otherInThisCategory": "Інші товари в цій категорії"
   }
 }

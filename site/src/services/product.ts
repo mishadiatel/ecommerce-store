@@ -1,5 +1,7 @@
 import { GetItemsResponse } from '@/types/getItemsResponse';
 import { FullProductWithTranslations } from '@/types/product';
+import { FullCategoryWithTranslation } from '@/types/category';
+import { notFound } from 'next/navigation';
 
 export interface GetProductsParams {
   search?: string;
@@ -70,6 +72,21 @@ export async function getPublicProducts(searchParams: GetProductsParams, cache=f
 
   if (!res.ok) {
     throw new Error('Failed to fetch products');
+  }
+
+  return res.json();
+}
+
+
+export async function getPublicProductBySlug(slug: string, lang: string): Promise<FullProductWithTranslations> {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_PROJECT_API_URL}/api/product/${slug}/public?lang=${lang}`, {
+    next: { tags: ['product-slug'] },
+    cache: 'no-store'
+  });
+
+  if (!res.ok) {
+    // throw new Error('Failed to fetch category');
+    return notFound();
   }
 
   return res.json();

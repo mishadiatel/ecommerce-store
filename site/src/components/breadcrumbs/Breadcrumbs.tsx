@@ -38,7 +38,7 @@ export default function Breadcrumbs({ items }: Props) {
         {items.map((item, index) => (
           <span key={index} className="flex items-center gap-1 whitespace-nowrap">
             {item.href ? (
-              <Link href={item.href} className="caption1 text-gray-80">
+              <Link href={item.href} className="caption1 text-gray-80 hover:text-primary-green">
                 {item.name}
               </Link>
             ) : (
