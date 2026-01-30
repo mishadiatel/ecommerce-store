@@ -78,6 +78,18 @@ export class ProductController {
     return this.productService.findAllPublic(query);
   }
 
+  @Get('publicByIdsArray')
+  findByIdsArrayPublic(@Query('ids') ids: string | string[]) {
+    const normalizedIds = Array.isArray(ids) ? ids : [ids];
+    return this.productService.findPublicProductsByIdsArray(normalizedIds);
+  }
+
+  @Get('publicBySlugsArray')
+  findBySlugsArrayPublic(@Query('slugs') slugs: string | string[]) {
+    const normalizedSlugs = Array.isArray(slugs) ? slugs : [slugs];
+    return this.productService.findPublicProductsBySlugsArray(normalizedSlugs);
+  }
+
   @Get(':slug/public')
   findBySlugPublic(@Param('slug') slug: string) {
     return this.productService.findPublicProductBySlug(slug);

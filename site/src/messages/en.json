@@ -30,7 +30,6 @@
     "newsMessage": "Stay up to date with our promotions and updates",
     "rightsReversedText": "All rights reserved."
   },
-
   "Subscribe": {
     "agreeText": "I agree to the <link>processing of personal data</link>",
     "agreeRequiredMessage": "You must agree to the processing of personal data",
@@ -80,5 +79,9 @@
     "payInfoLabel": "Payment",
     "deliveryInfoLabel": "Delivery",
     "otherInThisCategory": "Other products in this category"
+  },
+  "Wishlist": {
+    "emptyWishlistMessage": "Your wishlist is empty",
+    "catalogButtonText": "Go to catalog"
   }
 }

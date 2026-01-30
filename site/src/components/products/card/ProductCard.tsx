@@ -5,9 +5,15 @@ import { generateFileUrl } from '@/lib/utils';
 import { Link, useRouter } from '@/i18n/navigation';
 import { useTranslations } from 'next-intl';
 import ProductBages from '@/components/products/card/ProductBages';
+import { useWishlistStore } from '@/stores/wishlistStore';
 
 
 export default function ProductCard({ product }: { product: FullProductWithTranslations }) {
+  const toggleWishlist = useWishlistStore(s => s.toggle);
+  const isWishlistLoading = useWishlistStore(s => s.isLoading);
+  const isInWishlist = useWishlistStore(
+    s => s.ids.includes(product._id)
+  );
   const t = useTranslations('Product');
   const router = useRouter();
   return (
@@ -19,13 +25,19 @@ export default function ProductCard({ product }: { product: FullProductWithTrans
         <div
           className="product-thumb bg-extra-light-gray bg-christmas relative overflow-hidden rounded-xl flex items-center justify-center w-full aspect-[296/400]">
          <ProductBages product={product} />
-          <button className="list-action-right absolute top-3 right-3 z-[2]">
-                <span
-                  className="add-wishlist-btn w-9 h-9 flex items-center justify-center rounded-full bg-white duration-300 relative js--add-wishlist-btn">
+          <div className="list-action-right absolute top-3 right-3 z-[2]">
+                <button
+                  disabled={isWishlistLoading}
+                  type={'button'}
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    toggleWishlist(product._id)
+                  }}
+                  className={`add-wishlist-btn w-9 h-9 flex items-center justify-center rounded-full bg-white duration-300 relative ${isInWishlist ? 'active' : ''}`}>
                     <i className="icon icon-favorites text-xl"></i>
-                    <i className="icon icon-filled_like text-xl hidden"></i>
-                </span>
-          </button>
+                    <i className="icon icon-filled_like text-xl"></i>
+                </button>
+          </div>
 
 
 

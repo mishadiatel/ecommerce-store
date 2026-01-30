@@ -80,5 +80,9 @@
     "payInfoLabel": "Оплата",
     "deliveryInfoLabel": "Доставка",
     "otherInThisCategory": "Інші товари в цій категорії"
+  },
+  "Wishlist": {
+    "emptyWishlistMessage": "Ваш список бажань порожній",
+    "catalogButtonText": "Перейти в каталог"
   }
 }

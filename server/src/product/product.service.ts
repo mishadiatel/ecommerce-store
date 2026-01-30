@@ -192,6 +192,127 @@ export class ProductService {
     return data[0];
   }
 
+  async findPublicProductsByIdsArray(ids: string[]) {
+    if (!ids.length) return [];
+
+    const objectIds = ids.map((id) => new Types.ObjectId(id));
+
+    const data: FullProductWithTranslations[] =
+      await this.productModel.aggregate([
+        {
+          $match: {
+            _id: { $in: objectIds },
+          },
+        },
+
+        // 🔢 додаємо поле orderIndex = позиція _id в масиві ids
+        {
+          $addFields: {
+            orderIndex: {
+              $indexOfArray: [objectIds, '$_id'],
+            },
+          },
+        },
+
+        // 🔁 translations
+        {
+          $lookup: {
+            from: 'producttranslations',
+            let: { productId: '$_id' },
+            pipeline: [
+              {
+                $match: {
+                  $expr: {
+                    $and: [
+                      { $eq: ['$productId', '$$productId'] },
+                      { $eq: ['$lang', this.i18n.lang()] },
+                    ],
+                  },
+                },
+              },
+            ],
+            as: 'translations',
+          },
+        },
+
+        // 🔃 сортуємо у правильному порядку
+        {
+          $sort: {
+            orderIndex: 1,
+          },
+        },
+
+        // 🧹 опціонально — прибрати службове поле
+        {
+          $project: {
+            orderIndex: 0,
+          },
+        },
+      ]);
+
+    return data;
+  }
+
+  async findPublicProductsBySlugsArray(slugs: string[]) {
+    if (!slugs.length) return [];
+
+
+    const data: FullProductWithTranslations[] =
+      await this.productModel.aggregate([
+        {
+          $match: {
+            slug: { $in: slugs },
+          },
+        },
+
+        // 🔢 додаємо поле orderIndex = позиція _id в масиві ids
+        {
+          $addFields: {
+            orderIndex: {
+              $indexOfArray: [slugs, '$slug'],
+            },
+          },
+        },
+
+        // 🔁 translations
+        {
+          $lookup: {
+            from: 'producttranslations',
+            let: { productId: '$_id' },
+            pipeline: [
+              {
+                $match: {
+                  $expr: {
+                    $and: [
+                      { $eq: ['$productId', '$$productId'] },
+                      { $eq: ['$lang', this.i18n.lang()] },
+                    ],
+                  },
+                },
+              },
+            ],
+            as: 'translations',
+          },
+        },
+
+        // 🔃 сортуємо у правильному порядку
+        {
+          $sort: {
+            orderIndex: 1,
+          },
+        },
+
+        // 🧹 опціонально — прибрати службове поле
+        {
+          $project: {
+            orderIndex: 0,
+          },
+        },
+      ]);
+
+    return data;
+  }
+
   async findAllPublic(query: BaseQueryDto) {
     const page = Number(query.page) > 0 ? Number(query.page) : 1;
     const limit = Number(query.limit) > 0 ? Number(query.limit) : 10;

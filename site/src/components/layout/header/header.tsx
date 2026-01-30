@@ -11,6 +11,7 @@ import HeaderMenu from '@/components/layout/header/menu/HeaderMenu';
 import { Dropdown } from '@/components/ui/dropdown/Dropdown';
 import SearchForm from '@/components/search/form/SearchForm';
 import { useModalStore } from '@/stores/useModalStore';
+import { useWishlistStore } from '@/stores/wishlistStore';
 
 export default function Header() {
   const t = useTranslations('Header');
@@ -19,7 +20,8 @@ export default function Header() {
   const [isOpenMobileMenu, setIsOpenMobileMenu] = useState(false);
   const loginPopupRef = useRef<HTMLDivElement>(null);
   const [isHeaderFixed, setIsHeaderFixed] = useState(false);
-  const openModal = useModalStore(state => state.openModal)
+  const openModal = useModalStore(state => state.openModal);
+  const wishlistLength = useWishlistStore(s => s.items.length);
 
   const closeMobileMenu = () => {
     setIsOpenMobileMenu(false);
@@ -125,7 +127,9 @@ export default function Header() {
                      className="max-md:hidden wishlist-icon flex items-center relative cursor-pointer">
                     <i className="icon-favorites max-lg:text-[28px]"></i>
                     <span
-                      className="quantity wishlist-quantity absolute -right-1.5 -top-1.5 text-xs text-white bg-primary-green w-4 h-4 flex items-center justify-center rounded-full js--wishlist-total">2</span>
+                      className="quantity wishlist-quantity absolute -right-1.5 -top-1.5 text-xs text-white bg-primary-green w-4 h-4 flex items-center justify-center rounded-full">
+                      {wishlistLength}
+                    </span>
                   </Link>
 
                   <div className="user-icon flex items-center justify-center cursor-pointer" ref={loginPopupRef}>

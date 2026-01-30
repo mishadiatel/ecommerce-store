@@ -17,7 +17,7 @@ export interface GetProductsParams {
   sortOrder?: string;
 }
 
-export async function getPublicProducts(searchParams: GetProductsParams, cache=false): Promise<GetItemsResponse<FullProductWithTranslations>> {
+export async function getPublicProducts(searchParams: GetProductsParams, cache = false): Promise<GetItemsResponse<FullProductWithTranslations>> {
   const {
     search,
     page = 1,
@@ -29,8 +29,8 @@ export async function getPublicProducts(searchParams: GetProductsParams, cache=f
     isOnePlusOne,
     category,
     sortBy,
-    sortOrder
-  } = searchParams
+    sortOrder,
+  } = searchParams;
 
   const params = new URLSearchParams();
 
@@ -46,7 +46,7 @@ export async function getPublicProducts(searchParams: GetProductsParams, cache=f
     params.set('isOnePlusOne', String(isOnePlusOne));
 
   if (category) params.set('category', category);
-  if(sortBy) params.set('sortBy', sortBy);
+  if (sortBy) params.set('sortBy', sortBy);
   if (sortOrder) params.set('sortOrder', sortOrder);
 
   const requestOptions: RequestInit & {
@@ -81,12 +81,31 @@ export async function getPublicProducts(searchParams: GetProductsParams, cache=f
 export async function getPublicProductBySlug(slug: string, lang: string): Promise<FullProductWithTranslations> {
   const res = await fetch(`${process.env.NEXT_PUBLIC_PROJECT_API_URL}/api/product/${slug}/public?lang=${lang}`, {
     next: { tags: ['product-slug'] },
-    cache: 'no-store'
+    cache: 'no-store',
   });
 
   if (!res.ok) {
     // throw new Error('Failed to fetch category');
     return notFound();
+  }
+
+  return res.json();
+}
+
+
+export async function getProductByIdsArray(ids: string[], lang: string): Promise<FullProductWithTranslations[]> {
+  if (ids.length === 0) {
+    return [];
+  }
+
+  const idsPrams = ids.map(id => `ids=${id}`).join('&');
+
+  const res = await fetch(`${process.env.NEXT_PUBLIC_PROJECT_API_URL}/api/product/publicByIdsArray?lang=${lang}&${idsPrams}`, {
+    cache: 'no-store',
+  });
+
+  if (!res.ok) {
+    throw new Error('Failed to fetch products');
   }
 
   return res.json();

@@ -8,6 +8,7 @@ import { useState } from 'react';
 import ProductInfoTabs from '@/components/products/productInfoTabs/ProductInfoTabs';
 import dynamic from 'next/dynamic';
 import ProductCard from '@/components/products/card/ProductCard';
+import { useWishlistStore } from '@/stores/wishlistStore';
 
 const SwiperSlider = dynamic(
   () => import('@/components/ui/slider/SwiperSlider')
@@ -19,6 +20,11 @@ interface ProductPageProps {
 }
 
 export default function ProductPage({ sameCategoryProducts, productInfo }: ProductPageProps) {
+  const toggleWishlist = useWishlistStore(s => s.toggle);
+  const isWishlistLoading = useWishlistStore(s => s.isLoading);
+  const isInWishlist = useWishlistStore(
+    s => s.ids.includes(productInfo._id)
+  );
   const t = useTranslations('Product');
   const [count, setCount] = useState(1);
 
@@ -36,9 +42,11 @@ export default function ProductPage({ sameCategoryProducts, productInfo }: Produ
               )}
 
               <button
-                className="add-wishlist-btn w-12 h-12 ml-auto flex-shrink-0 flex items-center justify-center cursor-pointer rounded-full bg-extra-light-gray duration-300 lg:hover:bg-primary-green lg:hover:text-white js--add-wishlist-btn">
-                <i className="icon-favorites text-[32px]"></i>
-                <i className="icon icon-filled_like text-[32px] hidden"></i>
+                disabled={isWishlistLoading}
+                onClick={() => toggleWishlist(productInfo._id)}
+                className={`add-wishlist-btn w-12 h-12 ml-auto flex-shrink-0 flex items-center justify-center cursor-pointer rounded-full bg-extra-light-gray duration-300 hover:bg-primary-green hover:text-white ${isInWishlist ? 'active' : ''}`}>
+                <i className={`icon icon-favorites text-[32px]`}></i>
+                <i className= {`icon icon-filled_like text-[32px]`}></i>
               </button>
             </div>
             {productInfo.isLimited && (

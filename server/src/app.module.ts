@@ -26,6 +26,7 @@ import { MailTemplateModule } from './mail-template/mail-template.module';
 import { CategoryModule } from './category/category.module';
 import { ProductModule } from './product/product.module';
 import { LoggerModule } from 'nestjs-pino';
+import { WishlistModule } from './wishlist/wishlist.module';
 
 @Module({
   imports: [
@@ -89,6 +90,7 @@ import { LoggerModule } from 'nestjs-pino';
     MailTemplateModule,
     CategoryModule,
     ProductModule,
+    WishlistModule,
   ],
   controllers: [AppController],
   providers: [AppService],
