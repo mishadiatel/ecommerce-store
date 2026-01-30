@@ -17,11 +17,8 @@ export default function Setup() {
   }, []);
 
   useEffect(() => {
-    load();
-  }, [locale]);
-
-  useEffect(() => {
     setLocale(locale);
+    load();
   }, [locale, setLocale]);
 
   return null;
