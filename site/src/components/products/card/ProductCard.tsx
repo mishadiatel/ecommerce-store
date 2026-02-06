@@ -6,6 +6,7 @@ import { Link, useRouter } from '@/i18n/navigation';
 import { useTranslations } from 'next-intl';
 import ProductBages from '@/components/products/card/ProductBages';
 import { useWishlistStore } from '@/stores/wishlistStore';
+import { useCartStore } from '@/stores/cartStore';
 
 
 export default function ProductCard({ product }: { product: FullProductWithTranslations }) {
@@ -16,6 +17,7 @@ export default function ProductCard({ product }: { product: FullProductWithTrans
   );
   const t = useTranslations('Product');
   const router = useRouter();
+  const addToCart = useCartStore(s => s.add);
   return (
     <div
       className="product-item grid-type"
@@ -87,7 +89,14 @@ export default function ProductCard({ product }: { product: FullProductWithTrans
 
             </div>
 
-            <button type="button" className="button-main bg-gray icon-button middle">
+            <button
+              type="button"
+              className="button-main bg-gray icon-button middle"
+              onClick={(event) => {
+                event.stopPropagation();
+                addToCart(product._id, 1)
+              }}
+            >
               <i className="icon icon-shopping-cart"></i>
             </button>
           </div>

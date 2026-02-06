@@ -9,6 +9,8 @@ import ProductInfoTabs from '@/components/products/productInfoTabs/ProductInfoTa
 import dynamic from 'next/dynamic';
 import ProductCard from '@/components/products/card/ProductCard';
 import { useWishlistStore } from '@/stores/wishlistStore';
+import { useCartStore } from '@/stores/cartStore';
+import { Link } from '@/i18n/navigation';
 
 const SwiperSlider = dynamic(
   () => import('@/components/ui/slider/SwiperSlider')
@@ -25,6 +27,8 @@ export default function ProductPage({ sameCategoryProducts, productInfo }: Produ
   const isInWishlist = useWishlistStore(
     s => s.ids.includes(productInfo._id)
   );
+  const addToCart = useCartStore(s => s.add);
+  const isAddedToCart = Boolean(useCartStore(s => s.cart?.items.find(el => el.product._id === productInfo._id)))
   const t = useTranslations('Product');
   const [count, setCount] = useState(1);
 
@@ -125,9 +129,16 @@ export default function ProductPage({ sameCategoryProducts, productInfo }: Produ
                     <i className="icon-plus"></i>
                   </button>
                 </div>
-                <div className="add-cart-btn button-main whitespace-nowrap w-full lg:w-fit text-center">
-                  {t('cartButtonText')}
-                </div>
+                {isAddedToCart ? (
+                  <Link href={'/cart'} className={'button-main whitespace-nowrap w-full lg:w-fit text-center'}>{t('cartLinkText')}</Link>
+                  ) : (
+                  <button
+                    className="add-cart-btn button-main whitespace-nowrap w-full lg:w-fit text-center"
+                    onClick={() => addToCart(productInfo._id, count)}
+                  >
+                    {t('cartButtonText')}
+                  </button>
+                )}
               </div>
             </div>
             <ProductInfoTabs productInfo={productInfo} />

@@ -27,6 +27,7 @@ import { CategoryModule } from './category/category.module';
 import { ProductModule } from './product/product.module';
 import { LoggerModule } from 'nestjs-pino';
 import { WishlistModule } from './wishlist/wishlist.module';
+import { CartModule } from './cart/cart.module';
 
 @Module({
   imports: [
@@ -91,6 +92,7 @@ import { WishlistModule } from './wishlist/wishlist.module';
     CategoryModule,
     ProductModule,
     WishlistModule,
+    CartModule,
   ],
   controllers: [AppController],
   providers: [AppService],

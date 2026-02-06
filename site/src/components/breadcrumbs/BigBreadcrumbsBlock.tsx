@@ -17,7 +17,7 @@ export default function BigBreadcrumbs({title, items}: BigBreadcrumbsProps) {
            <div className="text-content">
              <h1 className="heading1 text-center mb-5 sm:mb-8">{title}</h1>
              <div className={'max-w-full overflow-x-auto'}>
-               <Breadcrumbs items={items} />
+               <Breadcrumbs items={items} breadcrumbsClassName={'justify-center'} />
              </div>
            </div>
          </div>

@@ -78,10 +78,20 @@
     "expirationLabel": "Expiration date",
     "payInfoLabel": "Payment",
     "deliveryInfoLabel": "Delivery",
-    "otherInThisCategory": "Other products in this category"
+    "otherInThisCategory": "Other products in this category",
+    "cartLinkText": "Added to cart"
   },
   "Wishlist": {
     "emptyWishlistMessage": "Your wishlist is empty",
     "catalogButtonText": "Go to catalog"
+  },
+  "Cart": {
+    "modalTitle": "Cart",
+    "freeShippingPriceText": "Add <pricespan>{priceText}</pricespan> more to get free shipping",
+    "successFreeShippingText": "Congratulations! You get free shipping!",
+    "cartPageLinkText": "View cart",
+    "totalLabelText": "Total",
+    "emptyCartMessage": "Your cart is empty",
+    "itemsCountLabel": "pcs"
   }
 }

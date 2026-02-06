@@ -51,7 +51,7 @@
     "cardButtonText": "Дивитись всі"
   },
   "Product": {
-    "currencyUah": "грн.",
+    "currencyUah": "грн",
     "saleText": "Знижка",
     "newText": "Новинка",
     "limitedText": "Лімітована серія",
@@ -79,10 +79,20 @@
     "expirationLabel": "Термін придатності",
     "payInfoLabel": "Оплата",
     "deliveryInfoLabel": "Доставка",
-    "otherInThisCategory": "Інші товари в цій категорії"
+    "otherInThisCategory": "Інші товари в цій категорії",
+    "cartLinkText": "Додано в кошик"
   },
   "Wishlist": {
     "emptyWishlistMessage": "Ваш список бажань порожній",
     "catalogButtonText": "Перейти в каталог"
+  },
+  "Cart": {
+    "modalTitle": "Кошик",
+    "freeShippingPriceText": "Ще <pricespan>{priceText}</pricespan> до безкоштовної доставки",
+    "successFreeShippingText": "Ура, у вас безкоштовна доставка!",
+    "cartPageLinkText": "Дивитись кошик",
+    "totalLabelText": "Загальна сума",
+    "emptyCartMessage": "Ваша кошик порожній",
+    "itemsCountLabel": "шт"
   }
 }

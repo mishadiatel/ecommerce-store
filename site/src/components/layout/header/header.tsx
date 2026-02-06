@@ -12,6 +12,7 @@ import { Dropdown } from '@/components/ui/dropdown/Dropdown';
 import SearchForm from '@/components/search/form/SearchForm';
 import { useModalStore } from '@/stores/useModalStore';
 import { useWishlistStore } from '@/stores/wishlistStore';
+import { useCartStore } from '@/stores/cartStore';
 
 export default function Header() {
   const t = useTranslations('Header');
@@ -22,7 +23,7 @@ export default function Header() {
   const [isHeaderFixed, setIsHeaderFixed] = useState(false);
   const openModal = useModalStore(state => state.openModal);
   const wishlistLength = useWishlistStore(s => s.items.length);
-
+  const cartLength = useCartStore(s => s.cart?.items.length) || 0;
   const closeMobileMenu = () => {
     setIsOpenMobileMenu(false);
   };
@@ -157,12 +158,13 @@ export default function Header() {
                   </div>
 
                   <div className="cart-icon flex items-center relative cursor-pointer js--cart-container">
-                    <div className="js--cart-action flex" data-cart-action="show">
+                    <button className="flex cursor-pointer" onClick={() => openModal('cart')}>
                       <i className="icon-cart max-lg:text-[28px]"></i>
                       <span
                         className="quantity cart-quantity absolute -right-1.5 -top-1.5 text-xs text-white bg-primary-green w-4 h-4 flex items-center justify-center rounded-full js--cart-total-items">
-            0        </span>
-                    </div>
+                        {cartLength}
+                      </span>
+                    </button>
                   </div>
                   <div className="line h-[24px] w-px bg-gray-20 lg:hidden"></div>
                   <button

@@ -7,9 +7,10 @@ export interface BreadcrumbItem {
 
 interface Props {
   items: BreadcrumbItem[];
+  breadcrumbsClassName?: string;
 }
 
-export default function Breadcrumbs({ items }: Props) {
+export default function Breadcrumbs({ items, breadcrumbsClassName }: Props) {
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
@@ -34,7 +35,7 @@ export default function Breadcrumbs({ items }: Props) {
       />
 
       {/* UI */}
-      <div className="link flex items-center justify-center gap-1 caption1">
+      <div className={`link flex items-center gap-1 caption1 ${breadcrumbsClassName ? breadcrumbsClassName : ''}`}>
         {items.map((item, index) => (
           <span key={index} className="flex items-center gap-1 whitespace-nowrap">
             {item.href ? (
