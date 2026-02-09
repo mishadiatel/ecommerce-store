@@ -5,9 +5,11 @@ export class CreatePageDto {
   slug: string;
 
   @IsString()
+  @IsOptional()
   title: string;
 
   @IsString()
+  @IsOptional()
   description: string;
 
   @IsString()

@@ -8,10 +8,10 @@ export class Page {
   @Prop({ type: String, required: true })
   slug: string;
 
-  @Prop({ type: String, required: true })
+  @Prop({ type: String, required: false })
   title: string;
 
-  @Prop({ type: String, required: true })
+  @Prop({ type: String, required: false })
   description: string;
 
   @Prop({ type: String, required: false })

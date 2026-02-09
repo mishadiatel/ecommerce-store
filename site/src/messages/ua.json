@@ -93,6 +93,19 @@
     "cartPageLinkText": "Дивитись кошик",
     "totalLabelText": "Загальна сума",
     "emptyCartMessage": "Ваша кошик порожній",
-    "itemsCountLabel": "шт"
+    "itemsCountLabel": "шт",
+    "catalogButtonText": "Перейти в каталог",
+    "listLabel": {
+      "items": "Товари",
+      "price": "Вартість",
+      "quantity": "Кількість",
+      "total": "Сума"
+    },
+    "asideTitle": "Замовлення",
+    "deliveryTitle": "Доставка",
+    "paidDeliveryLabel": "За тарифами перевізника",
+    "freeDeliveryLabel": "Безкоштовна доставка",
+    "continueShoppingButtonText": "Продовжити покупки",
+    "checkoutButtonText": "Оформити замовлення"
   }
 }

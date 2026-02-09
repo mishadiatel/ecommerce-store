@@ -24,8 +24,8 @@ export default function EditPageForm({ page, updatePageList }: EditPageFormProps
   const closeRef = useRef<HTMLButtonElement>(null);
   const editPageFormSchema = z.object({
     slug: z.string({ error: 'slug is required' }).min(1, { message: 'slug is required' }),
-    title: z.string({ error: 'title is required' }).min(1, { message: 'title is required' }),
-    description: z.string({ error: 'description is required' }).min(1, { message: 'description is required' }),
+    title: z.string().optional(),
+    description: z.string().optional(),
     breadcrumbTitle: z.string().optional(),
     language: z.string({ error: 'language is required' }).min(1, { message: 'language is required' }),
     index: z.boolean(),

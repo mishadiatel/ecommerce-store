@@ -92,6 +92,19 @@
     "cartPageLinkText": "View cart",
     "totalLabelText": "Total",
     "emptyCartMessage": "Your cart is empty",
-    "itemsCountLabel": "pcs"
+    "itemsCountLabel": "pcs",
+    "catalogButtonText": "Go to catalog",
+    "listLabel": {
+      "items": "Items",
+      "price": "Price",
+      "quantity": "Quantity",
+      "total": "Total"
+    },
+    "asideTitle": "Order",
+    "deliveryTitle": "Delivery",
+    "paidDeliveryLabel": "According to carrier tariffs",
+    "freeDeliveryLabel": "Free shipping",
+    "continueShoppingButtonText": "Continue shopping",
+    "checkoutButtonText": "Checkout"
   }
 }

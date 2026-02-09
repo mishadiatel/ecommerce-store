@@ -45,3 +45,18 @@ export const cleanHtmlString = (html: string) => {
     .replace(/&nbsp;/g, ' ')
     .trim();
 }
+
+export function debounce<T extends (...args: never[]) => void>(
+  fn: T,
+  delay: number
+) {
+  let timeout: NodeJS.Timeout;
+
+  return (...args: Parameters<T>) => {
+    clearTimeout(timeout);
+
+    timeout = setTimeout(() => {
+      fn(...args);
+    }, delay);
+  };
+}
