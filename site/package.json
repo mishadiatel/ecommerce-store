@@ -21,6 +21,7 @@
     "react-dom": "19.1.0",
     "react-fast-marquee": "^1.6.5",
     "react-hook-form": "^7.68.0",
+    "react-select": "^5.10.2",
     "react-slick": "^0.31.0",
     "react-toastify": "^11.0.5",
     "sass": "^1.93.2",

@@ -33,10 +33,7 @@
 
   "Subscribe": {
     "agreeText": "Даю згоду на <link>обробку персональних даних</link>",
-    "agreeRequiredMessage": "Ви повинні погодитись на обробку даних",
-    "buttonText": "Підписатись",
-    "emailRequiredMessage": "Введіть електронну пошту",
-    "emailNotValidMessage": "Не коректна електронна пошта"
+    "buttonText": "Підписатись"
   },
   "Search": {
     "popupTitle": "Пошук",
@@ -107,5 +104,61 @@
     "freeDeliveryLabel": "Безкоштовна доставка",
     "continueShoppingButtonText": "Продовжити покупки",
     "checkoutButtonText": "Оформити замовлення"
+  },
+  "Checkout": {
+    "totalToPaidLabel": "Разом до сплати",
+    "promocodeInputPlaceholder": "Промокод",
+    "applyPromocodeButtonText": "Застосувати",
+    "haveAccountQuestion": "Вже маєте особистий кабінет?",
+    "loginButtonText": "Увійти",
+    "email": {
+      "label": "Електронна пошта",
+      "placeholder": "Введіть електронну пошту"
+    },
+    "firstName": {
+      "label": "Ім'я",
+      "placeholder": "Введіть ім'я"
+    },
+    "lastName": {
+      "label": "Прізвище",
+      "placeholder": "Введіть прізвище"
+    },
+    "phoneNumber": {
+      "label": "Номер телефону",
+      "placeholder": "Введіть номер телефону"
+    },
+    "message": {
+      "label": "Коментар",
+      "placeholder": "Введіть коментар"
+    },
+    "agree": {
+      "label": "Даю згоду на <link>обробку персональних даних</link>"
+    },
+    "otherRecipientLabel": "Оформити на іншу особу",
+    "yourContactDataTitle": "Контактна інформація",
+    "otherRecipientTitle": "Дані отримувача",
+    "paymentMethodTitle": "Спосіб оплати",
+    "paymentMethodOnlineLabel": "Онлайн оплата",
+    "paymentMethodAfterPayLabel": "Оплата при отриманні",
+    "paymentMethodRequiredError": "Оберіть спосіб оплати",
+    "dontCallMeLabel": "Не телефонувати мені для підтвердження замовлення",
+    "deliveryTitle": "Доставка",
+    "novaPoshtaLabel": "Нова Пошта (відділення чи поштомат)",
+    "requiredDeliveryTypeMessage": "Виберіть тип доставки",
+    "noOptionsMessage": "Нічого не знайдено",
+    "loadingMessage": "Завантаження...",
+    "city": {
+      "label": "Населений пункт",
+      "placeholder": "Виберіть населений пункт"
+    },
+    "warehouse": {
+      "label": "Номер відділення",
+      "placeholder": "Введіть номер відділення"
+    }
+  },
+  "Form": {
+    "requiredMessage": "Поле {fieldName} є обовязковим",
+    "validEmailMessage": "Поле {fieldName} має містити коректну електронну адресу",
+    "agreeRequiredMessage": "Ви повинні погодитись на обробку даних"
   }
 }

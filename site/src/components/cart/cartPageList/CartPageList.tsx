@@ -130,7 +130,7 @@ export default function CartPageList() {
                     <div className="container">
                       <div className="flex items-center justify-between mb-6">
                         <span className="font-semibold text-black text-lg sm:text-xl">{t('Cart.totalLabelText')}</span>
-                        <span className="font-semibold text-black text-lg sm:text-xl js--cart-grand-total-cost">
+                        <span className="font-semibold text-black text-lg sm:text-xl">
                           {cartTotalPrice} {t('Product.currencyUah')}
                         </span>
                       </div>

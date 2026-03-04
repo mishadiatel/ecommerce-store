@@ -5,10 +5,12 @@ import { getGeneralSettings } from '@/services/generalSettings';
 import BlocksList from '@/components/blocks/BlocksList';
 import BigBreadcrumbs from '@/components/breadcrumbs/BigBreadcrumbsBlock';
 import CartPageList from '@/components/cart/cartPageList/CartPageList';
+import SmallBreadcrumbsBlock from '@/components/breadcrumbs/SmallBreadcrumbsBlock';
+import CheckoutPageComponent from '@/components/checkout/checkoutPage/CheckoutPageComponent';
 
 export async function generateMetadata({ params }: {params: Promise<{locale: string}>}): Promise<Metadata> {
   const {locale} = await params;
-  const pageInfo = await getPublicPageInfo('cart', locale);
+  const pageInfo = await getPublicPageInfo('checkout', locale);
 
   return {
     title: `${pageInfo.title}`,
@@ -20,26 +22,26 @@ export async function generateMetadata({ params }: {params: Promise<{locale: str
   };
 }
 
-export default async function CartPage({ params }: {
+export default async function CheckoutPage({ params }: {
   params: Promise<{locale: string}>,
 }) {
   const { locale } = await params;
-  const topBlocks = await getPageBlocks('cart', locale, true, false);
-  const bottomBlocks = await getPageBlocks('cart', locale, false, true);
+  const topBlocks = await getPageBlocks('checkout', locale, true, false);
+  const bottomBlocks = await getPageBlocks('checkout', locale, false, true);
   const settings = await getGeneralSettings(locale);
-  const pageInfo = await getPublicPageInfo('cart', locale);
+  const pageInfo = await getPublicPageInfo('checkout', locale);
 
 
   return (
     <>
       <BlocksList blocks={topBlocks} />
       {pageInfo.breadcrumbTitle && (
-        <BigBreadcrumbs title={pageInfo.breadcrumbTitle} items={[
+        <SmallBreadcrumbsBlock items={[
           { href: '/', name: settings.companyName },
           { name: pageInfo.breadcrumbTitle }
         ]} />
       )}
-      <CartPageList />
+      <CheckoutPageComponent pageInfo={pageInfo} />
       <BlocksList blocks={bottomBlocks} />
     </>
   )

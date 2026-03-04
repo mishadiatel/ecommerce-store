@@ -32,10 +32,7 @@
   },
   "Subscribe": {
     "agreeText": "I agree to the <link>processing of personal data</link>",
-    "agreeRequiredMessage": "You must agree to the processing of personal data",
-    "buttonText": "Subscribe",
-    "emailRequiredMessage": "Please enter your email address",
-    "emailNotValidMessage": "Invalid email address"
+    "buttonText": "Subscribe"
   },
   "Search": {
     "popupTitle": "Search",
@@ -106,5 +103,61 @@
     "freeDeliveryLabel": "Free shipping",
     "continueShoppingButtonText": "Continue shopping",
     "checkoutButtonText": "Checkout"
+  },
+  "Checkout": {
+    "totalToPaidLabel": "Total to be paid",
+    "promocodeInputPlaceholder": "Promo code",
+    "applyPromocodeButtonText": "Apply",
+    "haveAccountQuestion": "Do you already have a personal account?",
+    "loginButtonText": "Login",
+    "email": {
+      "label": "Email",
+      "placeholder": "Enter your email"
+    },
+    "firstName": {
+      "label": "First name",
+      "placeholder": "Enter your first name"
+    },
+    "lastName": {
+      "label": "Last name",
+      "placeholder": "Enter your last name"
+    },
+    "phoneNumber": {
+      "label": "Phone number",
+      "placeholder": "Enter phone number"
+    },
+    "message": {
+      "label": "Comment",
+      "placeholder": "Enter comment"
+    },
+    "agree": {
+      "label": "I agree to the <link>processing of personal data</link>"
+    },
+    "otherRecipientLabel": "Issue to another person",
+    "yourContactDataTitle": "Contact information",
+    "otherRecipientTitle": "Recipient details",
+    "paymentMethodTitle": "Payment method",
+    "paymentMethodOnlineLabel": "Online payment",
+    "paymentMethodAfterPayLabel": "Payment upon receipt",
+    "paymentMethodRequiredError": "Select payment type",
+    "dontCallMeLabel": "Please do not call me to confirm my order",
+    "deliveryTitle": "Order",
+    "novaPoshtaLabel": "NovaPost",
+    "requiredDeliveryTypeMessage": "Select delivery type",
+    "noOptionsMessage": "Not found",
+    "loadingMessage": "Loading...",
+    "city": {
+      "label": "City",
+      "placeholder": "Select city"
+    },
+    "warehouse": {
+      "label": "Post office number",
+      "placeholder": "Select post office number"
+    }
+  },
+  "Form": {
+    "requiredMessage": "The {fieldName} field is required",
+    "validEmailMessage": "The {fieldName} field must contain a valid email address",
+    "agreeRequiredMessage": "You must agree to the processing of personal data"
   }
 }

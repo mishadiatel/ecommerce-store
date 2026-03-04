@@ -12,13 +12,18 @@ export class NovaPoshtaService {
       modelName: 'Address',
       calledMethod: 'searchSettlements',
       methodProperties: {
-        CityName: query,
+        CityName: query.trim() || undefined,
         Limit: 20,
       },
     });
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return,@typescript-eslint/no-unsafe-member-access
-    return data.data[0]?.Addresses ?? [];
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return,@typescript-eslint/no-unsafe-member-access,@typescript-eslint/no-unsafe-call
+    return (data.data[0]?.Addresses ?? []).map(
+      (city: { DeliveryCity: string; Present: string }) => ({
+        value: city.DeliveryCity,
+        label: city.Present,
+      }),
+    );
   }
   async getWarehouses(cityRef: string, query?: string) {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -33,7 +38,10 @@ export class NovaPoshtaService {
       },
     });
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return,@typescript-eslint/no-unsafe-member-access
-    return data.data;
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return,@typescript-eslint/no-unsafe-member-access,@typescript-eslint/no-unsafe-call
+    return data.data.map((w: { Description: string; Ref: string }) => ({
+      label: w.Description,
+      value: w.Ref,
+    }));
   }
 }

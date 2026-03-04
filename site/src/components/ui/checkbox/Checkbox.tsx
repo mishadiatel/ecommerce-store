@@ -27,7 +27,7 @@ export function Checkbox<T extends FieldValues>({
                 <i className="icon icon-tick-small"></i>
               </div>
             </div>
-            {label && <span className="caption1 text-black pl-2 relative -top-[2px]">{label}</span>}
+            {label && <span className="caption1 text-black pl-2 relative">{label}</span>}
           </div>
 
           {fieldState.error && (
