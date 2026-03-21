@@ -8,6 +8,7 @@ import { generateFileUrl } from '@/lib/utils';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/scrollbar';
+import 'intl-tel-input/build/css/intlTelInput.css';
 import '@/style/icomoon/style.min.css';
 import '@/style/style.scss';
 import '../global.css';

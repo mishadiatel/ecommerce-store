@@ -10,10 +10,13 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
+    "@types/intl-tel-input": "^18.1.4",
     "axios": "^1.13.2",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "html-react-parser": "^5.2.7",
+    "intl-tel-input": "^26.7.6",
+    "libphonenumber-js": "^1.12.38",
     "lucide-react": "^0.556.0",
     "next": "15.5.4",
     "next-intl": "^4.3.12",

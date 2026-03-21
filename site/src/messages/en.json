@@ -158,6 +158,7 @@
   "Form": {
     "requiredMessage": "The {fieldName} field is required",
     "validEmailMessage": "The {fieldName} field must contain a valid email address",
-    "agreeRequiredMessage": "You must agree to the processing of personal data"
+    "agreeRequiredMessage": "You must agree to the processing of personal data",
+    "validPhoneMessage": "Invalid phone number"
   }
 }

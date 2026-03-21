@@ -159,6 +159,7 @@
   "Form": {
     "requiredMessage": "Поле {fieldName} є обовязковим",
     "validEmailMessage": "Поле {fieldName} має містити коректну електронну адресу",
-    "agreeRequiredMessage": "Ви повинні погодитись на обробку даних"
+    "agreeRequiredMessage": "Ви повинні погодитись на обробку даних",
+    "validPhoneMessage": "Не коректний номер телефону"
   }
 }

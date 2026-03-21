@@ -16,6 +16,8 @@ import { RadioGroup } from '@/components/ui/radioGroup/RadioGroup';
 import { Textarea } from '@/components/ui/textarea/Textarea';
 import AsyncSelect from 'react-select/async';
 import { projectApi } from '@/lib/axios';
+import { PhoneInput } from '@/components/ui/phoneInput/PhoneInput';
+import { isValidPhoneNumber } from 'libphonenumber-js';
 
 export default function CheckoutPageComponent({ pageInfo }: { pageInfo: Page }) {
   const t = useTranslations();
@@ -88,9 +90,29 @@ export default function CheckoutPageComponent({ pageInfo }: { pageInfo: Page }) 
       .min(1, {
         message: t('Form.requiredMessage', { fieldName: t('Checkout.lastName.label') }),
       }),
+    phoneNumber: z
+      .string()
+      .min(1, {
+        message: t('Form.requiredMessage', {
+          fieldName: t('Checkout.phoneNumber.label'),
+        }),
+      })
+      .refine((val) => isValidPhoneNumber(val), {
+        message: t('Form.validPhoneMessage'),
+      }),
     orderForAnotherPerson: z.boolean().optional(),
     anotherFirstName: z.string().optional(),
     anotherLastName: z.string().optional(),
+    anotherPhoneNumber: z
+      .string()
+      .trim()
+      .or(z.literal(''))
+      .refine(
+        val => val === '' || isValidPhoneNumber(val),
+        {
+          message: t('Form.validPhoneMessage'),
+        }
+      ),
     anotherEmail: z
       .string()
       .trim()
@@ -135,15 +157,17 @@ export default function CheckoutPageComponent({ pageInfo }: { pageInfo: Page }) 
     setValue,
   } = useForm<CheckoutFormData>({
     resolver: zodResolver(checkoutFormSchema),
-    mode: 'onChange',
+    mode: 'all',
     defaultValues: {
       email: '',
       firstName: '',
       lastName: '',
+      phoneNumber: '',
       orderForAnotherPerson: false,
       anotherFirstName: '',
       anotherLastName: '',
       anotherEmail: '',
+      anotherPhoneNumber: '',
       deliveryType: 'novaposhta',
       deliveryCity: null,
       deliveryWarehouse: null,
@@ -251,6 +275,12 @@ export default function CheckoutPageComponent({ pageInfo }: { pageInfo: Page }) 
                           placeholder={t('Checkout.email.placeholder')}
                           label={t('Checkout.email.label')}
                         />
+                        <PhoneInput
+                          control={control}
+                          name={'phoneNumber'}
+                          label={t('Checkout.phoneNumber.label')}
+                          placeholder={t('Checkout.phoneNumber.placeholder')}
+                        />
                       </div>
                       <div className={'mb-4'}>
                         <div className={'w-fit'}><Checkbox control={control} name={'orderForAnotherPerson'}
@@ -276,6 +306,12 @@ export default function CheckoutPageComponent({ pageInfo }: { pageInfo: Page }) 
                                 name={'anotherEmail'}
                                 placeholder={t('Checkout.email.placeholder')}
                                 label={t('Checkout.email.label')}
+                              />
+                              <PhoneInput
+                                control={control}
+                                name={'anotherPhoneNumber'}
+                                label={t('Checkout.phoneNumber.label')}
+                                placeholder={t('Checkout.phoneNumber.placeholder')}
                               />
                             </div>
                           </div>
