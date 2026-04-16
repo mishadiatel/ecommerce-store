@@ -4,11 +4,12 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, Types } from 'mongoose';
+import { FilterQuery, Model, Types } from 'mongoose';
 
 import { Order, OrderDocument } from './schema/order.schema';
 import { CartService } from '../cart/cart.service';
 import { CreateOrderDto } from './dto/create-order.dto';
+import { OrderQueryDto } from './dto/order-query.dto';
 import { JwtUser } from '../auth/interfaces/jwt-user.interface';
 import { OrderStatus, PaymentStatus } from './enum/order.enums';
 import { FullProductWithTranslations } from '../product/interface/product.interface';
@@ -142,6 +143,61 @@ export class OrderService {
   }
 
   // ─── Адмін-методи ───────────────────────────────────────────────────────────
+
+  async findAllOrdersAdmin(query: OrderQueryDto) {
+    const page = Number(query.page) > 0 ? Number(query.page) : 1;
+    const limit = Number(query.limit) > 0 ? Number(query.limit) : 10;
+    const skip = (page - 1) * limit;
+
+    const filter: FilterQuery<OrderDocument> = {};
+
+    /* 🔍 SEARCH — за номером замовлення, email або телефоном */
+    if (query.search) {
+      const search = query.search.trim();
+      const safeSearch = search.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      filter.$or = [
+        { orderNumber: { $regex: safeSearch, $options: 'i' } },
+        { email: { $regex: safeSearch, $options: 'i' } },
+        { phoneNumber: { $regex: safeSearch, $options: 'i' } },
+        { firstName: { $regex: safeSearch, $options: 'i' } },
+        { lastName: { $regex: safeSearch, $options: 'i' } },
+      ];
+    }
+
+    if (query.status) {
+      filter.status = query.status;
+    }
+
+    if (query.paymentStatus) {
+      filter.paymentStatus = query.paymentStatus;
+    }
+
+    const sortOrder: 1 | -1 = query.sortOrder === 'asc' ? 1 : -1;
+
+    const [data, total] = await Promise.all([
+      this.orderModel
+        .find(filter)
+        .sort({ createdAt: sortOrder })
+        .skip(skip)
+        .limit(limit)
+        .lean(),
+      this.orderModel.countDocuments(filter),
+    ]);
+
+    const totalPages = Math.ceil(total / limit);
+
+    return {
+      data,
+      totalDocuments: total,
+      totalPages,
+    };
+  }
+
+  async findOrderById(orderId: string) {
+    const order = await this.orderModel.findById(orderId).lean();
+    if (!order) throw new NotFoundException('Order not found');
+    return order;
+  }
 
   async markAsPaid(orderId: string) {
     const order = await this.orderModel.findById(orderId);
