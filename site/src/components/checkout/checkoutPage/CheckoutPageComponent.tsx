@@ -198,13 +198,28 @@ export default function CheckoutPageComponent({ pageInfo }: { pageInfo: Page }) 
     try {
       const guestId = !isAuth ? guestCart.get() : undefined;
 
+      const isForAnotherPerson = data.orderForAnotherPerson ?? false;
+
       await createOrder({
         ...data,
         guestId,
         deliveryCity: data.deliveryCity!.label,
         deliveryWarehouse: data.deliveryWarehouse!.label,
-        orderForAnotherPerson: data.orderForAnotherPerson ?? false,
+        orderForAnotherPerson: isForAnotherPerson,
         dontCallMe: data.dontCallMe ?? false,
+        // якщо заказ НЕ для іншого отримувача — не шлемо поля взагалі
+        anotherFirstName: isForAnotherPerson
+          ? data.anotherFirstName?.trim() || undefined
+          : undefined,
+        anotherLastName: isForAnotherPerson
+          ? data.anotherLastName?.trim() || undefined
+          : undefined,
+        anotherEmail: isForAnotherPerson
+          ? data.anotherEmail?.trim() || undefined
+          : undefined,
+        anotherPhoneNumber: isForAnotherPerson
+          ? data.anotherPhoneNumber?.trim() || undefined
+          : undefined,
       });
 
       if (!isAuth) {

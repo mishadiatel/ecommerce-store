@@ -126,12 +126,21 @@ export class OrderService {
       lastName: dto.lastName,
       phoneNumber: dto.phoneNumber,
 
-      // Дані для іншого отримувача
+      // Дані для іншого отримувача — зберігаємо ТІЛЬКИ якщо прапорець true,
+      // інакше не створюємо ці поля взагалі (null для MongoDB → відсутність).
       orderForAnotherPerson: dto.orderForAnotherPerson,
-      anotherFirstName: dto.anotherFirstName,
-      anotherLastName: dto.anotherLastName,
-      anotherEmail: dto.anotherEmail,
-      anotherPhoneNumber: dto.anotherPhoneNumber,
+      anotherFirstName: dto.orderForAnotherPerson
+        ? dto.anotherFirstName?.trim() || undefined
+        : undefined,
+      anotherLastName: dto.orderForAnotherPerson
+        ? dto.anotherLastName?.trim() || undefined
+        : undefined,
+      anotherEmail: dto.orderForAnotherPerson
+        ? dto.anotherEmail?.trim() || undefined
+        : undefined,
+      anotherPhoneNumber: dto.orderForAnotherPerson
+        ? dto.anotherPhoneNumber?.trim() || undefined
+        : undefined,
 
       // Доставка
       deliveryType: dto.deliveryType,

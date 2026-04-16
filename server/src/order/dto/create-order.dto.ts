@@ -4,6 +4,7 @@ import {
   IsNotEmpty,
   IsOptional,
   IsString,
+  ValidateIf,
 } from 'class-validator';
 
 export class CreateOrderDto {
@@ -29,20 +30,44 @@ export class CreateOrderDto {
   @IsBoolean()
   orderForAnotherPerson: boolean;
 
+  /*
+   * Поля отримувача валідуються ТІЛЬКИ якщо orderForAnotherPerson === true
+   * АБО якщо в полі щось реально надіслали (не пусте значення).
+   * Це прибирає false-positive 400-ки коли фронт шле порожні рядки.
+   */
+  @ValidateIf(
+    (o: CreateOrderDto) =>
+      o.orderForAnotherPerson === true ||
+      (!!o.anotherFirstName && o.anotherFirstName.trim().length > 0),
+  )
   @IsString()
-  @IsOptional()
+  @IsNotEmpty()
   anotherFirstName?: string;
 
+  @ValidateIf(
+    (o: CreateOrderDto) =>
+      o.orderForAnotherPerson === true ||
+      (!!o.anotherLastName && o.anotherLastName.trim().length > 0),
+  )
   @IsString()
-  @IsOptional()
+  @IsNotEmpty()
   anotherLastName?: string;
 
+  @ValidateIf(
+    (o: CreateOrderDto) =>
+      o.orderForAnotherPerson === true ||
+      (!!o.anotherEmail && o.anotherEmail.trim().length > 0),
+  )
   @IsEmail()
-  @IsOptional()
   anotherEmail?: string;
 
+  @ValidateIf(
+    (o: CreateOrderDto) =>
+      o.orderForAnotherPerson === true ||
+      (!!o.anotherPhoneNumber && o.anotherPhoneNumber.trim().length > 0),
+  )
   @IsString()
-  @IsOptional()
+  @IsNotEmpty()
   anotherPhoneNumber?: string;
 
   @IsString()
