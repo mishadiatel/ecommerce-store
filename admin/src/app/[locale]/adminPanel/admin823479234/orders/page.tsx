@@ -2,6 +2,7 @@
 import { useAuth } from '@/components/admin/authProvider/AdminAuthProvider';
 import { useRouter } from '@/i18n/navigation';
 import OrdersList from '@/components/admin/orders/ordersList/OrdersList';
+import PageHeader from '@/components/admin/ui/pageHeader';
 
 export default function AdminOrders() {
   const { isAuthenticated } = useAuth();
@@ -12,11 +13,12 @@ export default function AdminOrders() {
     return <div>Access Denied</div>;
   }
   return (
-    <div>
-      <div className={'flex flex-col gap-8'}>
-        <div>Orders</div>
-        <OrdersList />
-      </div>
+    <div className="flex flex-col gap-6">
+      <PageHeader
+        title="Orders"
+        subtitle="Track customer orders, update statuses and manage payments."
+      />
+      <OrdersList />
     </div>
   );
 }

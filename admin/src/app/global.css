@@ -3,6 +3,7 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* ─── LIGHT THEME (default) ─────────────────────────────────────────────── */
 :root {
     --dark-gray: #2F3233;
     --gray-2: #4B4C4E;
@@ -12,38 +13,87 @@
     --white-3: #F9F8FA;
     --light-gray: #C4C4C4;
     --red: #FF0000;
-    --radius: 0.625rem;
-    --background: oklch(1 0 0);
-    --foreground: oklch(0.145 0 0);
+    --radius: 0.75rem;
+
+    /* Surfaces */
+    --background: oklch(0.985 0.002 260);
+    --foreground: oklch(0.22 0.03 265);
     --card: oklch(1 0 0);
-    --card-foreground: oklch(0.145 0 0);
+    --card-foreground: oklch(0.22 0.03 265);
     --popover: oklch(1 0 0);
-    --popover-foreground: oklch(0.145 0 0);
-    --primary: oklch(0.205 0 0);
-    --primary-foreground: oklch(0.985 0 0);
-    --secondary: oklch(0.97 0 0);
-    --secondary-foreground: oklch(0.205 0 0);
-    --muted: oklch(0.97 0 0);
-    --muted-foreground: oklch(0.556 0 0);
-    --accent: oklch(0.97 0 0);
-    --accent-foreground: oklch(0.205 0 0);
-    --destructive: oklch(0.577 0.245 27.325);
-    --border: oklch(0.922 0 0);
-    --input: oklch(0.922 0 0);
-    --ring: oklch(0.708 0 0);
-    --chart-1: oklch(0.646 0.222 41.116);
-    --chart-2: oklch(0.6 0.118 184.704);
-    --chart-3: oklch(0.398 0.07 227.392);
-    --chart-4: oklch(0.828 0.189 84.429);
-    --chart-5: oklch(0.769 0.188 70.08);
-    --sidebar: oklch(0.985 0 0);
-    --sidebar-foreground: oklch(0.145 0 0);
-    --sidebar-primary: oklch(0.205 0 0);
-    --sidebar-primary-foreground: oklch(0.985 0 0);
-    --sidebar-accent: oklch(0.97 0 0);
-    --sidebar-accent-foreground: oklch(0.205 0 0);
-    --sidebar-border: oklch(0.922 0 0);
-    --sidebar-ring: oklch(0.708 0 0);
+    --popover-foreground: oklch(0.22 0.03 265);
+
+    /* Brand */
+    --primary: oklch(0.68 0.17 152);           /* green accent */
+    --primary-foreground: oklch(0.12 0.03 152);
+    --secondary: oklch(0.95 0.01 265);
+    --secondary-foreground: oklch(0.22 0.03 265);
+    --muted: oklch(0.95 0.01 265);
+    --muted-foreground: oklch(0.55 0.02 265);
+    --accent: oklch(0.65 0.2 290);             /* purple accent */
+    --accent-foreground: oklch(0.985 0 0);
+
+    --destructive: oklch(0.62 0.23 25);
+    --border: oklch(0.9 0.01 265);
+    --input: oklch(0.92 0.01 265);
+    --ring: oklch(0.65 0.2 290 / 45%);
+
+    --chart-1: oklch(0.68 0.17 152);
+    --chart-2: oklch(0.65 0.2 290);
+    --chart-3: oklch(0.72 0.18 70);
+    --chart-4: oklch(0.62 0.23 25);
+    --chart-5: oklch(0.6 0.15 220);
+
+    --sidebar: oklch(0.97 0.01 265);
+    --sidebar-foreground: oklch(0.22 0.03 265);
+    --sidebar-primary: oklch(0.68 0.17 152);
+    --sidebar-primary-foreground: oklch(0.12 0.03 152);
+    --sidebar-accent: oklch(0.93 0.02 265);
+    --sidebar-accent-foreground: oklch(0.22 0.03 265);
+    --sidebar-border: oklch(0.9 0.01 265);
+    --sidebar-ring: oklch(0.65 0.2 290);
+}
+
+/* ─── DARK THEME (inspired by Traffic-jet UI) ───────────────────────────── */
+.dark {
+    /* Surfaces — deep navy */
+    --background: oklch(0.18 0.04 270);
+    --foreground: oklch(0.97 0.005 260);
+    --card: oklch(0.23 0.04 270);
+    --card-foreground: oklch(0.97 0.005 260);
+    --popover: oklch(0.23 0.04 270);
+    --popover-foreground: oklch(0.97 0.005 260);
+
+    /* Brand */
+    --primary: oklch(0.72 0.18 152);           /* bright green like "Сохранить" */
+    --primary-foreground: oklch(0.15 0.03 152);
+    --secondary: oklch(0.28 0.04 270);
+    --secondary-foreground: oklch(0.97 0.005 260);
+    --muted: oklch(0.28 0.04 270);
+    --muted-foreground: oklch(0.72 0.02 260);
+    --accent: oklch(0.7 0.23 290);             /* vibrant purple for hover */
+    --accent-foreground: oklch(0.97 0 0);
+
+    --destructive: oklch(0.68 0.22 25);
+    --border: oklch(1 0 0 / 8%);
+    --input: oklch(1 0 0 / 10%);
+    --ring: oklch(0.7 0.23 290 / 50%);
+
+    --chart-1: oklch(0.72 0.18 152);
+    --chart-2: oklch(0.7 0.23 290);
+    --chart-3: oklch(0.8 0.17 85);
+    --chart-4: oklch(0.68 0.22 25);
+    --chart-5: oklch(0.65 0.2 230);
+
+    /* Sidebar slightly darker than content */
+    --sidebar: oklch(0.21 0.04 270);
+    --sidebar-foreground: oklch(0.92 0.01 260);
+    --sidebar-primary: oklch(0.72 0.18 152);
+    --sidebar-primary-foreground: oklch(0.15 0.03 152);
+    --sidebar-accent: oklch(0.3 0.06 285);
+    --sidebar-accent-foreground: oklch(0.97 0 0);
+    --sidebar-border: oklch(1 0 0 / 6%);
+    --sidebar-ring: oklch(0.7 0.23 290);
 }
 
 @theme inline {
@@ -93,46 +143,38 @@
     --radius-xl: calc(var(--radius) + 4px);
 }
 
-.dark {
-    --background: oklch(0.145 0 0);
-    --foreground: oklch(0.985 0 0);
-    --card: oklch(0.205 0 0);
-    --card-foreground: oklch(0.985 0 0);
-    --popover: oklch(0.205 0 0);
-    --popover-foreground: oklch(0.985 0 0);
-    --primary: oklch(0.922 0 0);
-    --primary-foreground: oklch(0.205 0 0);
-    --secondary: oklch(0.269 0 0);
-    --secondary-foreground: oklch(0.985 0 0);
-    --muted: oklch(0.269 0 0);
-    --muted-foreground: oklch(0.708 0 0);
-    --accent: oklch(0.269 0 0);
-    --accent-foreground: oklch(0.985 0 0);
-    --destructive: oklch(0.704 0.191 22.216);
-    --border: oklch(1 0 0 / 10%);
-    --input: oklch(1 0 0 / 15%);
-    --ring: oklch(0.556 0 0);
-    --chart-1: oklch(0.488 0.243 264.376);
-    --chart-2: oklch(0.696 0.17 162.48);
-    --chart-3: oklch(0.769 0.188 70.08);
-    --chart-4: oklch(0.627 0.265 303.9);
-    --chart-5: oklch(0.645 0.246 16.439);
-    --sidebar: oklch(0.205 0 0);
-    --sidebar-foreground: oklch(0.985 0 0);
-    --sidebar-primary: oklch(0.488 0.243 264.376);
-    --sidebar-primary-foreground: oklch(0.985 0 0);
-    --sidebar-accent: oklch(0.269 0 0);
-    --sidebar-accent-foreground: oklch(0.985 0 0);
-    --sidebar-border: oklch(1 0 0 / 10%);
-    --sidebar-ring: oklch(0.556 0 0);
-}
-
 @layer base {
-  * {
-    @apply border-border outline-ring/50;
+    * {
+        @apply border-border outline-ring/50;
     }
-  body {
-    @apply bg-background text-foreground;
+    body {
+        @apply bg-background text-foreground;
+        transition: background-color 0.2s ease, color 0.2s ease;
     }
 }
 
+/* ─── Admin panel specific helpers ──────────────────────────────────────── */
+.admin-panel-shell {
+    min-height: 100vh;
+    background: var(--background);
+    color: var(--foreground);
+}
+
+.admin-card {
+    background: var(--card);
+    color: var(--card-foreground);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+}
+
+.dark .admin-card {
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.35), 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+/* Subtle gradient background for dark mode shell */
+.dark .admin-panel-shell {
+    background:
+        radial-gradient(1200px 600px at 0% -20%, oklch(0.32 0.12 280 / 22%), transparent 60%),
+        radial-gradient(900px 500px at 110% 0%, oklch(0.3 0.1 150 / 15%), transparent 60%),
+        var(--background);
+}

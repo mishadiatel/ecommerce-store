@@ -25,18 +25,18 @@ interface OrderCardProps {
 }
 
 const statusColors: Record<string, string> = {
-  pending: 'bg-yellow-100 text-yellow-800',
-  processing: 'bg-blue-100 text-blue-800',
-  shipped: 'bg-indigo-100 text-indigo-800',
-  delivered: 'bg-green-100 text-green-800',
-  completed: 'bg-emerald-100 text-emerald-800',
-  cancelled: 'bg-red-100 text-red-800',
+  pending: 'bg-yellow-500/15 text-yellow-600 dark:text-yellow-300 ring-1 ring-yellow-500/30',
+  processing: 'bg-blue-500/15 text-blue-600 dark:text-blue-300 ring-1 ring-blue-500/30',
+  shipped: 'bg-indigo-500/15 text-indigo-600 dark:text-indigo-300 ring-1 ring-indigo-500/30',
+  delivered: 'bg-green-500/15 text-green-600 dark:text-green-300 ring-1 ring-green-500/30',
+  completed: 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-300 ring-1 ring-emerald-500/30',
+  cancelled: 'bg-red-500/15 text-red-600 dark:text-red-300 ring-1 ring-red-500/30',
 };
 
 const paymentColors: Record<string, string> = {
-  pending: 'bg-yellow-100 text-yellow-800',
-  paid: 'bg-green-100 text-green-800',
-  failed: 'bg-red-100 text-red-800',
+  pending: 'bg-yellow-500/15 text-yellow-600 dark:text-yellow-300 ring-1 ring-yellow-500/30',
+  paid: 'bg-green-500/15 text-green-600 dark:text-green-300 ring-1 ring-green-500/30',
+  failed: 'bg-red-500/15 text-red-600 dark:text-red-300 ring-1 ring-red-500/30',
 };
 
 function formatDate(iso: string): string {
@@ -81,18 +81,18 @@ export default function OrderCard({ order, updateOrdersList }: OrderCardProps) {
   };
 
   return (
-    <div className={'flex flex-col gap-2 p-4 border rounded-md bg-white'}>
+    <div className={'admin-card flex flex-col gap-2 p-4'}>
       <div className={'flex items-center justify-between flex-wrap gap-2'}>
         <div className={'flex flex-col'}>
           <div className={'font-semibold text-lg'}>{order.orderNumber}</div>
-          <div className={'text-sm text-gray-500'}>{formatDate(order.createdAt)}</div>
+          <div className={'text-sm text-muted-foreground'}>{formatDate(order.createdAt)}</div>
         </div>
 
         <div className={'flex items-center gap-2 flex-wrap'}>
-          <span className={`px-2 py-1 rounded-md text-xs ${paymentColors[order.paymentStatus] || 'bg-gray-100 text-gray-800'}`}>
+          <span className={`px-2 py-1 rounded-md text-xs ${paymentColors[order.paymentStatus] || 'bg-muted text-muted-foreground ring-1 ring-border'}`}>
             {order.paymentStatus}
           </span>
-          <span className={`px-2 py-1 rounded-md text-xs ${statusColors[order.status] || 'bg-gray-100 text-gray-800'}`}>
+          <span className={`px-2 py-1 rounded-md text-xs ${statusColors[order.status] || 'bg-muted text-muted-foreground ring-1 ring-border'}`}>
             {order.status}
           </span>
           <span className={'font-semibold'}>{order.total} ₴</span>
@@ -102,29 +102,29 @@ export default function OrderCard({ order, updateOrdersList }: OrderCardProps) {
       <div className={'flex justify-between flex-wrap gap-2 text-sm'}>
         <div>
           <div>
-            <span className={'text-gray-500'}>Customer: </span>
+            <span className={'text-muted-foreground'}>Customer: </span>
             {order.firstName} {order.lastName}
           </div>
           <div>
-            <span className={'text-gray-500'}>Email: </span>
+            <span className={'text-muted-foreground'}>Email: </span>
             {order.email}
           </div>
           <div>
-            <span className={'text-gray-500'}>Phone: </span>
+            <span className={'text-muted-foreground'}>Phone: </span>
             {order.phoneNumber}
           </div>
         </div>
         <div>
           <div>
-            <span className={'text-gray-500'}>Items: </span>
+            <span className={'text-muted-foreground'}>Items: </span>
             {order.items.reduce((sum, i) => sum + i.quantity, 0)}
           </div>
           <div>
-            <span className={'text-gray-500'}>Payment: </span>
+            <span className={'text-muted-foreground'}>Payment: </span>
             {order.paymentMethod}
           </div>
           <div>
-            <span className={'text-gray-500'}>Delivery: </span>
+            <span className={'text-muted-foreground'}>Delivery: </span>
             {order.deliveryType}
           </div>
         </div>
@@ -189,12 +189,12 @@ export default function OrderCard({ order, updateOrdersList }: OrderCardProps) {
                 <div className={'font-semibold mb-1'}>Items ({order.items.length})</div>
                 <div className={'flex flex-col gap-1'}>
                   {order.items.map((item, idx) => (
-                    <div key={`${item.productId}-${idx}`} className={'flex justify-between gap-2 border-b pb-1'}>
+                    <div key={`${item.productId}-${idx}`} className={'flex justify-between gap-2 border-b border-border pb-1'}>
                       <div>{item.name}</div>
                       <div className={'whitespace-nowrap'}>
                         {item.quantity} × {item.price} ₴
                         {item.oldPrice > item.price && (
-                          <span className={'text-gray-400 line-through ml-2'}>{item.oldPrice} ₴</span>
+                          <span className={'text-muted-foreground line-through ml-2'}>{item.oldPrice} ₴</span>
                         )}
                       </div>
                     </div>

@@ -2,10 +2,11 @@
 import BlocksList from '@/components/admin/blocks/blocksList/BlocksList';
 import { useAuth } from '@/components/admin/authProvider/AdminAuthProvider';
 import { useRouter } from '@/i18n/navigation';
+import PageHeader from '@/components/admin/ui/pageHeader';
 
-export default function AdminBlocks () {
+export default function AdminBlocks() {
   const { isAuthenticated } = useAuth();
-  const router = useRouter()
+  const router = useRouter();
 
   if (!isAuthenticated) {
     router.replace('/adminPanel/login');
@@ -13,11 +14,12 @@ export default function AdminBlocks () {
   }
 
   return (
-    <div>
-      <div className={'flex flex-col gap-8'}>
-        <div>Blocks</div>
-        <BlocksList />
-      </div>
+    <div className="flex flex-col gap-6">
+      <PageHeader
+        title="Blocks"
+        subtitle="Reusable content blocks that can be placed across your site pages."
+      />
+      <BlocksList />
     </div>
   );
 }

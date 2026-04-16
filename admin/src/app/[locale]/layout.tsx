@@ -32,8 +32,30 @@ export default async function RootLayout({
     if (!hasLocale(routing.locales, locale)) {
         notFound();
     }
+    // Inline script runs BEFORE React hydration to set the correct theme
+    // class on <html>, preventing a flash of the wrong theme (FOUC).
+    const themeInitScript = `
+(function() {
+  try {
+    var stored = localStorage.getItem('admin-theme');
+    var theme = (stored === 'light' || stored === 'dark')
+      ? stored
+      : (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    if (theme === 'dark') {
+      document.documentElement.classList.add('dark');
+      document.documentElement.style.colorScheme = 'dark';
+    } else {
+      document.documentElement.style.colorScheme = 'light';
+    }
+  } catch (e) {}
+})();
+`;
+
     return (
-        <html lang={locale}>
+        <html lang={locale} suppressHydrationWarning>
+        <head>
+            <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+        </head>
         <body
             className={`${openSansFont.variable} antialiased`}
         >
@@ -42,7 +64,13 @@ export default async function RootLayout({
                 {children}
             </main>
         </NextIntlClientProvider>
-        <ToastContainer />
+        <ToastContainer
+            position="top-right"
+            theme="colored"
+            autoClose={4000}
+            newestOnTop
+            pauseOnHover
+        />
         </body>
         </html>
     );
