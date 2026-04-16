@@ -30,6 +30,7 @@ import { WishlistModule } from './wishlist/wishlist.module';
 import { CartModule } from './cart/cart.module';
 import { NovaPoshtaModule } from './nova-poshta/nova-poshta.module';
 import { OrderModule } from './order/order.module';
+import { TelegramModule } from './telegram/telegram.module';
 
 @Module({
   imports: [
@@ -97,6 +98,7 @@ import { OrderModule } from './order/order.module';
     CartModule,
     NovaPoshtaModule,
     OrderModule,
+    TelegramModule,
   ],
   controllers: [AppController],
   providers: [AppService],
