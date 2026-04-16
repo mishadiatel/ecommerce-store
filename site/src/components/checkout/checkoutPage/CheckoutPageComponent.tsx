@@ -384,7 +384,7 @@ export default function CheckoutPageComponent({ pageInfo }: { pageInfo: Page }) 
                         <div className={'flex flex-col gap-8'}>
                           <RadioGroup control={control} name={'paymentMethod'} options={[
                             { value: 'online', label: t('Checkout.paymentMethodOnlineLabel') },
-                            { value: 'afterPay', label: t('Checkout.paymentMethodAfterPayLabel') },
+                            { value: 'cash_on_delivery', label: t('Checkout.paymentMethodAfterPayLabel') },
                           ]} />
                           <Textarea
                             control={control}

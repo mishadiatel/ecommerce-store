@@ -29,6 +29,7 @@ import { LoggerModule } from 'nestjs-pino';
 import { WishlistModule } from './wishlist/wishlist.module';
 import { CartModule } from './cart/cart.module';
 import { NovaPoshtaModule } from './nova-poshta/nova-poshta.module';
+import { OrderModule } from './order/order.module';
 
 @Module({
   imports: [
@@ -95,6 +96,7 @@ import { NovaPoshtaModule } from './nova-poshta/nova-poshta.module';
     WishlistModule,
     CartModule,
     NovaPoshtaModule,
+    OrderModule,
   ],
   controllers: [AppController],
   providers: [AppService],
