@@ -30,7 +30,6 @@
     "newsMessage": "Будьте завжди в курсі наших акцій та оновлень",
     "rightsReversedText": "Всі права захищені."
   },
-
   "Subscribe": {
     "agreeText": "Даю згоду на <link>обробку персональних даних</link>",
     "buttonText": "Підписатись"
@@ -154,7 +153,10 @@
     "warehouse": {
       "label": "Номер відділення",
       "placeholder": "Введіть номер відділення"
-    }
+    },
+    "orderSuccessMessage": "Дякуємо! Ваше замовлення успішно оформлено",
+    "orderErrorMessage": "Помилка при оформленні замовлення. Спробуйте ще раз",
+    "submittingText": "Оформлення..."
   },
   "Form": {
     "requiredMessage": "Поле {fieldName} є обовязковим",

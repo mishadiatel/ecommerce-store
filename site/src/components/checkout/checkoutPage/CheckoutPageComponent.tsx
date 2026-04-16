@@ -3,7 +3,7 @@
 import { useTranslations } from 'next-intl';
 import { useCartStore } from '@/stores/cartStore';
 import Loader from '@/components/ui/loader/Loader';
-import { Link } from '@/i18n/navigation';
+import { Link, useRouter } from '@/i18n/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { Page } from '@/types/pages';
 import { useAuthStore } from '@/stores/authStore';
@@ -18,20 +18,26 @@ import AsyncSelect from 'react-select/async';
 import { projectApi } from '@/lib/axios';
 import { PhoneInput } from '@/components/ui/phoneInput/PhoneInput';
 import { isValidPhoneNumber } from 'libphonenumber-js';
+import { createOrder } from '@/services/order';
+import { guestCart } from '@/stores/guestCart';
+import { toast } from 'react-toastify';
 
 export default function CheckoutPageComponent({ pageInfo }: { pageInfo: Page }) {
   const t = useTranslations();
+  const router = useRouter();
   const freeShippingPrice = 2000;
   const cartTotalPrice = useCartStore(s => s.cart?.total) || 0;
   const cartItems = useCartStore(s => s.cart?.items);
   const isCartLoading = useCartStore(s => s.isLoading);
+  const loadCart = useCartStore(s => s.load);
   const totalProducts = useCartStore(s =>
     s.cart?.items.reduce((sum, item) => sum + item.quantity, 0) ?? 0,
   );
   const isAuth = useAuthStore(s => s.isAuth);
   const asideRef = useRef<HTMLDivElement | null>(null);
   const [showBottom, setShowBottom] = useState(false);
-  const [warehouseOptions, setWarehouseOptions] = useState<Array<{label: string, value: string}>>([])
+  const [warehouseOptions, setWarehouseOptions] = useState<Array<{label: string, value: string}>>([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     if (typeof window === 'undefined') {
@@ -187,8 +193,34 @@ export default function CheckoutPageComponent({ pageInfo }: { pageInfo: Page }) 
     }
   }, [selectedCity, setValue]);
 
-  const onSubmit = (data: CheckoutFormData) => {
-    console.log(data);
+  const onSubmit = async (data: CheckoutFormData) => {
+    setIsSubmitting(true);
+    try {
+      const guestId = !isAuth ? guestCart.get() : undefined;
+
+      await createOrder({
+        ...data,
+        guestId,
+        deliveryCity: data.deliveryCity!.label,
+        deliveryWarehouse: data.deliveryWarehouse!.label,
+        orderForAnotherPerson: data.orderForAnotherPerson ?? false,
+        dontCallMe: data.dontCallMe ?? false,
+      });
+
+      if (!isAuth) {
+        guestCart.clear();
+      }
+
+      await loadCart();
+
+      // router.push('/');
+      toast.success(t('Checkout.orderSuccessMessage'));
+    } catch (err) {
+      console.error(err);
+      toast.error(t('Checkout.orderErrorMessage'));
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const loadCities = async (
@@ -204,6 +236,7 @@ export default function CheckoutPageComponent({ pageInfo }: { pageInfo: Page }) 
 
     return data;
   };
+
   const loadWarehouses = async (inputValue: string) => {
     if (!selectedCity?.value) return [];
 
@@ -410,15 +443,6 @@ export default function CheckoutPageComponent({ pageInfo }: { pageInfo: Page }) 
                         <div className="font-semibold sm:font-bold text-[22px] sm:text-[28px] lg:text-[32px] mb-6">
                           {t('Cart.asideTitle')}
                         </div>
-                        {/*<div className="input-wrapper mb-4">*/}
-                        {/*  <input type="text"*/}
-                        {/*         className="input coupon-input bg-white !pr-[130px]"*/}
-                        {/*         placeholder={t('Checkout.promocodeInputPlaceholder')} />*/}
-                        {/*  <button type="button"*/}
-                        {/*          className="text-sm font-bold uppercase text-primary-green absolute top-4 right-6">*/}
-                        {/*    {t('Checkout.applyPromocodeButtonText')}*/}
-                        {/*  </button>*/}
-                        {/*</div>*/}
                         <div
                           className="flex items-center justify-between pb-3 mb-3 sm:mb-4 sm:pb-4 border-b border-b-gray-20">
                         <span
@@ -457,8 +481,9 @@ export default function CheckoutPageComponent({ pageInfo }: { pageInfo: Page }) 
                         <div className="block-button flex flex-col items-center gap-y-4 mt-5">
                           <button
                             type={'submit'}
-                            className="checkout-btn button-main text-center !w-full">
-                            {t('Cart.checkoutButtonText')}
+                            disabled={isSubmitting}
+                            className="checkout-btn button-main text-center !w-full disabled:opacity-60 disabled:cursor-not-allowed">
+                            {isSubmitting ? t('Checkout.submittingText') : t('Cart.checkoutButtonText')}
                           </button>
                         </div>
                       </div>
@@ -477,8 +502,9 @@ export default function CheckoutPageComponent({ pageInfo }: { pageInfo: Page }) 
                         </div>
                         <button
                           type={'submit'}
-                          className="checkout-btn button-main text-center !w-full">
-                          {t('Cart.checkoutButtonText')}
+                          disabled={isSubmitting}
+                          className="checkout-btn button-main text-center !w-full disabled:opacity-60 disabled:cursor-not-allowed">
+                          {isSubmitting ? t('Checkout.submittingText') : t('Cart.checkoutButtonText')}
                         </button>
                       </div>
                     </div>

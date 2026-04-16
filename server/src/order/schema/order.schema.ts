@@ -28,6 +28,9 @@ export class Order {
   @Prop({ required: true })
   total: number;
 
+  @Prop({ required: true, default: false })
+  hasFreeDelivery: boolean;
+
   @Prop({
     type: String,
     enum: [PaymentMethod.ONLINE, PaymentMethod.CASH_ON_DELIVERY],

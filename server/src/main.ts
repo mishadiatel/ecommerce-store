@@ -6,14 +6,14 @@ import { MongoExceptionFilter } from './filters/mongodb.filter';
 import * as cookieParser from 'cookie-parser';
 
 async function bootstrap() {
-  const PORT = process.env.PORT || 5000;
+  const PORT = process.env.PORT || 8080;
   const app = await NestFactory.create(AppModule);
   app.enableCors({
     origin: [
       'http://localhost:3000',
-      'http://192.168.1.107:3000',
+      'http://192.168.1.104:3000',
       'http://localhost:8000',
-      'http://192.168.1.107:8000',
+      'http://192.168.1.104:8000',
     ],
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
