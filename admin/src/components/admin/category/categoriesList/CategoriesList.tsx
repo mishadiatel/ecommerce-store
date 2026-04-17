@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 
 import { toast } from 'react-toastify';
+import { useTranslations } from 'next-intl';
 import { FullCategoryWithTranslation } from '@/types/category';
 import { getAdminCategories } from '@/services/category';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/admin/shadcnuiComponents/dialog';
@@ -11,6 +12,7 @@ import CategoryCard from '@/components/admin/category/card/CategoryCard';
 import CreateCategoryForm from '@/components/admin/category/forms/CreateCategoryForm';
 
 export default function CategoriesList() {
+  const t = useTranslations('categories');
   const isFirstRender = useRef(true);
   const [categoriesState, setCategoriesState] = useState<FullCategoryWithTranslation[] | undefined>([]);
   const [searchWord, setSearchWord] = useState('');
@@ -36,7 +38,7 @@ export default function CategoriesList() {
       setTotalPages(pagesResult?.totalPages);
       setTotalDocuments(pagesResult?.totalDocuments);
     }).catch((err) => {
-      toast.error('error loading categories.');
+      toast.error(t('toast.loadError'));
     });
   };
 
@@ -56,7 +58,7 @@ export default function CategoriesList() {
       <div className={'w-fit'}>
         <Dialog>
           <DialogTrigger className={'w-fit'} asChild>
-            <Button>Add category</Button>
+            <Button>{t('addButton')}</Button>
           </DialogTrigger>
           <DialogContent className={'max-w-[1000px] sm:max-w-[1000px] max-h-screen overflow-y-auto'}>
             <CreateCategoryForm updateCategoriesList={updateCategoriesList} />
@@ -65,7 +67,7 @@ export default function CategoriesList() {
       </div>
 
       <Input type={'text'}
-             placeholder={'Search...'}
+             placeholder={t('searchPlaceholder')}
              className={'w-[200px] flex-shrink max-w-full max-[500px]:w-full'}
              value={searchWord}
              onChange={e => setSearchWord(e.target.value)}
@@ -84,7 +86,7 @@ export default function CategoriesList() {
             )}
           </>
         ) : (
-          <div>not found categories</div>
+          <div>{t('notFound')}</div>
         )}
       </div>
     </>

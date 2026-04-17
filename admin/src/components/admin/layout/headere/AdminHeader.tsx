@@ -1,12 +1,15 @@
 'use client';
 
 import { LogOut, UserCircle2 } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { useAuth } from '@/components/admin/authProvider/AdminAuthProvider';
 import { Button } from '@/components/admin/shadcnuiComponents/button';
 import ThemeToggle from '@/components/admin/themeProvider/ThemeToggle';
+import LanguageSwitcher from '@/components/admin/layout/languageSwitcher/LanguageSwitcher';
 
 export default function AdminHeader() {
   const { user, logout } = useAuth();
+  const t = useTranslations('header');
 
   return (
     <header
@@ -31,14 +34,15 @@ export default function AdminHeader() {
         </div>
         <div className="flex flex-col leading-tight">
           <span className="text-[11px] uppercase tracking-[0.15em] text-muted-foreground">
-            ecommerce
+            {t('brandTag')}
           </span>
-          <span className="text-sm font-semibold">Admin panel</span>
+          <span className="text-sm font-semibold">{t('brandTitle')}</span>
         </div>
       </div>
 
       {/* Right-side controls */}
       <div className="ml-auto flex items-center gap-3">
+        <LanguageSwitcher />
         <ThemeToggle />
 
         {user && (
@@ -57,7 +61,7 @@ export default function AdminHeader() {
 
         <Button variant="outline" size="sm" onClick={logout} className="gap-2">
           <LogOut className="h-4 w-4" />
-          <span className="hidden sm:inline">Logout</span>
+          <span className="hidden sm:inline">{t('logout')}</span>
         </Button>
       </div>
     </header>

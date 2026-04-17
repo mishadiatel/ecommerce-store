@@ -2,6 +2,7 @@
 
 import { GeneralSettingsTranslation } from '@/types/general';
 import { useState } from 'react';
+import { useTranslations } from 'next-intl';
 import SettingsTranslationCard from '@/components/admin/general/card/SettingsTranslationCard';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/admin/shadcnuiComponents/dialog';
 import { Button } from '@/components/admin/shadcnuiComponents/button';
@@ -14,13 +15,14 @@ interface SettingsTranslationsListProps {
 }
 
 export default function SettingsTranslationsList({ translations }: SettingsTranslationsListProps) {
+  const t = useTranslations('general');
   const [translationsState, setTranslationsState] = useState<GeneralSettingsTranslation[]>(translations || []);
 
   const updateTranslationsList = () => {
     getSettingsTranslations().then((settingsTranslations) => {
       setTranslationsState(settingsTranslations!);
     }).catch((err) => {
-      toast.error('error loading pages.');
+      toast.error(t('toast.loadError'));
     })
   }
 
@@ -29,7 +31,7 @@ export default function SettingsTranslationsList({ translations }: SettingsTrans
       <div className={'w-fit'}>
         <Dialog>
           <DialogTrigger className={'w-fit'} asChild>
-            <Button>Add Translation</Button>
+            <Button>{t('addTranslation')}</Button>
           </DialogTrigger>
           <DialogContent className={'max-w-[1000px] sm:max-w-[1000px] max-h-screen overflow-y-auto'}>
             <SettingsTranslationForm onSuccess={updateTranslationsList} />
@@ -39,7 +41,7 @@ export default function SettingsTranslationsList({ translations }: SettingsTrans
       <div className={'flex flex-col sm:flex-row gap-6'}>
         {translationsState && translationsState.length > 0 ? translationsState.map(translationItem => (
           <SettingsTranslationCard key={translationItem._id} settingsTranslation={translationItem} />
-        )) : <div>Not found translations</div>}
+        )) : <div>{t('notFoundTranslations')}</div>}
       </div>
     </div>
   );

@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 import {
   LayoutDashboard,
   FileText,
@@ -14,23 +15,30 @@ import {
 import { usePathname } from '@/i18n/navigation';
 
 interface NavItem {
-  key: string;
+  key:
+    | 'dashboard'
+    | 'pagesControl'
+    | 'blocks'
+    | 'mailTemplates'
+    | 'category'
+    | 'product'
+    | 'orders';
   href: string;
-  label: string;
   icon: LucideIcon;
 }
 
 const NAV_ITEMS: NavItem[] = [
-  { key: 'dashboard', href: '/adminPanel/admin823479234/dashboard', label: 'General', icon: LayoutDashboard },
-  { key: 'pagesControl', href: '/adminPanel/admin823479234/pagesControl', label: 'Pages', icon: FileText },
-  { key: 'blocks', href: '/adminPanel/admin823479234/blocks', label: 'Blocks', icon: Layers },
-  { key: 'mailTemplates', href: '/adminPanel/admin823479234/mailTemplates', label: 'Mail templates', icon: Mail },
-  { key: 'category', href: '/adminPanel/admin823479234/category', label: 'Category', icon: FolderTree },
-  { key: 'product', href: '/adminPanel/admin823479234/product', label: 'Products', icon: ShoppingBag },
-  { key: 'orders', href: '/adminPanel/admin823479234/orders', label: 'Orders', icon: ClipboardList },
+  { key: 'dashboard', href: '/adminPanel/admin823479234/dashboard', icon: LayoutDashboard },
+  { key: 'pagesControl', href: '/adminPanel/admin823479234/pagesControl', icon: FileText },
+  { key: 'blocks', href: '/adminPanel/admin823479234/blocks', icon: Layers },
+  { key: 'mailTemplates', href: '/adminPanel/admin823479234/mailTemplates', icon: Mail },
+  { key: 'category', href: '/adminPanel/admin823479234/category', icon: FolderTree },
+  { key: 'product', href: '/adminPanel/admin823479234/product', icon: ShoppingBag },
+  { key: 'orders', href: '/adminPanel/admin823479234/orders', icon: ClipboardList },
 ];
 
 export default function AdminAside() {
+  const t = useTranslations('nav');
   const pathname = usePathname();
   const segments = pathname.split('/').filter(Boolean);
   const lastSegment = segments[segments.length - 1];
@@ -44,7 +52,7 @@ export default function AdminAside() {
       ].join(' ')}
     >
       <nav className="flex flex-col gap-1">
-        {NAV_ITEMS.map(({ key, href, label, icon: Icon }) => {
+        {NAV_ITEMS.map(({ key, href, icon: Icon }) => {
           const isActive = lastSegment === key;
           return (
             <Link
@@ -68,7 +76,7 @@ export default function AdminAside() {
               >
                 <Icon className="h-4 w-4" />
               </span>
-              <span className="flex-1 truncate">{label}</span>
+              <span className="flex-1 truncate">{t(key)}</span>
               {isActive && (
                 <span className="h-1.5 w-1.5 rounded-full bg-primary" aria-hidden />
               )}

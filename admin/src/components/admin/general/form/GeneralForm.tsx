@@ -5,6 +5,7 @@ import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'react-toastify';
+import { useTranslations } from 'next-intl';
 import InputGroup from '@/components/admin/ui/inputGroup';
 import { Button } from '@/components/admin/shadcnuiComponents/button';
 import FileInput from '@/components/admin/ui/fileInput';
@@ -15,20 +16,24 @@ interface GeneralFormProps {
 }
 
 export default function GeneralForm({generalSettings}: GeneralFormProps) {
+  const t = useTranslations('general');
+  const tCommon = useTranslations('common');
+  const tFields = useTranslations('fields');
+  const tVal = useTranslations('validation');
   const editGeneralSettingsSchema = z.object({
-    companyName: z.string({ error: 'companyName is required' }).min(1, { message: 'companyName is required' }),
-    logo:  z.string({ error: 'logo is required' }).min(1, { message: 'logo is required' })
+    companyName: z.string({ error: tVal('required', { field: tFields('companyName') }) }).min(1, { message: tVal('required', { field: tFields('companyName') }) }),
+    logo:  z.string({ error: tVal('required', { field: tFields('logo') }) }).min(1, { message: tVal('required', { field: tFields('logo') }) })
     .refine(
       (val) => /\.(jpg|jpeg|png|webp|avif|gif|svg)$/.test(val.split("?")[0]),
       {
-        message: "Image name must end with a valid image extension",
+        message: tVal('invalidImageExtension'),
       }
     ),
-    favicon: z.string({ error: 'favicon is required' }).min(1, { message: 'favicon is required' })
+    favicon: z.string({ error: tVal('required', { field: tFields('favicon') }) }).min(1, { message: tVal('required', { field: tFields('favicon') }) })
       .refine(
         (val) => /\.(jpg|jpeg|png|webp|avif|gif|svg)$/.test(val.split("?")[0]),
         {
-          message: "Image name must end with a valid image extension",
+          message: tVal('invalidImageExtension'),
         }
       ),
     facebook: z.string().optional(),
@@ -79,9 +84,9 @@ export default function GeneralForm({generalSettings}: GeneralFormProps) {
     console.log(preparedData);
     updateSettings(preparedData)
       .then(data => {
-        toast.success('Successfully updated general settings!');
+        toast.success(t('toast.updated'));
       }).catch(error => {
-      toast.error('Error while updating settings, try again letter');
+      toast.error(t('toast.updateError'));
     }).finally(() => {
     });
   };
@@ -90,19 +95,19 @@ export default function GeneralForm({generalSettings}: GeneralFormProps) {
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <div className={'grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6'}>
-        <InputGroup control={control} name={'companyName'} label={'companyName'} placeholder={'companyName'} />
-        <FileInput control={control} name={`logo`} label="logo" placeholder={'logo'} />
-        <FileInput control={control} name={`favicon`} label="favicon" placeholder={'favicon'} />
-        <InputGroup control={control} name={'instagram'} label={'instagram'} placeholder={'instagram'} />
-        <InputGroup control={control} name={'facebook'} label={'facebook'} placeholder={'facebook'} />
-        <InputGroup control={control} name={'tiktok'} label={'tiktok'} placeholder={'tiktok'} />
-        <InputGroup control={control} name={'telegram'} label={'telegram'} placeholder={'telegram'} />
-        <InputGroup control={control} name={'phoneNumber'} label={'phoneNumber'} placeholder={'phoneNumber'} />
-        <InputGroup control={control} name={'email'} label={'email'} placeholder={'email'} />
-        <InputGroup control={control} name={'mailjetEmail'} label={'mailjetEmail'} placeholder={'mailjetEmail'} />
-        <InputGroup control={control} name={'mailjetName'} label={'mailjetName'} placeholder={'mailjetName'} />
+        <InputGroup control={control} name={'companyName'} label={tFields('companyName')} placeholder={tFields('companyName')} />
+        <FileInput control={control} name={`logo`} label={tFields('logo')} placeholder={tFields('logo')} />
+        <FileInput control={control} name={`favicon`} label={tFields('favicon')} placeholder={tFields('favicon')} />
+        <InputGroup control={control} name={'instagram'} label={tFields('instagram')} placeholder={tFields('instagram')} />
+        <InputGroup control={control} name={'facebook'} label={tFields('facebook')} placeholder={tFields('facebook')} />
+        <InputGroup control={control} name={'tiktok'} label={tFields('tiktok')} placeholder={tFields('tiktok')} />
+        <InputGroup control={control} name={'telegram'} label={tFields('telegram')} placeholder={tFields('telegram')} />
+        <InputGroup control={control} name={'phoneNumber'} label={tFields('phoneNumber')} placeholder={tFields('phoneNumber')} />
+        <InputGroup control={control} name={'email'} label={tCommon('email')} placeholder={tCommon('email')} />
+        <InputGroup control={control} name={'mailjetEmail'} label={tFields('mailjetEmail')} placeholder={tFields('mailjetEmail')} />
+        <InputGroup control={control} name={'mailjetName'} label={tFields('mailjetName')} placeholder={tFields('mailjetName')} />
       </div>
-      <Button type="submit" className={'w-fit'}>Save changes</Button>
+      <Button type="submit" className={'w-fit'}>{tCommon('saveChanges')}</Button>
 
     </form>
   )

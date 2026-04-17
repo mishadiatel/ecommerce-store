@@ -8,6 +8,7 @@ import {routing} from "@/i18n/routing";
 import {notFound} from "next/navigation";
 import { ToastContainer } from 'react-toastify';
 import 'react-quill-new/dist/quill.snow.css';
+import {ThemeProvider} from "@/components/admin/themeProvider/ThemeProvider";
 
 
 const openSansFont = Open_Sans({
@@ -60,9 +61,11 @@ export default async function RootLayout({
             className={`${openSansFont.variable} antialiased`}
         >
         <NextIntlClientProvider>
-            <main>
-                {children}
-            </main>
+            <ThemeProvider>
+                <main>
+                    {children}
+                </main>
+            </ThemeProvider>
         </NextIntlClientProvider>
         <ToastContainer
             position="top-right"

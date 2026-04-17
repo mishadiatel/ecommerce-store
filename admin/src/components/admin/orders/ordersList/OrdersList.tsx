@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 
 import { toast } from 'react-toastify';
+import { useTranslations } from 'next-intl';
 import { Input } from '@/components/admin/shadcnuiComponents/input';
 import PageControl from '@/components/admin/ui/pageControl';
 import {
@@ -16,6 +17,7 @@ import { getAdminOrders } from '@/services/order';
 import OrderCard from '@/components/admin/orders/card/OrderCard';
 
 export default function OrdersList() {
+  const t = useTranslations('orders');
   const isFirstRender = useRef(true);
   const [ordersState, setOrdersState] = useState<Order[] | undefined>([]);
   const [searchWord, setSearchWord] = useState('');
@@ -57,7 +59,7 @@ export default function OrdersList() {
         setTotalDocuments(pagesResult?.totalDocuments);
       })
       .catch(() => {
-        toast.error('error loading orders.');
+        toast.error(t('loadError'));
       });
   };
 
@@ -81,7 +83,7 @@ export default function OrdersList() {
       <div className={'flex gap-4 items-center flex-wrap'}>
         <Input
           type={'text'}
-          placeholder={'Search order, email, phone, name...'}
+          placeholder={t('searchPlaceholder')}
           className={'w-[280px] flex-shrink max-w-full max-[500px]:w-full'}
           value={searchWord}
           onChange={(e) => setSearchWord(e.target.value)}
@@ -89,17 +91,17 @@ export default function OrdersList() {
 
         <Select value={selectedStatus} onValueChange={(value) => setSelectedStatus(value)}>
           <SelectTrigger className={'w-[180px]'}>
-            <SelectValue placeholder={'Status'} />
+            <SelectValue placeholder={t('statusPlaceholder')} />
           </SelectTrigger>
 
           <SelectContent>
-            <SelectItem value={'all'}>All statuses</SelectItem>
-            <SelectItem value={'pending'}>Pending</SelectItem>
-            <SelectItem value={'processing'}>Processing</SelectItem>
-            <SelectItem value={'shipped'}>Shipped</SelectItem>
-            <SelectItem value={'delivered'}>Delivered</SelectItem>
-            <SelectItem value={'completed'}>Completed</SelectItem>
-            <SelectItem value={'cancelled'}>Cancelled</SelectItem>
+            <SelectItem value={'all'}>{t('allStatuses')}</SelectItem>
+            <SelectItem value={'pending'}>{t('status.pending')}</SelectItem>
+            <SelectItem value={'processing'}>{t('status.processing')}</SelectItem>
+            <SelectItem value={'shipped'}>{t('status.shipped')}</SelectItem>
+            <SelectItem value={'delivered'}>{t('status.delivered')}</SelectItem>
+            <SelectItem value={'completed'}>{t('status.completed')}</SelectItem>
+            <SelectItem value={'cancelled'}>{t('status.cancelled')}</SelectItem>
           </SelectContent>
         </Select>
 
@@ -108,25 +110,25 @@ export default function OrdersList() {
           onValueChange={(value) => setSelectedPaymentStatus(value)}
         >
           <SelectTrigger className={'w-[180px]'}>
-            <SelectValue placeholder={'Payment status'} />
+            <SelectValue placeholder={t('paymentStatusPlaceholder')} />
           </SelectTrigger>
 
           <SelectContent>
-            <SelectItem value={'all'}>All payments</SelectItem>
-            <SelectItem value={'pending'}>Pending</SelectItem>
-            <SelectItem value={'paid'}>Paid</SelectItem>
-            <SelectItem value={'failed'}>Failed</SelectItem>
+            <SelectItem value={'all'}>{t('allPayments')}</SelectItem>
+            <SelectItem value={'pending'}>{t('payment.pending')}</SelectItem>
+            <SelectItem value={'paid'}>{t('payment.paid')}</SelectItem>
+            <SelectItem value={'failed'}>{t('payment.failed')}</SelectItem>
           </SelectContent>
         </Select>
 
         <Select value={sortOrder} onValueChange={(value) => setSortOrder(value)}>
           <SelectTrigger className={'w-[180px]'}>
-            <SelectValue placeholder={'Sort'} />
+            <SelectValue placeholder={t('sortPlaceholder')} />
           </SelectTrigger>
 
           <SelectContent>
-            <SelectItem value={'desc'}>Newest first</SelectItem>
-            <SelectItem value={'asc'}>Oldest first</SelectItem>
+            <SelectItem value={'desc'}>{t('sortNewest')}</SelectItem>
+            <SelectItem value={'asc'}>{t('sortOldest')}</SelectItem>
           </SelectContent>
         </Select>
       </div>
@@ -149,7 +151,7 @@ export default function OrdersList() {
             )}
           </>
         ) : (
-          <div>no orders found</div>
+          <div>{t('noOrders')}</div>
         )}
       </div>
     </>

@@ -1,5 +1,6 @@
 import { useRef } from 'react';
 import { toast } from 'react-toastify';
+import { useTranslations } from 'next-intl';
 import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai';
 import Image from 'next/image';
 import { generateFileUrl } from '@/lib/utils';
@@ -25,14 +26,16 @@ interface ProductCardProps {
 }
 
 export default function ProductCard({product, updateProductList, categoriesList}: ProductCardProps) {
+  const t = useTranslations('products');
+  const tCommon = useTranslations('common');
   const closeRemoveModalRef = useRef<HTMLButtonElement>(null);
   const onRemoveProductClick = () => {
     deleteProduct(product._id)
       .then(data => {
-        toast.success('successfully removed');
+        toast.success(t('toast.deleted'));
         updateProductList()
       }).catch(error => {
-      toast.error(error?.response?.data?.message || 'problem with removing, try again letter');
+      toast.error(error?.response?.data?.message || t('toast.deleteError'));
     }).finally(() => {
       closeRemoveModalRef.current?.click();
     })
@@ -69,16 +72,16 @@ export default function ProductCard({product, updateProductList, categoriesList}
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>Are you absolutely sure?</DialogTitle>
+              <DialogTitle>{tCommon('confirmDeleteTitle')}</DialogTitle>
               <DialogDescription>
-                You will delete product {product.slug}
+                {t('deleteDescription', { slug: product.slug })}
               </DialogDescription>
             </DialogHeader>
             <DialogFooter>
               <DialogClose asChild>
-                <Button variant="outline" ref={closeRemoveModalRef}>Cancel</Button>
+                <Button variant="outline" ref={closeRemoveModalRef}>{tCommon('cancel')}</Button>
               </DialogClose>
-              <Button type="button" onClick={onRemoveProductClick}>Delete</Button>
+              <Button type="button" onClick={onRemoveProductClick}>{tCommon('delete')}</Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>

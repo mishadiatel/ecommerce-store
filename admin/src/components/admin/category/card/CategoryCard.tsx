@@ -1,6 +1,7 @@
 import { FullCategoryWithTranslation } from '@/types/category';
 import { useRef } from 'react';
 import { toast } from 'react-toastify';
+import { useTranslations } from 'next-intl';
 import { deleteCategory } from '@/services/category';
 import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai';
 import Image from 'next/image';
@@ -24,14 +25,16 @@ interface CategoryCardProps {
 }
 
 export default function CategoryCard({category, updateCategoriesList}: CategoryCardProps) {
+  const t = useTranslations('categories');
+  const tCommon = useTranslations('common');
   const closeRemoveModalRef = useRef<HTMLButtonElement>(null);
   const onRemoveCategoryClick = () => {
     deleteCategory(category._id)
       .then(data => {
-        toast.success('successfully removed');
+        toast.success(t('toast.deleted'));
         updateCategoriesList();
       }).catch(error => {
-      toast.error(error?.response?.data?.message || 'problem with removing, try again letter');
+      toast.error(error?.response?.data?.message || t('toast.deleteError'));
     }).finally(() => {
       closeRemoveModalRef.current?.click();
     })
@@ -73,16 +76,16 @@ export default function CategoryCard({category, updateCategoriesList}: CategoryC
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>Are you absolutely sure?</DialogTitle>
+              <DialogTitle>{tCommon('confirmDeleteTitle')}</DialogTitle>
               <DialogDescription>
-                You will delete category {category.slug}
+                {t('deleteDescription', { slug: category.slug })}
               </DialogDescription>
             </DialogHeader>
             <DialogFooter>
               <DialogClose asChild>
-                <Button variant="outline" ref={closeRemoveModalRef}>Cancel</Button>
+                <Button variant="outline" ref={closeRemoveModalRef}>{tCommon('cancel')}</Button>
               </DialogClose>
-              <Button type="button" onClick={onRemoveCategoryClick}>Delete</Button>
+              <Button type="button" onClick={onRemoveCategoryClick}>{tCommon('delete')}</Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>

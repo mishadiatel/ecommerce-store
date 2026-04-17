@@ -2,6 +2,7 @@ import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'react-toastify';
+import { useTranslations } from 'next-intl';
 import InputGroup from '@/components/admin/ui/inputGroup';
 import { Button } from '@/components/admin/shadcnuiComponents/button';
 import { createCategoryTranslation, updateCategoryTranslation } from '@/services/category';
@@ -18,13 +19,16 @@ interface CategoryTranslationFormProps {
 }
 
 export default function CategoryTranslationForm({categoryTranslation, categoryId, setTranslations, updateCategoriesList}: CategoryTranslationFormProps) {
+  const t = useTranslations('categories');
+  const tFields = useTranslations('fields');
+  const tVal = useTranslations('validation');
   // const closeRef = useRef<HTMLButtonElement>(null);
   const isEditMode = Boolean(categoryTranslation);
   const categoryTranslationFormSchema = z.object({
-    lang: z.string({ error: 'lang is required' }).min(1, { message: 'lang is required' }),
-    name: z.string({ error: 'name is required' }).min(1, { message: 'name is required' }),
-    pageTitle: z.string({ error: 'pageTitle is required' }).min(1, { message: 'pageTitle is required' }),
-    pageDescription: z.string({ error: 'pageDescription is required' }).min(1, { message: 'pageDescription is required' })
+    lang: z.string({ error: tVal('required', { field: tFields('lang') }) }).min(1, { message: tVal('required', { field: tFields('lang') }) }),
+    name: z.string({ error: tVal('required', { field: tFields('name') }) }).min(1, { message: tVal('required', { field: tFields('name') }) }),
+    pageTitle: z.string({ error: tVal('required', { field: tFields('pageTitle') }) }).min(1, { message: tVal('required', { field: tFields('pageTitle') }) }),
+    pageDescription: z.string({ error: tVal('required', { field: tFields('pageDescription') }) }).min(1, { message: tVal('required', { field: tFields('pageDescription') }) })
   });
   type CategoryTranslationData = z.infer<typeof categoryTranslationFormSchema>
 
@@ -58,7 +62,7 @@ export default function CategoryTranslationForm({categoryTranslation, categoryId
           return;
         }
         toast.success(
-          `Successfully ${isEditMode ? 'updated' : 'created'} category translation`,
+          isEditMode ? t('toast.translationUpdated') : t('toast.translationCreated'),
         );
         setTranslations((prev) => {
           if (!prev) return prev;
@@ -82,19 +86,19 @@ export default function CategoryTranslationForm({categoryTranslation, categoryId
         updateCategoriesList();
       })
       .catch(error => {
-        toast.error(`Error while ${isEditMode ? 'updating' : 'creating'} category translation, try again letter`);
+        toast.error(isEditMode ? t('toast.translationUpdateError') : t('toast.translationCreateError'));
       })
   };
 
   return (
     <>
       <form className={'flex flex-col gap-4 flex-1'} onSubmit={handleSubmit(onSubmit)}>
-        <GroupSelect control={control} name={'lang'} label={'lang'} placeholder={'lang'} values={LANGUAGES_LIST} disabled={isEditMode} />
-        <InputGroup control={control} name={'name'} label={'name'} placeholder={'name'} />
-        <InputGroup control={control} name={'pageTitle'} label={'pageTitle'} placeholder={'pageTitle'} />
-        <InputGroup control={control} name={'pageDescription'} label={'pageDescription'} placeholder={'pageDescription'} />
+        <GroupSelect control={control} name={'lang'} label={tFields('lang')} placeholder={tFields('lang')} values={LANGUAGES_LIST} disabled={isEditMode} />
+        <InputGroup control={control} name={'name'} label={tFields('name')} placeholder={tFields('name')} />
+        <InputGroup control={control} name={'pageTitle'} label={tFields('pageTitle')} placeholder={tFields('pageTitle')} />
+        <InputGroup control={control} name={'pageDescription'} label={tFields('pageDescription')} placeholder={tFields('pageDescription')} />
         <div>
-          <Button type="submit">{isEditMode ? 'update translation' : 'crete translation'}</Button>
+          <Button type="submit">{isEditMode ? t('updateTranslation') : t('createTranslation')}</Button>
         </div>
       </form>
     </>

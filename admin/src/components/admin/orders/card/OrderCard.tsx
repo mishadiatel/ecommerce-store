@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { toast } from 'react-toastify';
+import { useTranslations } from 'next-intl';
 import {
   Dialog,
   DialogContent,
@@ -49,19 +50,37 @@ function formatDate(iso: string): string {
 }
 
 export default function OrderCard({ order, updateOrdersList }: OrderCardProps) {
+  const t = useTranslations('orders');
+  const tCommon = useTranslations('common');
   const [status, setStatus] = useState<string>(order.status);
   const [saving, setSaving] = useState(false);
+
+  const statusKeys: Record<string, string> = {
+    pending: t('status.pending'),
+    processing: t('status.processing'),
+    shipped: t('status.shipped'),
+    delivered: t('status.delivered'),
+    completed: t('status.completed'),
+    cancelled: t('status.cancelled'),
+  };
+
+  const paymentKeys: Record<string, string> = {
+    pending: t('payment.pending'),
+    paid: t('payment.paid'),
+    failed: t('payment.failed'),
+    refunded: t('payment.refunded'),
+  };
 
   const handleStatusChange = (value: string) => {
     setStatus(value);
     setSaving(true);
     updateAdminOrderStatus(order._id, value as OrderStatus)
       .then(() => {
-        toast.success('Order status updated');
+        toast.success(t('statusUpdated'));
         updateOrdersList();
       })
       .catch((error) => {
-        toast.error(error?.response?.data?.message || 'Error updating status');
+        toast.error(error?.response?.data?.message || t('statusUpdateError'));
         setStatus(order.status);
       })
       .finally(() => setSaving(false));
@@ -71,11 +90,11 @@ export default function OrderCard({ order, updateOrdersList }: OrderCardProps) {
     setSaving(true);
     markAdminOrderAsPaid(order._id)
       .then(() => {
-        toast.success('Order marked as paid');
+        toast.success(t('markedPaid'));
         updateOrdersList();
       })
       .catch((error) => {
-        toast.error(error?.response?.data?.message || 'Error marking paid');
+        toast.error(error?.response?.data?.message || t('markPaidError'));
       })
       .finally(() => setSaving(false));
   };
@@ -90,10 +109,10 @@ export default function OrderCard({ order, updateOrdersList }: OrderCardProps) {
 
         <div className={'flex items-center gap-2 flex-wrap'}>
           <span className={`px-2 py-1 rounded-md text-xs ${paymentColors[order.paymentStatus] || 'bg-muted text-muted-foreground ring-1 ring-border'}`}>
-            {order.paymentStatus}
+            {paymentKeys[order.paymentStatus] || order.paymentStatus}
           </span>
           <span className={`px-2 py-1 rounded-md text-xs ${statusColors[order.status] || 'bg-muted text-muted-foreground ring-1 ring-border'}`}>
-            {order.status}
+            {statusKeys[order.status] || order.status}
           </span>
           <span className={'font-semibold'}>{order.total} ₴</span>
         </div>
@@ -102,29 +121,29 @@ export default function OrderCard({ order, updateOrdersList }: OrderCardProps) {
       <div className={'flex justify-between flex-wrap gap-2 text-sm'}>
         <div>
           <div>
-            <span className={'text-muted-foreground'}>Customer: </span>
+            <span className={'text-muted-foreground'}>{t('customerLabel')} </span>
             {order.firstName} {order.lastName}
           </div>
           <div>
-            <span className={'text-muted-foreground'}>Email: </span>
+            <span className={'text-muted-foreground'}>{t('emailLabel')} </span>
             {order.email}
           </div>
           <div>
-            <span className={'text-muted-foreground'}>Phone: </span>
+            <span className={'text-muted-foreground'}>{t('phoneLabel')} </span>
             {order.phoneNumber}
           </div>
         </div>
         <div>
           <div>
-            <span className={'text-muted-foreground'}>Items: </span>
+            <span className={'text-muted-foreground'}>{t('itemsLabel')} </span>
             {order.items.reduce((sum, i) => sum + i.quantity, 0)}
           </div>
           <div>
-            <span className={'text-muted-foreground'}>Payment: </span>
+            <span className={'text-muted-foreground'}>{t('paymentLabel')} </span>
             {order.paymentMethod}
           </div>
           <div>
-            <span className={'text-muted-foreground'}>Delivery: </span>
+            <span className={'text-muted-foreground'}>{t('deliveryLabel')} </span>
             {order.deliveryType}
           </div>
         </div>
@@ -133,37 +152,37 @@ export default function OrderCard({ order, updateOrdersList }: OrderCardProps) {
       <div className={'flex gap-2 items-center flex-wrap mt-2'}>
         <Select value={status} onValueChange={handleStatusChange} disabled={saving}>
           <SelectTrigger className={'w-[180px]'}>
-            <SelectValue placeholder={'Status'} />
+            <SelectValue placeholder={t('statusPlaceholder')} />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value={'pending'}>Pending</SelectItem>
-            <SelectItem value={'processing'}>Processing</SelectItem>
-            <SelectItem value={'shipped'}>Shipped</SelectItem>
-            <SelectItem value={'delivered'}>Delivered</SelectItem>
-            <SelectItem value={'completed'}>Completed</SelectItem>
-            <SelectItem value={'cancelled'}>Cancelled</SelectItem>
+            <SelectItem value={'pending'}>{t('status.pending')}</SelectItem>
+            <SelectItem value={'processing'}>{t('status.processing')}</SelectItem>
+            <SelectItem value={'shipped'}>{t('status.shipped')}</SelectItem>
+            <SelectItem value={'delivered'}>{t('status.delivered')}</SelectItem>
+            <SelectItem value={'completed'}>{t('status.completed')}</SelectItem>
+            <SelectItem value={'cancelled'}>{t('status.cancelled')}</SelectItem>
           </SelectContent>
         </Select>
 
         {order.paymentStatus !== 'paid' && (
           <Button variant={'outline'} disabled={saving} onClick={handleMarkPaid}>
-            Mark as paid
+            {t('markAsPaid')}
           </Button>
         )}
 
         <Dialog>
           <DialogTrigger asChild>
-            <Button variant={'outline'}>Details</Button>
+            <Button variant={'outline'}>{t('viewDetails')}</Button>
           </DialogTrigger>
           <DialogContent className={'max-w-[700px] sm:max-w-[700px] max-h-screen overflow-y-auto'}>
             <DialogHeader>
-              <DialogTitle>Order {order.orderNumber}</DialogTitle>
-              <DialogDescription>Details of the order</DialogDescription>
+              <DialogTitle>{t('orderNumber')} {order.orderNumber}</DialogTitle>
+              <DialogDescription>{t('detailsDescription')}</DialogDescription>
             </DialogHeader>
 
             <div className={'flex flex-col gap-4 text-sm'}>
               <section>
-                <div className={'font-semibold mb-1'}>Customer</div>
+                <div className={'font-semibold mb-1'}>{t('customer')}</div>
                 <div>{order.firstName} {order.lastName}</div>
                 <div>{order.email}</div>
                 <div>{order.phoneNumber}</div>
@@ -171,7 +190,7 @@ export default function OrderCard({ order, updateOrdersList }: OrderCardProps) {
 
               {order.orderForAnotherPerson && (
                 <section>
-                  <div className={'font-semibold mb-1'}>Recipient</div>
+                  <div className={'font-semibold mb-1'}>{t('recipient')}</div>
                   <div>{order.anotherFirstName} {order.anotherLastName}</div>
                   <div>{order.anotherEmail}</div>
                   <div>{order.anotherPhoneNumber}</div>
@@ -179,14 +198,14 @@ export default function OrderCard({ order, updateOrdersList }: OrderCardProps) {
               )}
 
               <section>
-                <div className={'font-semibold mb-1'}>Delivery</div>
-                <div>Type: {order.deliveryType}</div>
-                <div>City: {order.deliveryCity}</div>
-                <div>Warehouse: {order.deliveryWarehouse}</div>
+                <div className={'font-semibold mb-1'}>{t('delivery')}</div>
+                <div>{t('deliveryType')} {order.deliveryType}</div>
+                <div>{t('deliveryCity')} {order.deliveryCity}</div>
+                <div>{t('deliveryWarehouse')} {order.deliveryWarehouse}</div>
               </section>
 
               <section>
-                <div className={'font-semibold mb-1'}>Items ({order.items.length})</div>
+                <div className={'font-semibold mb-1'}>{t('itemsCount', { count: order.items.length })}</div>
                 <div className={'flex flex-col gap-1'}>
                   {order.items.map((item, idx) => (
                     <div key={`${item.productId}-${idx}`} className={'flex justify-between gap-2 border-b border-border pb-1'}>
@@ -203,28 +222,28 @@ export default function OrderCard({ order, updateOrdersList }: OrderCardProps) {
               </section>
 
               <section>
-                <div className={'font-semibold mb-1'}>Totals</div>
+                <div className={'font-semibold mb-1'}>{t('totals')}</div>
                 <div className={'flex justify-between'}>
-                  <span>Subtotal</span>
+                  <span>{t('subtotal')}</span>
                   <span>{order.subtotal} ₴</span>
                 </div>
                 <div className={'flex justify-between'}>
-                  <span>Discount</span>
+                  <span>{t('discount')}</span>
                   <span>-{order.discount} ₴</span>
                 </div>
                 <div className={'flex justify-between'}>
-                  <span>Free delivery</span>
-                  <span>{order.hasFreeDelivery ? 'Yes' : 'No'}</span>
+                  <span>{t('freeDelivery')}</span>
+                  <span>{order.hasFreeDelivery ? tCommon('yes') : tCommon('no')}</span>
                 </div>
                 <div className={'flex justify-between font-semibold'}>
-                  <span>Total</span>
+                  <span>{tCommon('total')}</span>
                   <span>{order.total} ₴</span>
                 </div>
               </section>
 
               {order.message && (
                 <section>
-                  <div className={'font-semibold mb-1'}>Message</div>
+                  <div className={'font-semibold mb-1'}>{t('message')}</div>
                   <div>{order.message}</div>
                 </section>
               )}

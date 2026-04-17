@@ -1,7 +1,6 @@
 import AdminAside from '@/components/admin/layout/aside/AdminAside';
 import { AdminAuthProvider } from '@/components/admin/authProvider/AdminAuthProvider';
 import AdminHeader from '@/components/admin/layout/headere/AdminHeader';
-import { ThemeProvider } from '@/components/admin/themeProvider/ThemeProvider';
 
 export default async function AdminLayout({
   children,
@@ -9,7 +8,6 @@ export default async function AdminLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ThemeProvider>
       <AdminAuthProvider>
         <div className="admin-panel-shell">
           <AdminHeader />
@@ -23,6 +21,5 @@ export default async function AdminLayout({
           </div>
         </div>
       </AdminAuthProvider>
-    </ThemeProvider>
   );
 }

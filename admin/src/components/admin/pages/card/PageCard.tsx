@@ -14,6 +14,7 @@ import EditPageForm from '@/components/admin/pages/forms/EditPage';
 import { DialogClose } from '@radix-ui/react-dialog';
 import { Button } from '@/components/admin/shadcnuiComponents/button';
 import { useEffect, useRef, useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { deletePage } from '@/services/pages';
 import { toast } from 'react-toastify';
 import { Block } from '@/types/blocks';
@@ -26,6 +27,8 @@ interface PageCardProps {
 }
 
 export default function PageCard({ page, updatePagesList }: PageCardProps) {
+  const t = useTranslations('pagesControlPage');
+  const tCommon = useTranslations('common');
   const [pageBlocks, setPageBlocks] = useState<Block<object>[] | undefined>([]);
   useEffect(() => {
     const fetchPageBlocks = async () => {
@@ -38,10 +41,10 @@ export default function PageCard({ page, updatePagesList }: PageCardProps) {
   const onRemovePageClick = () => {
     deletePage(page._id)
       .then(data => {
-        toast.success('successfully removed');
+        toast.success(t('toast.deleted'));
         updatePagesList();
       }).catch(error => {
-      toast.error('problem with removing, try again letter');
+      toast.error(t('toast.deleteError'));
     }).finally(() => {
       closeRemoveModalRef.current?.click();
     });
@@ -56,18 +59,18 @@ export default function PageCard({ page, updatePagesList }: PageCardProps) {
 
         <Dialog>
           <DialogTrigger className={'w-fit'} asChild>
-            <Button>blocks list</Button>
+            <Button>{t('blocksList')}</Button>
           </DialogTrigger>
           <DialogContent className={'max-w-[1000px] sm:max-w-[1000px] max-h-screen overflow-y-auto'}>
             <DialogHeader>
-              <DialogTitle>blocks list</DialogTitle>
+              <DialogTitle>{t('blocksListTitle')}</DialogTitle>
             </DialogHeader>
             <div className={'flex flex-col gap-3'}>
               {pageBlocks && pageBlocks.length > 0 ? pageBlocks.map((block) => (
                   <BlockCard block={block} updateBlocksList={updatePagesList} key={block._id} />
                 ))
                 :
-                <div>not found blocks on this page</div>
+                <div>{t('blocksNotFound')}</div>
               }
             </div>
           </DialogContent>
@@ -90,16 +93,16 @@ export default function PageCard({ page, updatePagesList }: PageCardProps) {
           </DialogTrigger>
           <DialogContent className={'max-h-screen overflow-y-auto'}>
             <DialogHeader>
-              <DialogTitle>Are you absolutely sure?</DialogTitle>
+              <DialogTitle>{tCommon('confirmDeleteTitle')}</DialogTitle>
               <DialogDescription>
-                You will delete page with page {page.language} {page.slug} {page.title}
+                {t('deleteDescription', { language: page.language, slug: page.slug, title: page.title })}
               </DialogDescription>
             </DialogHeader>
             <DialogFooter>
               <DialogClose asChild>
-                <Button variant="outline" ref={closeRemoveModalRef}>Cancel</Button>
+                <Button variant="outline" ref={closeRemoveModalRef}>{tCommon('cancel')}</Button>
               </DialogClose>
-              <Button type="button" onClick={onRemovePageClick}>Delete</Button>
+              <Button type="button" onClick={onRemovePageClick}>{tCommon('delete')}</Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>

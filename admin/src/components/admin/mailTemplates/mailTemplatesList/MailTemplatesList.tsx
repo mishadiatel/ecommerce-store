@@ -6,6 +6,7 @@ import {
 } from '@/components/admin/shadcnuiComponents/dialog';
 import { Button } from '@/components/admin/shadcnuiComponents/button';
 import { useEffect, useRef, useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { Input } from '@/components/admin/shadcnuiComponents/input';
 import { toast } from 'react-toastify';
 import { MailTemplate } from '@/types/mailTemplate';
@@ -16,6 +17,7 @@ import PageControl from '@/components/admin/ui/pageControl';
 
 
 export default function MailTemplatesList() {
+  const t = useTranslations('mailTemplatesPage');
   const isFirstRender = useRef(true);
   const [templatesState, setTemplatesState] = useState<MailTemplate[] | undefined>([]);
   const [searchWord, setSearchWord] = useState('');
@@ -41,7 +43,7 @@ export default function MailTemplatesList() {
       setTotalPages(templatesResult?.totalPages);
       setTotalDocuments(templatesResult?.totalDocuments);
     }).catch((err) => {
-      toast.error('error loading email templates.');
+      toast.error(t('toast.loadError'));
     });
   };
 
@@ -60,7 +62,7 @@ export default function MailTemplatesList() {
       <div className={'w-fit'}>
         <Dialog>
           <DialogTrigger className={'w-fit'} asChild>
-            <Button>Add email template</Button>
+            <Button>{t('addButton')}</Button>
           </DialogTrigger>
           <DialogContent className={'max-w-[1000px] sm:max-w-[1000px] max-h-screen overflow-y-auto'}>
             {/*<AddPageForm updatePagesList={updatePagesList} />*/}
@@ -70,7 +72,7 @@ export default function MailTemplatesList() {
       </div>
 
       <Input type={'text'}
-             placeholder={'Search...'}
+             placeholder={t('searchPlaceholder')}
              className={'w-[200px] flex-shrink max-w-full max-[500px]:w-full'}
              value={searchWord}
              onChange={e => setSearchWord(e.target.value)}
@@ -90,7 +92,7 @@ export default function MailTemplatesList() {
             )}
           </>
         ) : (
-          <div>not found mail templates</div>
+          <div>{t('notFound')}</div>
         )}
       </div>
     </>

@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 
 import { toast } from 'react-toastify';
+import { useTranslations } from 'next-intl';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/admin/shadcnuiComponents/dialog';
 import { Button } from '@/components/admin/shadcnuiComponents/button';
 import { Input } from '@/components/admin/shadcnuiComponents/input';
@@ -20,6 +21,7 @@ import {
 } from '@/components/admin/shadcnuiComponents/select';
 
 export default function ProductsList() {
+  const t = useTranslations('products');
   const isFirstRender = useRef(true);
   const [productsState, setProductsState] = useState<FullProductWithTranslations[] | undefined>([]);
   const [categoriesList, setCategoriesList] = useState<Array<{_id: string, text: string}>>([]);
@@ -51,7 +53,7 @@ export default function ProductsList() {
       setTotalPages(pagesResult?.totalPages);
       setTotalDocuments(pagesResult?.totalDocuments);
     }).catch((err) => {
-      toast.error('error loading products.');
+      toast.error(t('toast.loadError'));
     });
   };
 
@@ -87,7 +89,7 @@ export default function ProductsList() {
       <div className={'w-fit'}>
         <Dialog>
           <DialogTrigger className={'w-fit'} asChild>
-            <Button>Add product</Button>
+            <Button>{t('addButton')}</Button>
           </DialogTrigger>
           <DialogContent className={'max-w-[1000px] sm:max-w-[1000px] max-h-screen overflow-y-auto'}>
             <CreateProductForm updateProductsList={updateProductsList} categoriesList={categoriesList} />
@@ -97,7 +99,7 @@ export default function ProductsList() {
 
       <div className={'flex gap-4 items-center'}>
         <Input type={'text'}
-                placeholder={'Search...'}
+                placeholder={t('searchPlaceholder')}
                 className={'w-[200px] flex-shrink max-w-full max-[500px]:w-full'}
                 value={searchWord}
                 onChange={e => setSearchWord(e.target.value)}
@@ -110,12 +112,12 @@ export default function ProductsList() {
             }}
           >
             <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Category" />
+              <SelectValue placeholder={t('categoryPlaceholder')} />
             </SelectTrigger>
 
             <SelectContent>
               <SelectItem value="all">
-                All categories
+                {t('allCategories')}
               </SelectItem>
 
               {categoriesList.map((category) => (
@@ -149,7 +151,7 @@ export default function ProductsList() {
             )}
           </>
         ) : (
-          <div>not found products</div>
+          <div>{t('notFound')}</div>
         )}
       </div>
     </>

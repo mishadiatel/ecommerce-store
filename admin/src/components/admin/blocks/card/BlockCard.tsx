@@ -13,6 +13,7 @@ import { MdDelete } from "react-icons/md";
 import { DialogClose } from '@radix-ui/react-dialog';
 import { Button } from '@/components/admin/shadcnuiComponents/button';
 import { useRef } from 'react';
+import { useTranslations } from 'next-intl';
 import { toast } from 'react-toastify';
 import { Block } from '@/types/blocks';
 import { deleteBlock } from '@/services/blocks';
@@ -24,14 +25,16 @@ interface BlockCardProps {
 }
 
 export default function BlockCard({block, updateBlocksList}: BlockCardProps) {
+  const t = useTranslations('blocksPage');
+  const tCommon = useTranslations('common');
   const closeRemoveModalRef = useRef<HTMLButtonElement>(null);
   const onRemoveBlockClick = () => {
     deleteBlock(block._id)
       .then(data => {
-        toast.success('successfully removed');
+        toast.success(t('toast.deleted'));
         updateBlocksList();
       }).catch(error => {
-      toast.error('problem with removing, try again letter');
+      toast.error(t('toast.deleteError'));
     }).finally(() => {
       closeRemoveModalRef.current?.click();
     })
@@ -63,16 +66,16 @@ export default function BlockCard({block, updateBlocksList}: BlockCardProps) {
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>Are you absolutely sure?</DialogTitle>
+              <DialogTitle>{tCommon('confirmDeleteTitle')}</DialogTitle>
               <DialogDescription>
-                You will delete block {block.blockType} {block.pages.join(',')}
+                {t('deleteDescription', { type: block.blockType, pages: block.pages.join(',') })}
               </DialogDescription>
             </DialogHeader>
             <DialogFooter>
               <DialogClose asChild>
-                <Button variant="outline" ref={closeRemoveModalRef}>Cancel</Button>
+                <Button variant="outline" ref={closeRemoveModalRef}>{tCommon('cancel')}</Button>
               </DialogClose>
-              <Button type="button" onClick={onRemoveBlockClick}>Delete</Button>
+              <Button type="button" onClick={onRemoveBlockClick}>{tCommon('delete')}</Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>

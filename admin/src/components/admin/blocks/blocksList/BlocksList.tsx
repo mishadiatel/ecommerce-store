@@ -6,6 +6,7 @@ import {
 } from '@/components/admin/shadcnuiComponents/dialog';
 import { Button } from '@/components/admin/shadcnuiComponents/button';
 import { useEffect, useRef, useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { Input } from '@/components/admin/shadcnuiComponents/input';
 import { toast } from 'react-toastify';
 import { Block } from '@/types/blocks';
@@ -15,6 +16,7 @@ import AddBlockForm from '@/components/admin/blocks/forms/AddBlock';
 import PageControl from '@/components/admin/ui/pageControl';
 
 export default function BlocksList() {
+  const t = useTranslations('blocksPage');
   const isFirstRender = useRef(true);
   const [blocksState, setBlocksState] = useState<Block<object>[] | undefined>([]);
   const [searchWord, setSearchWord] = useState('');
@@ -44,7 +46,7 @@ export default function BlocksList() {
       setTotalDocuments(blocksResult?.totalDocuments);
 
     }).catch((err) => {
-      toast.error('error loading pages.');
+      toast.error(t('toast.loadError'));
     });
   };
   useEffect(() => {
@@ -61,7 +63,7 @@ export default function BlocksList() {
       <div className={'w-fit'}>
         <Dialog>
           <DialogTrigger className={'w-fit'} asChild>
-            <Button>Add block</Button>
+            <Button>{t('addButton')}</Button>
           </DialogTrigger>
           <DialogContent className={'max-w-[1000px] sm:max-w-[1000px] max-h-screen overflow-y-auto'}>
             {/*<AddPageForm updatePagesList={updatePagesList} />*/}
@@ -71,7 +73,7 @@ export default function BlocksList() {
       </div>
 
       <Input type={'text'}
-             placeholder={'Search...'}
+             placeholder={t('searchPlaceholder')}
              className={'w-[200px] flex-shrink max-w-full max-[500px]:w-full'}
              value={searchWord}
              onChange={e => setSearchWord(e.target.value)}
@@ -92,7 +94,7 @@ export default function BlocksList() {
           </>
 
         ) : (
-          <div>not found pages</div>
+          <div>{t('notFound')}</div>
         )}
       </div>
     </>

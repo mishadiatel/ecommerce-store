@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { useFieldArray, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'react-toastify';
+import { useTranslations } from 'next-intl';
 import { DialogFooter, DialogHeader, DialogTitle } from '@/components/admin/shadcnuiComponents/dialog';
 import InputGroup from '@/components/admin/ui/inputGroup';
 import CheckboxInput from '@/components/admin/ui/checkboxInput';
@@ -18,29 +19,33 @@ interface CreateProductFormProps {
 }
 
 export default function CreateProductForm({ updateProductsList, categoriesList }: CreateProductFormProps) {
+  const t = useTranslations('products');
+  const tCommon = useTranslations('common');
+  const tFields = useTranslations('fields');
+  const tVal = useTranslations('validation');
   const closeRef = useRef<HTMLButtonElement>(null);
   const createProductFormSchema = z.object({
-    categoryId: z.string({ error: 'categoryId is required' }).min(1, { message: 'categoryId is required' }),
-    slug: z.string({ error: 'slug is required' }).min(1, { message: 'slug is required' }),
-    cardImage: z.string({ error: 'cardImage is required' }).min(1, { message: 'cardImage is required' })
+    categoryId: z.string({ error: tVal('required', { field: tFields('category') }) }).min(1, { message: tVal('required', { field: tFields('category') }) }),
+    slug: z.string({ error: tVal('required', { field: tFields('slug') }) }).min(1, { message: tVal('required', { field: tFields('slug') }) }),
+    cardImage: z.string({ error: tVal('required', { field: tFields('cardImage') }) }).min(1, { message: tVal('required', { field: tFields('cardImage') }) })
       .refine(
         (val) => /\.(jpg|jpeg|png|webp|avif|gif|svg)$/.test(val.split('?')[0]),
         {
-          message: 'Image name must end with a valid image extension',
+          message: tVal('invalidImageExtension'),
         },
       ),
     images: z
       .array(
         z
           .string()
-          .min(1, { message: 'Image is required' })
+          .min(1, { message: tVal('required', { field: tFields('image') }) })
           .refine(
             (val) => /\.(jpg|jpeg|png|webp|avif|gif|svg)$/.test(val.split('?')[0]),
-            { message: 'Invalid image format' },
+            { message: tVal('invalidImageFormat') },
           ),
       )
-      .min(1, 'At least one image is required'),
-    newPrice: z.number({ error: 'newPrice is required' }).min(1),
+      .min(1, tVal('atLeastOneImage')),
+    newPrice: z.number({ error: tVal('required', { field: tFields('newPrice') }) }).min(1),
     oldPrice: z.number().optional(),
     discountPercents: z.number().optional(),
     reviewsCount: z.number().optional(),
@@ -51,7 +56,7 @@ export default function CreateProductForm({ updateProductsList, categoriesList }
     isOnePlusOne: z.boolean(),
 
     isVisible: z.boolean(),
-    order: z.number({ error: 'order is required' }),
+    order: z.number({ error: tVal('required', { field: tFields('order') }) }),
   });
   type CreateProductData = z.infer<typeof createProductFormSchema>
 
@@ -89,10 +94,10 @@ export default function CreateProductForm({ updateProductsList, categoriesList }
       images: data.images.filter(Boolean)
     })
       .then(result => {
-        toast.success('Successfully created product');
+        toast.success(t('toast.created'));
         updateProductsList();
       }).catch(error => {
-      toast.error('Error while creating product, try again letter');
+      toast.error(t('toast.createError'));
     }).finally(() => {
       closeRef.current?.click();
     });
@@ -101,27 +106,27 @@ export default function CreateProductForm({ updateProductsList, categoriesList }
   return (
     <>
       <DialogHeader>
-        <DialogTitle>Create product</DialogTitle>
+        <DialogTitle>{t('createTitle')}</DialogTitle>
       </DialogHeader>
       <form className={'flex flex-col gap-4'} onSubmit={handleSubmit(onSubmit)}>
         <div className={'grid grid-cols-2 gap-4'}>
-          <InputGroup control={control} name={'slug'} label={'slug'} placeholder={'slug'} />
+          <InputGroup control={control} name={'slug'} label={tFields('slug')} placeholder={tFields('slug')} />
           <FileInput
             control={control}
             name={'cardImage'}
-            label={`cardImage`}
-            placeholder="cardImage"
+            label={tFields('cardImage')}
+            placeholder={tFields('cardImage')}
           />
           <div className="col-span-2 flex flex-col gap-2 w-full">
-            <label>Images</label>
+            <label>{tFields('images')}</label>
             <div className={'grid grid-cols-2 gap-4'}>
               {fields.map((field, index) => (
                 <div key={field.id} className="flex gap-2 items-center">
                   <FileInput
                     control={control}
                     name={`images.${index}`}
-                    label={`Image ${index + 1}`}
-                    placeholder="Image URL"
+                    label={`${tFields('image')} ${index + 1}`}
+                    placeholder={tFields('imageUrl')}
                   />
 
                   {fields.length > 1 && (
@@ -130,7 +135,7 @@ export default function CreateProductForm({ updateProductsList, categoriesList }
                       variant="destructive"
                       onClick={() => remove(index)}
                     >
-                      Remove
+                      {tCommon('remove')}
                     </Button>
                   )}
                 </div>
@@ -143,30 +148,30 @@ export default function CreateProductForm({ updateProductsList, categoriesList }
               variant="outline"
               onClick={() => append('')}
             >
-              + Add image
+              {t('addImage')}
             </Button>
           </div>
           {categoriesList && categoriesList.length > 0 && (
-            <GroupSelect control={control} name={'categoryId'} label={'category'} values={categoriesList}
-                         placeholder={'category'} />)}
-          <InputGroup control={control} name={'newPrice'} label={'newPrice'} placeholder={'newPrice'} type={'number'} />
-          <InputGroup control={control} name={'oldPrice'} label={'oldPrice'} placeholder={'oldPrice'} type={'number'} />
-          <InputGroup control={control} name={'discountPercents'} label={'discountPercents'}
-                      placeholder={'discountPercents'} type={'number'} />
-          <InputGroup control={control} name={'reviewsCount'} label={'reviewsCount'} placeholder={'reviewsCount'}
+            <GroupSelect control={control} name={'categoryId'} label={tFields('category')} values={categoriesList}
+                         placeholder={tFields('category')} />)}
+          <InputGroup control={control} name={'newPrice'} label={tFields('newPrice')} placeholder={tFields('newPrice')} type={'number'} />
+          <InputGroup control={control} name={'oldPrice'} label={tFields('oldPrice')} placeholder={tFields('oldPrice')} type={'number'} />
+          <InputGroup control={control} name={'discountPercents'} label={tFields('discountPercents')}
+                      placeholder={tFields('discountPercents')} type={'number'} />
+          <InputGroup control={control} name={'reviewsCount'} label={tFields('reviewsCount')} placeholder={tFields('reviewsCount')}
                       type={'number'} />
-          <InputGroup control={control} name={'order'} label={'order'} placeholder={'order'} type={'number'} />
-          <CheckboxInput control={control} name={'isNew'} label={'isNew'} />
-          <CheckboxInput control={control} name={'isLimited'} label={'isLimited'} />
-          <CheckboxInput control={control} name={'isOnSale'} label={'isOnSale'} />
-          <CheckboxInput control={control} name={'isOnePlusOne'} label={'isOnePlusOne'} />
-          <CheckboxInput control={control} name={'isVisible'} label={'isVisible'} />
+          <InputGroup control={control} name={'order'} label={tFields('order')} placeholder={tFields('order')} type={'number'} />
+          <CheckboxInput control={control} name={'isNew'} label={tFields('isNew')} />
+          <CheckboxInput control={control} name={'isLimited'} label={tFields('isLimited')} />
+          <CheckboxInput control={control} name={'isOnSale'} label={tFields('isOnSale')} />
+          <CheckboxInput control={control} name={'isOnePlusOne'} label={tFields('isOnePlusOne')} />
+          <CheckboxInput control={control} name={'isVisible'} label={tFields('isVisible')} />
         </div>
         <DialogFooter>
           <DialogClose asChild>
-            <Button variant="outline" ref={closeRef}>Cancel</Button>
+            <Button variant="outline" ref={closeRef}>{tCommon('cancel')}</Button>
           </DialogClose>
-          <Button type="submit">Create product</Button>
+          <Button type="submit">{t('createButton')}</Button>
         </DialogFooter>
       </form>
     </>

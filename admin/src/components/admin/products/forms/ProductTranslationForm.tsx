@@ -2,6 +2,7 @@ import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'react-toastify';
+import { useTranslations } from 'next-intl';
 import InputGroup from '@/components/admin/ui/inputGroup';
 import { Button } from '@/components/admin/shadcnuiComponents/button';
 import GroupSelect from '@/components/admin/ui/selectGroup';
@@ -19,11 +20,14 @@ interface ProductTranslationFormProps {
 }
 
 export default function ProductTranslationForm({productTranslation, productId, setTranslations, updateProductsList}: ProductTranslationFormProps) {
+  const t = useTranslations('products');
+  const tFields = useTranslations('fields');
+  const tVal = useTranslations('validation');
   // const closeRef = useRef<HTMLButtonElement>(null);
   const isEditMode = Boolean(productTranslation);
   const productTranslationFormSchema = z.object({
-    lang: z.string({ error: 'lang is required' }).min(1, { message: 'lang is required' }),
-    title: z.string({ error: 'title is required' }).min(1, { message: 'title is required' }),
+    lang: z.string({ error: tVal('required', { field: tFields('lang') }) }).min(1, { message: tVal('required', { field: tFields('lang') }) }),
+    title: z.string({ error: tVal('required', { field: tFields('title') }) }).min(1, { message: tVal('required', { field: tFields('title') }) }),
     shortDescription: z.string().optional(),
     longDescription: z.string().optional(),
     composition: z.string().optional(),
@@ -67,7 +71,7 @@ export default function ProductTranslationForm({productTranslation, productId, s
           return;
         }
         toast.success(
-          `Successfully ${isEditMode ? 'updated' : 'created'} category translation`,
+          isEditMode ? t('toast.translationUpdated') : t('toast.translationCreated'),
         );
         setTranslations((prev) => {
           if (!prev) return prev;
@@ -91,22 +95,22 @@ export default function ProductTranslationForm({productTranslation, productId, s
         updateProductsList();
       })
       .catch(error => {
-        toast.error(`Error while ${isEditMode ? 'updating' : 'creating'} product translation, try again letter`);
+        toast.error(isEditMode ? t('toast.translationUpdateError') : t('toast.translationCreateError'));
       })
   };
 
   return (
     <>
       <form className={'flex flex-col gap-4 flex-1'} onSubmit={handleSubmit(onSubmit)}>
-        <GroupSelect control={control} name={'lang'} label={'lang'} placeholder={'lang'} values={LANGUAGES_LIST} disabled={isEditMode} />
-        <InputGroup control={control} name={'title'} label={'title'} placeholder={'title'} />
-        <InputGroup control={control} name={'expiration'} label={'expiration'} placeholder={'expiration'} />
-        <EditorInput control={control} name={'shortDescription'} label={'shortDescription'} placeholder={'shortDescription'} />
-        <EditorInput control={control} name={'longDescription'} label={'longDescription'} placeholder={'longDescription'} />
-        <EditorInput control={control} name={'composition'} label={'composition'} placeholder={'composition'} />
-        <EditorInput control={control} name={'nutritionalTable'} label={'nutritionalTable'} placeholder={'nutritionalTable'} />
+        <GroupSelect control={control} name={'lang'} label={tFields('lang')} placeholder={tFields('lang')} values={LANGUAGES_LIST} disabled={isEditMode} />
+        <InputGroup control={control} name={'title'} label={tFields('title')} placeholder={tFields('title')} />
+        <InputGroup control={control} name={'expiration'} label={tFields('expiration')} placeholder={tFields('expiration')} />
+        <EditorInput control={control} name={'shortDescription'} label={tFields('shortDescription')} placeholder={tFields('shortDescription')} />
+        <EditorInput control={control} name={'longDescription'} label={tFields('longDescription')} placeholder={tFields('longDescription')} />
+        <EditorInput control={control} name={'composition'} label={tFields('composition')} placeholder={tFields('composition')} />
+        <EditorInput control={control} name={'nutritionalTable'} label={tFields('nutritionalTable')} placeholder={tFields('nutritionalTable')} />
         <div>
-          <Button type="submit">{isEditMode ? 'update translation' : 'crete translation'}</Button>
+          <Button type="submit">{isEditMode ? t('updateTranslation') : t('createTranslation')}</Button>
         </div>
       </form>
     </>

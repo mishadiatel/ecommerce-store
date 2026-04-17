@@ -9,6 +9,7 @@ import PageCard from '@/components/admin/pages/card/PageCard';
 import { Page } from '@/types/pages';
 import AddPageForm from '@/components/admin/pages/forms/AddPage';
 import { useEffect, useRef, useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { Input } from '@/components/admin/shadcnuiComponents/input';
 import { getPages } from '@/services/pages';
 import { toast } from 'react-toastify';
@@ -16,6 +17,7 @@ import PageControl from '@/components/admin/ui/pageControl';
 
 
 export default function PagesList() {
+  const t = useTranslations('pagesControlPage');
   const isFirstRender = useRef(true);
   const [pagesState, setPagesState] = useState<Page[] | undefined>([]);
   const [searchWord, setSearchWord] = useState('');
@@ -41,7 +43,7 @@ export default function PagesList() {
       setTotalPages(pagesResult?.totalPages);
       setTotalDocuments(pagesResult?.totalDocuments);
     }).catch((err) => {
-      toast.error('error loading pages.');
+      toast.error(t('toast.loadError'));
     });
   };
 
@@ -60,7 +62,7 @@ export default function PagesList() {
       <div className={'w-fit'}>
         <Dialog>
           <DialogTrigger className={'w-fit'} asChild>
-            <Button>Add page</Button>
+            <Button>{t('addButton')}</Button>
           </DialogTrigger>
           <DialogContent className={'max-h-screen overflow-y-auto'}>
             <AddPageForm updatePagesList={updatePagesList} />
@@ -69,7 +71,7 @@ export default function PagesList() {
       </div>
 
       <Input type={'text'}
-             placeholder={'Search...'}
+             placeholder={t('searchPlaceholder')}
              className={'w-[200px] flex-shrink max-w-full max-[500px]:w-full'}
              value={searchWord}
              onChange={e => setSearchWord(e.target.value)}
@@ -88,7 +90,7 @@ export default function PagesList() {
             )}
           </>
         ) : (
-          <div>not found pages</div>
+          <div>{t('notFound')}</div>
         )}
       </div>
     </>

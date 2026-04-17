@@ -3,10 +3,12 @@
 import GeneralForm from '@/components/admin/general/form/GeneralForm';
 import SettingsTranslationsList from '@/components/admin/general/settingsTranslationsList/SettingsTranslationsList';
 import { useEffect, useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { GeneralSettings, GeneralSettingsTranslation } from '@/types/general';
 import { getSettings, getSettingsTranslations } from '@/services/general';
 
 export default function GeneralContent() {
+  const t = useTranslations('general');
   const [generalSettings, setGeneralSettings] = useState<GeneralSettings | undefined>(undefined);
   const [generalSettingsTranslation, setGeneralSettingsTranslation] = useState<GeneralSettingsTranslation[] | undefined>(undefined);
 
@@ -27,9 +29,9 @@ export default function GeneralContent() {
     <>
       {generalSettings && generalSettingsTranslation && (
         <>
-          <div>General settings</div>
+          <div>{t('sectionSettings')}</div>
           <GeneralForm generalSettings={generalSettings} />
-          <div>Translations</div>
+          <div>{t('sectionTranslations')}</div>
           <SettingsTranslationsList translations={generalSettingsTranslation} />
         </>
       )}

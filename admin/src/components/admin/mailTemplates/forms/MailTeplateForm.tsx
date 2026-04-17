@@ -2,6 +2,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { toast } from 'react-toastify';
+import { useTranslations } from 'next-intl';
 import { DialogFooter, DialogHeader, DialogTitle } from '@/components/admin/shadcnuiComponents/dialog';
 import { DialogClose } from '@radix-ui/react-dialog';
 import { Button } from '@/components/admin/shadcnuiComponents/button';
@@ -19,13 +20,17 @@ interface MailTemplateFormProps {
 }
 
 export default function MailTemplateForm({ mailTemplate, onSuccess }: MailTemplateFormProps) {
+  const t = useTranslations('mailTemplatesPage');
+  const tCommon = useTranslations('common');
+  const tFields = useTranslations('fields');
+  const tVal = useTranslations('validation');
   const isEdit = Boolean(mailTemplate);
   const closeRef = useRef<HTMLButtonElement>(null);
   const editMailTemplateSchema = z.object({
-    language: z.string({ error: 'language is required' }).min(1, { message: 'language is required' }),
-    slug: z.string({ error: 'slug is required' }).min(1, { message: 'slug is required' }),
-    subject: z.string({ error: 'subject is required' }).min(1, { message: 'subject is required' }),
-    html: z.string({ error: 'html is required' }).min(1, { message: 'html is required' }),
+    language: z.string({ error: tVal('required', { field: tFields('language') }) }).min(1, { message: tVal('required', { field: tFields('language') }) }),
+    slug: z.string({ error: tVal('required', { field: tFields('slug') }) }).min(1, { message: tVal('required', { field: tFields('slug') }) }),
+    subject: z.string({ error: tVal('required', { field: tFields('subject') }) }).min(1, { message: tVal('required', { field: tFields('subject') }) }),
+    html: z.string({ error: tVal('required', { field: tFields('html') }) }).min(1, { message: tVal('required', { field: tFields('html') }) }),
   });
   type EditMailTemplateData = z.infer<typeof editMailTemplateSchema>
   const { handleSubmit, control } = useForm<EditMailTemplateData>({
@@ -47,14 +52,14 @@ export default function MailTemplateForm({ mailTemplate, onSuccess }: MailTempla
 
     action
       .then(() => {
-        toast.success(isEdit ? 'Mail template updated' : 'Mail template created');
+        toast.success(isEdit ? t('toast.updated') : t('toast.created'));
         if (onSuccess) {
           onSuccess();
         }
 
       })
       .catch(() => {
-        toast.error('Error, try again later');
+        toast.error(isEdit ? t('toast.updateError') : t('toast.createError'));
       })
       .finally(() => {
         closeRef.current?.click();
@@ -65,30 +70,30 @@ export default function MailTemplateForm({ mailTemplate, onSuccess }: MailTempla
     <>
 
       <DialogHeader>
-        <DialogTitle>{isEdit ? 'Update mail template' : 'Create mail template'}</DialogTitle>
+        <DialogTitle>{isEdit ? t('updateTitle') : t('createTitle')}</DialogTitle>
       </DialogHeader>
       <form className={'flex flex-col gap-6'} onSubmit={handleSubmit(onSubmit)}>
 
         <GroupSelect
           control={control}
           name="language"
-          label="language"
+          label={tFields('language')}
           values={LANGUAGES_LIST}
-          placeholder="Select language"
+          placeholder={tCommon('selectLanguage')}
           disabled={false}
         />
-        <InputGroup control={control} name={'slug'} label={'slug'} placeholder={'slug'} />
-        <InputGroup control={control} name={'subject'} label={'subject'} placeholder={'subject'} />
-        <TextareaWithPreview control={control} name={'html'} label={'html'} placeholder={'html'} />
+        <InputGroup control={control} name={'slug'} label={tFields('slug')} placeholder={tFields('slug')} />
+        <InputGroup control={control} name={'subject'} label={tFields('subject')} placeholder={tFields('subject')} />
+        <TextareaWithPreview control={control} name={'html'} label={tFields('html')} placeholder={tFields('html')} />
 
 
         <DialogFooter>
           <DialogClose asChild>
             <Button variant="outline" className={'w-fit'} ref={closeRef}>
-              Cancel
+              {tCommon('cancel')}
             </Button>
           </DialogClose>
-          <Button type="submit" className={'w-fit'}>{isEdit ? 'Save changes' : 'Create mail template'}</Button>
+          <Button type="submit" className={'w-fit'}>{isEdit ? tCommon('saveChanges') : t('createButton')}</Button>
         </DialogFooter>
       </form>
     </>

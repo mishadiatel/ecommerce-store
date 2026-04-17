@@ -12,6 +12,7 @@ import { MdDelete } from 'react-icons/md';
 import { DialogClose } from '@radix-ui/react-dialog';
 import { Button } from '@/components/admin/shadcnuiComponents/button';
 import { useRef } from 'react';
+import { useTranslations } from 'next-intl';
 import { toast } from 'react-toastify';
 import { MailTemplate } from '@/types/mailTemplate';
 import { deleteMailTemplate } from '@/services/mailTemplate';
@@ -23,14 +24,16 @@ interface MailTemplateCardProps {
 }
 
 export default function MailTemplateCard({ mailTemplate, updateMailTemplatesList }: MailTemplateCardProps) {
+  const t = useTranslations('mailTemplatesPage');
+  const tCommon = useTranslations('common');
   const closeRemoveModalRef = useRef<HTMLButtonElement>(null);
   const onRemoveMailTemplateClick = () => {
     deleteMailTemplate(mailTemplate._id)
       .then(data => {
-        toast.success('successfully removed');
+        toast.success(t('toast.deleted'));
         updateMailTemplatesList();
       }).catch(error => {
-      toast.error('problem with removing, try again letter');
+      toast.error(t('toast.deleteError'));
     }).finally(() => {
       closeRemoveModalRef.current?.click();
     });
@@ -61,16 +64,16 @@ export default function MailTemplateCard({ mailTemplate, updateMailTemplatesList
           </DialogTrigger>
           <DialogContent className={'max-h-screen overflow-y-auto'}>
             <DialogHeader>
-              <DialogTitle>Are you absolutely sure?</DialogTitle>
+              <DialogTitle>{tCommon('confirmDeleteTitle')}</DialogTitle>
               <DialogDescription>
-                You will delete mail template {mailTemplate.language} {mailTemplate.slug}
+                {t('deleteDescription', { language: mailTemplate.language, slug: mailTemplate.slug })}
               </DialogDescription>
             </DialogHeader>
             <DialogFooter>
               <DialogClose asChild>
-                <Button variant="outline" ref={closeRemoveModalRef}>Cancel</Button>
+                <Button variant="outline" ref={closeRemoveModalRef}>{tCommon('cancel')}</Button>
               </DialogClose>
-              <Button type="button" onClick={onRemoveMailTemplateClick}>Delete</Button>
+              <Button type="button" onClick={onRemoveMailTemplateClick}>{tCommon('delete')}</Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
