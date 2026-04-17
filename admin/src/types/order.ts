@@ -63,6 +63,12 @@ export interface Order {
   dontCallMe: boolean;
   isAgree: boolean;
 
+  // LiqPay tracking
+  liqpayPaymentId?: string | null;
+  liqpayTransactionId?: string | null;
+  liqpayStatus?: string | null;
+  isSandboxPayment?: boolean;
+
   createdAt: string;
   updatedAt: string;
   __v?: number;

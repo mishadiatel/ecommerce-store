@@ -4,10 +4,14 @@ import { ValidationPipe } from './pipes/validation.pipe';
 import { I18nValidationExceptionFilter, I18nValidationPipe } from 'nestjs-i18n';
 import { MongoExceptionFilter } from './filters/mongodb.filter';
 import * as cookieParser from 'cookie-parser';
+import * as bodyParser from 'body-parser';
 
 async function bootstrap() {
   const PORT = process.env.PORT || 8080;
   const app = await NestFactory.create(AppModule);
+
+  // LiqPay webhook sends application/x-www-form-urlencoded
+  app.use(bodyParser.urlencoded({ extended: true }));
   app.enableCors({
     origin: [
       'http://localhost:3000',

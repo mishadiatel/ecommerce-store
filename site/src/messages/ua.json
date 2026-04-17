@@ -156,7 +156,22 @@
     },
     "orderSuccessMessage": "Дякуємо! Ваше замовлення успішно оформлено",
     "orderErrorMessage": "Помилка при оформленні замовлення. Спробуйте ще раз",
-    "submittingText": "Оформлення..."
+    "submittingText": "Оформлення...",
+    "redirectingToPayment": "Перенаправляємо на оплату…",
+    "checkingPayment": "Перевіряємо статус платежу…",
+    "processingPayment": "Обробляємо оплату. Зачекайте…",
+    "paymentSuccessTitle": "Оплата пройшла",
+    "paymentSuccessMessage": "Ваше замовлення оплачено. Ми почнемо його обробляти найближчим часом.",
+    "paymentFailedTitle": "Оплата не пройшла",
+    "paymentFailedMessage": "Платіж не пройшов. Ви можете спробувати ще раз.",
+    "paymentUnknownTitle": "Щось пішло не так",
+    "paymentUnknownMessage": "Не вдалося перевірити статус оплати. Перевірте замовлення в особистому кабінеті або зверніться до підтримки.",
+    "retryPayment": "Спробувати оплатити ще раз",
+    "backToHome": "На головну",
+    "orderNumberLabel": "Номер замовлення",
+    "sandboxNotice": "Тестова оплата — справжні гроші не списуються.",
+    "codSuccessTitle": "Замовлення оформлено",
+    "codSuccessMessage": "Дякуємо! Ваше замовлення оформлено. Оплата здійснюється при отриманні на пошті."
   },
   "Form": {
     "requiredMessage": "Поле {fieldName} є обовязковим",

@@ -111,6 +111,11 @@ export default function OrderCard({ order, updateOrdersList }: OrderCardProps) {
           <span className={`px-2 py-1 rounded-md text-xs ${paymentColors[order.paymentStatus] || 'bg-muted text-muted-foreground ring-1 ring-border'}`}>
             {paymentKeys[order.paymentStatus] || order.paymentStatus}
           </span>
+          {order.isSandboxPayment && (
+            <span className={'px-2 py-1 rounded-md text-[10px] uppercase bg-yellow-500/15 text-yellow-700 dark:text-yellow-300 ring-1 ring-yellow-500/30'}>
+              {t('sandboxBadge')}
+            </span>
+          )}
           <span className={`px-2 py-1 rounded-md text-xs ${statusColors[order.status] || 'bg-muted text-muted-foreground ring-1 ring-border'}`}>
             {statusKeys[order.status] || order.status}
           </span>
@@ -245,6 +250,36 @@ export default function OrderCard({ order, updateOrdersList }: OrderCardProps) {
                 <section>
                   <div className={'font-semibold mb-1'}>{t('message')}</div>
                   <div>{order.message}</div>
+                </section>
+              )}
+
+              {(order.liqpayPaymentId || order.liqpayStatus || order.isSandboxPayment) && (
+                <section>
+                  <div className={'font-semibold mb-1'}>{t('liqpaySection')}</div>
+                  {order.liqpayPaymentId && (
+                    <div className={'flex justify-between gap-2'}>
+                      <span className={'text-muted-foreground'}>{t('liqpayId')}</span>
+                      <span className={'font-mono text-xs break-all'}>{order.liqpayPaymentId}</span>
+                    </div>
+                  )}
+                  {order.liqpayTransactionId && (
+                    <div className={'flex justify-between gap-2'}>
+                      <span className={'text-muted-foreground'}>{t('liqpayTxId')}</span>
+                      <span className={'font-mono text-xs break-all'}>{order.liqpayTransactionId}</span>
+                    </div>
+                  )}
+                  {order.liqpayStatus && (
+                    <div className={'flex justify-between gap-2'}>
+                      <span className={'text-muted-foreground'}>{t('liqpayStatus')}</span>
+                      <span>{order.liqpayStatus}</span>
+                    </div>
+                  )}
+                  {order.isSandboxPayment && (
+                    <div className={'flex justify-between gap-2'}>
+                      <span className={'text-muted-foreground'}>{t('liqpayMode')}</span>
+                      <span>{t('sandboxBadge')}</span>
+                    </div>
+                  )}
                 </section>
               )}
             </div>

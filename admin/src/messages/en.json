@@ -211,7 +211,13 @@
       "paid": "Paid",
       "failed": "Failed",
       "refunded": "Refunded"
-    }
+    },
+    "sandboxBadge": "Sandbox",
+    "liqpaySection": "Online payment (LiqPay)",
+    "liqpayId": "Payment ID",
+    "liqpayTxId": "Transaction ID",
+    "liqpayStatus": "LiqPay status",
+    "liqpayMode": "Mode"
   },
   "products": {
     "addButton": "Add product",

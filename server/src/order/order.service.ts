@@ -12,10 +12,11 @@ import { CartService } from '../cart/cart.service';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { OrderQueryDto } from './dto/order-query.dto';
 import { JwtUser } from '../auth/interfaces/jwt-user.interface';
-import { OrderStatus, PaymentStatus } from './enum/order.enums';
+import { OrderStatus, PaymentMethod, PaymentStatus } from './enum/order.enums';
 import { FullProductWithTranslations } from '../product/interface/product.interface';
 import { TelegramService } from '../telegram/telegram.service';
 import { MailService } from '../mail/mail.service';
+import { LiqPayService } from '../payments/liqpay/liqpay.service';
 
 /** Сума замовлення, починаючи з якої доставка безкоштовна */
 const FREE_SHIPPING_THRESHOLD = 2000;
@@ -29,6 +30,7 @@ export class OrderService {
     private cartService: CartService,
     private telegramService: TelegramService,
     private mailService: MailService,
+    private liqpayService: LiqPayService,
   ) {}
 
   // ─── Генерація номера замовлення ────────────────────────────────────────────
@@ -172,7 +174,29 @@ export class OrderService {
         });
     }
 
-    return order;
+    // ─── Онлайн-оплата: повертаємо LiqPay-параметри для редіректа ──────────
+    if (dto.paymentMethod === PaymentMethod.ONLINE) {
+      const liqpay = this.liqpayService.buildCheckoutParams(order);
+      return {
+        _id: order._id.toString(),
+        orderNumber: order.orderNumber,
+        total: order.total,
+        paymentStatus: order.paymentStatus,
+        paymentMethod: order.paymentMethod,
+        status: order.status,
+        liqpay,
+      };
+    }
+
+    return {
+      _id: order._id.toString(),
+      orderNumber: order.orderNumber,
+      total: order.total,
+      paymentStatus: order.paymentStatus,
+      paymentMethod: order.paymentMethod,
+      status: order.status,
+      liqpay: null,
+    };
   }
 
   // ─── Адмін-методи ───────────────────────────────────────────────────────────

@@ -21,6 +21,7 @@ import { isValidPhoneNumber } from 'libphonenumber-js';
 import { createOrder } from '@/services/order';
 import { guestCart } from '@/stores/guestCart';
 import { toast } from 'react-toastify';
+import { redirectToLiqPay } from '@/lib/liqpayRedirect';
 
 export default function CheckoutPageComponent({ pageInfo }: { pageInfo: Page }) {
   const t = useTranslations();
@@ -200,7 +201,7 @@ export default function CheckoutPageComponent({ pageInfo }: { pageInfo: Page }) 
 
       const isForAnotherPerson = data.orderForAnotherPerson ?? false;
 
-      await createOrder({
+      const createdOrder = await createOrder({
         ...data,
         guestId,
         deliveryCity: data.deliveryCity!.label,
@@ -228,8 +229,16 @@ export default function CheckoutPageComponent({ pageInfo }: { pageInfo: Page }) 
 
       await loadCart();
 
-      // router.push('/');
+      // ─── Онлайн-оплата → редирект на LiqPay ─────────────────────────────
+      if (createdOrder.liqpay) {
+        toast.info(t('Checkout.redirectingToPayment'));
+        redirectToLiqPay(createdOrder.liqpay);
+        return;
+      }
+
+      // ─── Оплата при отриманні → дякую-сторінка ──────────────────────────
       toast.success(t('Checkout.orderSuccessMessage'));
+      router.push(`/checkout/result?orderId=${createdOrder.orderNumber}`);
     } catch (err) {
       console.error(err);
       toast.error(t('Checkout.orderErrorMessage'));

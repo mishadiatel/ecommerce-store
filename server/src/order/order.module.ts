@@ -6,6 +6,7 @@ import { Order, OrderSchema } from './schema/order.schema';
 import { CartModule } from '../cart/cart.module';
 import { TelegramModule } from '../telegram/telegram.module';
 import { MailModule } from '../mail/mail.module';
+import { PaymentsModule } from '../payments/payments.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { MailModule } from '../mail/mail.module';
     CartModule,
     TelegramModule,
     MailModule,
+    PaymentsModule,
   ],
   controllers: [OrderController],
   providers: [OrderService],

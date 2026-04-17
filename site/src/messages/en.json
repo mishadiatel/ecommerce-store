@@ -156,7 +156,22 @@
     },
     "orderSuccessMessage": "Thank you! Your order has been placed successfully",
     "orderErrorMessage": "Failed to place the order. Please try again",
-    "submittingText": "Placing order..."
+    "submittingText": "Placing order...",
+    "redirectingToPayment": "Redirecting to payment…",
+    "checkingPayment": "Checking payment status…",
+    "processingPayment": "Processing payment. Please wait…",
+    "paymentSuccessTitle": "Payment successful",
+    "paymentSuccessMessage": "Your order has been paid. We will start processing it shortly.",
+    "paymentFailedTitle": "Payment failed",
+    "paymentFailedMessage": "The payment did not go through. You can try again.",
+    "paymentUnknownTitle": "Something went wrong",
+    "paymentUnknownMessage": "We could not determine the payment status. Please check your order in your account or contact support.",
+    "retryPayment": "Try payment again",
+    "backToHome": "Back to home",
+    "orderNumberLabel": "Order number",
+    "sandboxNotice": "Sandbox test payment — no real money is charged.",
+    "codSuccessTitle": "Order placed",
+    "codSuccessMessage": "Thank you! Your order has been placed. Payment will be collected on delivery."
   },
   "Form": {
     "requiredMessage": "The {fieldName} field is required",

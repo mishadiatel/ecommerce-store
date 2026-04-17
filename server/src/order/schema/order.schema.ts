@@ -85,6 +85,12 @@ export class Order {
 
   @Prop({ default: false })
   isAgree: boolean;
+
+  // LiqPay tracking
+  @Prop({ default: null }) liqpayPaymentId?: string;
+  @Prop({ default: null }) liqpayTransactionId?: string;
+  @Prop({ default: null }) liqpayStatus?: string;
+  @Prop({ default: false }) isSandboxPayment?: boolean;
 }
 
 export const OrderSchema = SchemaFactory.createForClass(Order);

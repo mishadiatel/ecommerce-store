@@ -211,7 +211,13 @@
       "paid": "Оплачено",
       "failed": "Неуспішно",
       "refunded": "Повернено"
-    }
+    },
+    "sandboxBadge": "Тест",
+    "liqpaySection": "Онлайн-оплата (LiqPay)",
+    "liqpayId": "ID платежу",
+    "liqpayTxId": "ID транзакції",
+    "liqpayStatus": "Статус LiqPay",
+    "liqpayMode": "Режим"
   },
   "products": {
     "addButton": "Додати товар",
