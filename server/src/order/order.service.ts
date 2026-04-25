@@ -17,6 +17,7 @@ import { FullProductWithTranslations } from '../product/interface/product.interf
 import { TelegramService } from '../telegram/telegram.service';
 import { MailService } from '../mail/mail.service';
 import { LiqPayService } from '../payments/liqpay/liqpay.service';
+import { PromoCodeService } from '../promo-code/promo-code.service';
 
 /** Сума замовлення, починаючи з якої доставка безкоштовна */
 const FREE_SHIPPING_THRESHOLD = 2000;
@@ -31,6 +32,7 @@ export class OrderService {
     private telegramService: TelegramService,
     private mailService: MailService,
     private liqpayService: LiqPayService,
+    private promoCodeService: PromoCodeService,
   ) {}
 
   // ─── Генерація номера замовлення ────────────────────────────────────────────
@@ -90,8 +92,31 @@ export class OrderService {
     }
 
     // Підрахунок сум — передаємо cart.items з повними об'єктами продуктів
-    const { subtotal, discount, total, hasFreeDelivery } =
-      this.calculateTotals(cart.items);
+    const baseTotals = this.calculateTotals(cart.items);
+    let { total, hasFreeDelivery } = baseTotals;
+    const { subtotal, discount } = baseTotals;
+
+    // ─── Промокод ──────────────────────────────────────────────────────────
+    // Валідуємо промокод для поточної суми корзини.
+    // validateForCart кидає BadRequestException з людським повідомленням,
+    // якщо код невалідний — що автоматично транслюється в 400 для клієнта.
+    let promoCodeDoc: Awaited<
+      ReturnType<PromoCodeService['validateForCart']>
+    >['promoCode'] | null = null;
+    let promoCodeDiscountAmount = 0;
+
+    if (dto.promoCode && dto.promoCode.trim()) {
+      const validation = await this.promoCodeService.validateForCart(
+        dto.promoCode,
+        total,
+      );
+      promoCodeDoc = validation.promoCode;
+      promoCodeDiscountAmount = validation.discountAmount;
+      total = Math.max(0, total - promoCodeDiscountAmount);
+      // Перераховуємо безкоштовну доставку ПІСЛЯ застосування промокоду —
+      // уникаємо сюрпризів, коли замовлення після знижки падає нижче порога.
+      hasFreeDelivery = total >= 2000;
+    }
 
     // Маппінг позицій для збереження в БД
     const items = cart.items.map((i) => ({
@@ -116,6 +141,13 @@ export class OrderService {
       discount,
       total,
       hasFreeDelivery,
+
+      // Промокод (якщо був застосований)
+      promoCodeId: promoCodeDoc ? promoCodeDoc._id : null,
+      promoCode: promoCodeDoc ? promoCodeDoc.code : null,
+      promoCodeDiscountType: promoCodeDoc ? promoCodeDoc.discountType : null,
+      promoCodeDiscountValue: promoCodeDoc ? promoCodeDoc.discountValue : null,
+      promoCodeDiscountAmount,
 
       // Метод оплати та статуси
       paymentMethod: dto.paymentMethod,
@@ -155,6 +187,21 @@ export class OrderService {
       isAgree: dto.isAgree,
     });
 
+    // Атомарно збільшуємо лічильник активацій промокоду.
+    // Якщо хтось встиг вичерпати ліміт між validateForCart і create,
+    // incrementUses поверне null — у цьому випадку "викочуємо" промокод
+    // з замовлення, щоб не завищувати currentUses в базі.
+    if (promoCodeDoc) {
+      const updated = await this.promoCodeService.incrementUses(
+        promoCodeDoc._id.toString(),
+      );
+      if (!updated) {
+        this.logger.warn(
+          `Promo code ${promoCodeDoc.code} limit was exhausted between validation and order creation for order ${order.orderNumber}. Skipping counter increment.`,
+        );
+      }
+    }
+
     await this.clearCart(user, dto.guestId);
 
     // ─── Нотифікації (не блокуємо відповідь) ──────────────────────────────
@@ -184,6 +231,8 @@ export class OrderService {
         paymentStatus: order.paymentStatus,
         paymentMethod: order.paymentMethod,
         status: order.status,
+        promoCode: order.promoCode,
+        promoCodeDiscountAmount: order.promoCodeDiscountAmount,
         liqpay,
       };
     }
@@ -195,6 +244,8 @@ export class OrderService {
       paymentStatus: order.paymentStatus,
       paymentMethod: order.paymentMethod,
       status: order.status,
+      promoCode: order.promoCode,
+      promoCodeDiscountAmount: order.promoCodeDiscountAmount,
       liqpay: null,
     };
   }
@@ -403,6 +454,15 @@ export class OrderService {
       itemsLines,
       '',
       `<b>💰 Разом:</b> ${order.total}₴ (знижка ${order.discount}₴)`,
+    );
+
+    if (order.promoCode) {
+      parts.push(
+        `<b>🎟 Промокод:</b> ${esc(order.promoCode)} (−${order.promoCodeDiscountAmount}₴)`,
+      );
+    }
+
+    parts.push(
       `<b>💳 Оплата:</b> ${esc(order.paymentMethod)} / ${esc(order.paymentStatus)}`,
       `<b>📦 Статус:</b> ${esc(order.status)}`,
     );

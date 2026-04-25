@@ -7,6 +7,7 @@ import { CartModule } from '../cart/cart.module';
 import { TelegramModule } from '../telegram/telegram.module';
 import { MailModule } from '../mail/mail.module';
 import { PaymentsModule } from '../payments/payments.module';
+import { PromoCodeModule } from '../promo-code/promo-code.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { PaymentsModule } from '../payments/payments.module';
     TelegramModule,
     MailModule,
     PaymentsModule,
+    PromoCodeModule,
   ],
   controllers: [OrderController],
   providers: [OrderService],

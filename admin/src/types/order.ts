@@ -69,6 +69,13 @@ export interface Order {
   liqpayStatus?: string | null;
   isSandboxPayment?: boolean;
 
+  // Promo code (denormalized)
+  promoCodeId?: string | null;
+  promoCode?: string | null;
+  promoCodeDiscountType?: 'percent' | 'fixed' | null;
+  promoCodeDiscountValue?: number | null;
+  promoCodeDiscountAmount?: number;
+
   createdAt: string;
   updatedAt: string;
   __v?: number;

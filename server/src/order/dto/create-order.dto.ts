@@ -94,4 +94,9 @@ export class CreateOrderDto {
 
   @IsBoolean()
   isAgree: boolean;
+
+  /** Опціональний промокод, застосований на checkout-і. */
+  @IsOptional()
+  @IsString()
+  promoCode?: string;
 }

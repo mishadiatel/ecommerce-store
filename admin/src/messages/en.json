@@ -36,7 +36,9 @@
     "total": "Total",
     "confirmDeleteTitle": "Are you absolutely sure?",
     "errorLoading": "Error loading data",
-    "errorGeneric": "Error, try again later"
+    "errorGeneric": "Error, try again later",
+    "saving": "Saving...",
+    "deleting": "Deleting..."
   },
   "header": {
     "brandTag": "ecommerce",
@@ -50,7 +52,8 @@
     "mailTemplates": "Mail templates",
     "category": "Categories",
     "product": "Products",
-    "orders": "Orders"
+    "orders": "Orders",
+    "promoCodes": "Promo codes"
   },
   "pages": {
     "dashboard": {
@@ -80,6 +83,10 @@
     "orders": {
       "title": "Orders",
       "subtitle": "Track customer orders, update statuses and manage payments."
+    },
+    "promoCodes": {
+      "title": "Promo codes",
+      "subtitle": "Create and manage discount promo codes for your customers."
     }
   },
   "login": {
@@ -184,6 +191,7 @@
     "totals": "Totals",
     "subtotal": "Subtotal",
     "discount": "Discount",
+    "promoCodeLabel": "Promo code",
     "freeDelivery": "Free delivery",
     "shipping": "Shipping",
     "paymentMethod": "Payment method",
@@ -338,6 +346,64 @@
       "translationUpdated": "Settings translation updated",
       "error": "Error, try again later",
       "loadError": "Error loading translations"
+    }
+  },
+  "promoCodes": {
+    "createButton": "Create promo code",
+    "createTitle": "Create promo code",
+    "editTitle": "Edit promo code",
+    "createDescription": "Fill in the fields below to create a new promo code.",
+    "editDescription": "Update the promo code settings.",
+    "searchPlaceholder": "Search by code...",
+    "allStatuses": "All statuses",
+    "active": "Active",
+    "inactive": "Inactive",
+    "sortNewest": "Newest first",
+    "sortOldest": "Oldest first",
+    "empty": "No promo codes found",
+    "loadError": "Error loading promo codes",
+    "deleteDescription": "You will delete promo code {code}. This action cannot be undone.",
+    "usesLabel": "Uses",
+    "minOrderAmountLabel": "Min. order amount",
+    "validFromLabel": "Valid from",
+    "validToLabel": "Valid to",
+    "discountType": {
+      "percent": "Percentage (%)",
+      "fixed": "Fixed amount"
+    },
+    "form": {
+      "code": "Code",
+      "codePlaceholder": "e.g. SUMMER2026",
+      "discountType": "Discount type",
+      "discountValue": "Discount value",
+      "minOrderAmount": "Min. order amount",
+      "minOrderAmountHint": "Leave empty for no limit",
+      "maxUses": "Max activations",
+      "isUnlimited": "Unlimited activations",
+      "validFrom": "Valid from",
+      "validTo": "Valid to",
+      "isActive": "Active",
+      "description": "Description (internal)",
+      "descriptionPlaceholder": "For your own notes, not shown to customers"
+    },
+    "validation": {
+      "codeRequired": "Code is required",
+      "codeTooShort": "Code must be at least 2 characters",
+      "discountValueRequired": "Enter the discount value",
+      "discountValueMin": "Discount value must be greater than 0",
+      "discountPercentMax": "Percent discount cannot exceed 100",
+      "maxUsesRequired": "Enter max activations",
+      "maxUsesMin": "Must be at least 1",
+      "minOrderAmountMin": "Must be 0 or greater",
+      "validToBeforeFrom": "End date must be on or after start date"
+    },
+    "toast": {
+      "created": "Promo code created successfully",
+      "updated": "Promo code updated successfully",
+      "deleted": "Promo code deleted",
+      "createError": "Error creating promo code, try again later",
+      "updateError": "Error updating promo code, try again later",
+      "deleteError": "Error deleting, try again later"
     }
   }
 }

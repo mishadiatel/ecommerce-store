@@ -18,6 +18,7 @@ export interface CreateOrderPayload {
   message?: string;
   dontCallMe: boolean;
   isAgree: boolean;
+  promoCode?: string;
 }
 
 export interface LiqPayCheckoutParams {
@@ -34,6 +35,8 @@ export interface CreatedOrder {
   paymentStatus: string;
   paymentMethod: string;
   liqpay: LiqPayCheckoutParams | null;
+  promoCode?: string | null;
+  promoCodeDiscountAmount?: number;
 }
 
 export interface PaymentStatusResponse {
@@ -42,6 +45,21 @@ export interface PaymentStatusResponse {
   paymentStatus: 'pending' | 'paid' | 'failed';
   liqpayStatus: string | null;
   isSandboxPayment: boolean;
+}
+
+export type PromoDiscountType = 'percent' | 'fixed';
+
+export interface ValidatePromoCodePayload {
+  code: string;
+  guestId?: string;
+}
+
+export interface ValidatePromoCodeResponse {
+  code: string;
+  discountType: PromoDiscountType;
+  discountValue: number;
+  minOrderAmount: number | null;
+  discountAmount: number;
 }
 
 export const createOrder = async (
@@ -66,6 +84,16 @@ export const initLiqPayCheckout = async (
   const { data } = await projectApi.post<LiqPayCheckoutParams>(
     '/api/payments/liqpay/init',
     { orderNumber },
+  );
+  return data;
+};
+
+export const validatePromoCode = async (
+  payload: ValidatePromoCodePayload,
+): Promise<ValidatePromoCodeResponse> => {
+  const { data } = await projectApi.post<ValidatePromoCodeResponse>(
+    '/api/promo-code/validate',
+    payload,
   );
   return data;
 };

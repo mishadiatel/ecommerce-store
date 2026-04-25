@@ -10,6 +10,7 @@ import {
   FolderTree,
   ShoppingBag,
   ClipboardList,
+  Ticket,
   type LucideIcon,
 } from 'lucide-react';
 import { usePathname } from '@/i18n/navigation';
@@ -22,7 +23,8 @@ interface NavItem {
     | 'mailTemplates'
     | 'category'
     | 'product'
-    | 'orders';
+    | 'orders'
+    | 'promoCodes';
   href: string;
   icon: LucideIcon;
 }
@@ -35,6 +37,7 @@ const NAV_ITEMS: NavItem[] = [
   { key: 'category', href: '/adminPanel/admin823479234/category', icon: FolderTree },
   { key: 'product', href: '/adminPanel/admin823479234/product', icon: ShoppingBag },
   { key: 'orders', href: '/adminPanel/admin823479234/orders', icon: ClipboardList },
+  { key: 'promoCodes', href: '/adminPanel/admin823479234/promoCodes', icon: Ticket },
 ];
 
 export default function AdminAside() {

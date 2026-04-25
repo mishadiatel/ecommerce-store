@@ -18,10 +18,12 @@ import AsyncSelect from 'react-select/async';
 import { projectApi } from '@/lib/axios';
 import { PhoneInput } from '@/components/ui/phoneInput/PhoneInput';
 import { isValidPhoneNumber } from 'libphonenumber-js';
-import { createOrder } from '@/services/order';
+import { createOrder, validatePromoCode, ValidatePromoCodeResponse } from '@/services/order';
 import { guestCart } from '@/stores/guestCart';
 import { toast } from 'react-toastify';
 import { redirectToLiqPay } from '@/lib/liqpayRedirect';
+import { useModalStore } from '@/stores/useModalStore';
+import axios from 'axios';
 
 export default function CheckoutPageComponent({ pageInfo }: { pageInfo: Page }) {
   const t = useTranslations();
@@ -39,6 +41,12 @@ export default function CheckoutPageComponent({ pageInfo }: { pageInfo: Page }) 
   const [showBottom, setShowBottom] = useState(false);
   const [warehouseOptions, setWarehouseOptions] = useState<Array<{label: string, value: string}>>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const openModal = useModalStore(s => s.openModal);
+  const [promoCodeInput, setPromoCodeInput] = useState('');
+  const [appliedPromoCode, setAppliedPromoCode] = useState<ValidatePromoCodeResponse | null>(null);
+  const [promoDiscount, setPromoDiscount] = useState<number>(0);
+  const [promoCheckingState, setPromoCheckingState] = useState(false);
+  const [promoInlineMessage, setPromoInlineMessage] = useState<{ text: string; type: 'success' | 'error' } | null>(null);
 
   useEffect(() => {
     if (typeof window === 'undefined') {
@@ -194,6 +202,59 @@ export default function CheckoutPageComponent({ pageInfo }: { pageInfo: Page }) 
     }
   }, [selectedCity, setValue]);
 
+  const handleApplyPromoCode = async () => {
+    const code = promoCodeInput.trim();
+    if (!code) return;
+
+    setPromoCheckingState(true);
+    setPromoInlineMessage(null);
+    try {
+      const guestId = !isAuth ? guestCart.get() : undefined;
+      const result = await validatePromoCode({
+        code,
+        guestId,
+      });
+      setAppliedPromoCode(result);
+      setPromoDiscount(result.discountAmount);
+      const successMessage = t('Checkout.promoCodeAppliedMessage', {
+        code: result.code,
+      });
+      setPromoInlineMessage({ text: successMessage, type: 'success' });
+      openModal('promoCodeResult', {
+        success: true,
+        message: successMessage,
+        code: result.code,
+        discountAmount: result.discountAmount,
+      });
+    } catch (err) {
+      setAppliedPromoCode(null);
+      setPromoDiscount(0);
+      let errorMessage = t('Checkout.promoCodeInvalidMessage');
+      if (axios.isAxiosError(err)) {
+        const data = err.response?.data as { message?: string | string[] } | undefined;
+        const msg = data?.message;
+        if (Array.isArray(msg)) errorMessage = msg.join(', ');
+        else if (typeof msg === 'string') errorMessage = msg;
+      }
+      setPromoInlineMessage({ text: errorMessage, type: 'error' });
+      openModal('promoCodeResult', {
+        success: false,
+        message: errorMessage,
+      });
+    } finally {
+      setPromoCheckingState(false);
+    }
+  };
+
+  const handleRemovePromoCode = () => {
+    setAppliedPromoCode(null);
+    setPromoDiscount(0);
+    setPromoCodeInput('');
+    setPromoInlineMessage(null);
+  };
+
+  const totalToPaid = Math.max(0, cartTotalPrice - promoDiscount);
+
   const onSubmit = async (data: CheckoutFormData) => {
     setIsSubmitting(true);
     try {
@@ -208,6 +269,7 @@ export default function CheckoutPageComponent({ pageInfo }: { pageInfo: Page }) 
         deliveryWarehouse: data.deliveryWarehouse!.label,
         orderForAnotherPerson: isForAnotherPerson,
         dontCallMe: data.dontCallMe ?? false,
+        promoCode: appliedPromoCode?.code,
         // якщо заказ НЕ для іншого отримувача — не шлемо поля взагалі
         anotherFirstName: isForAnotherPerson
           ? data.anotherFirstName?.trim() || undefined
@@ -479,14 +541,78 @@ export default function CheckoutPageComponent({ pageInfo }: { pageInfo: Page }) 
                           className="flex items-center gap-4 justify-between pb-3 mb-3 sm:mb-4 sm:pb-4 border-b border-b-gray-20">
                           <span className="heading-6 text-gray-90">{t('Cart.deliveryTitle')}</span>
                           <span className="secondary-body text-gray-90 text-right">
-                          {(cartTotalPrice >= freeShippingPrice) ? t('Cart.freeDeliveryLabel') : t('Cart.paidDeliveryLabel')}
+                          {(totalToPaid >= freeShippingPrice) ? t('Cart.freeDeliveryLabel') : t('Cart.paidDeliveryLabel')}
                         </span>
                         </div>
+
+                        <div className="pb-3 mb-3 sm:mb-4 sm:pb-4 border-b border-b-gray-20">
+                          <label className="heading-6 text-gray-90 block mb-2">
+                            {t('Checkout.promoCodeLabel')}
+                          </label>
+                          <div className="flex items-stretch gap-2">
+                            <input
+                              type="text"
+                              className="flex-1 min-w-0 rounded-lg border border-gray-20 bg-white px-3 py-2 text-sm uppercase outline-none focus:border-primary-green disabled:opacity-60 disabled:cursor-not-allowed"
+                              placeholder={t('Checkout.promocodeInputPlaceholder')}
+                              value={promoCodeInput}
+                              onChange={(e) => setPromoCodeInput(e.target.value)}
+                              disabled={!!appliedPromoCode || promoCheckingState}
+                              autoComplete="off"
+                            />
+                            {appliedPromoCode ? (
+                              <button
+                                type="button"
+                                onClick={handleRemovePromoCode}
+                                className="rounded-lg bg-red-100 px-4 text-sm font-semibold text-red-700 hover:bg-red-200 transition-colors"
+                              >
+                                {t('Checkout.removePromoCodeButton')}
+                              </button>
+                            ) : (
+                              <button
+                                type="button"
+                                onClick={handleApplyPromoCode}
+                                disabled={!promoCodeInput.trim() || promoCheckingState}
+                                className="rounded-lg bg-primary-green px-4 text-sm font-semibold text-white hover:opacity-90 transition-opacity disabled:opacity-60 disabled:cursor-not-allowed"
+                              >
+                                {promoCheckingState
+                                  ? t('Checkout.checkingPromoCodeText')
+                                  : t('Checkout.applyPromocodeButtonText')}
+                              </button>
+                            )}
+                          </div>
+                          {promoInlineMessage && (
+                            <div
+                              className={`mt-2 text-xs ${
+                                promoInlineMessage.type === 'success'
+                                  ? 'text-green-700'
+                                  : 'text-red-600'
+                              }`}
+                              role={promoInlineMessage.type === 'error' ? 'alert' : undefined}
+                            >
+                              {promoInlineMessage.text}
+                            </div>
+                          )}
+                        </div>
+
+                        {appliedPromoCode && promoDiscount > 0 && (
+                          <div className="flex items-center gap-4 justify-between pb-3 mb-3 sm:mb-4 sm:pb-4 border-b border-b-gray-20">
+                            <span className="heading-6 text-green-700">
+                              {t('Checkout.promoCodeDiscountLabel')}{' '}
+                              <span className="font-mono text-xs uppercase">
+                                ({appliedPromoCode.code})
+                              </span>
+                            </span>
+                            <span className="secondary-body text-green-700 text-right">
+                              -{promoDiscount} {t('Product.currencyUah')}
+                            </span>
+                          </div>
+                        )}
+
                         <div className="flex items-center gap-4 justify-between mb-6 js--checkout-bottom-element">
                           <span
                             className="font-semibold text-black text-lg sm:text-xl">{t('Checkout.totalToPaidLabel')}</span>
                           <span
-                            className="font-semibold text-black text-lg sm:text-xl">{cartTotalPrice} {t('Product.currencyUah')}</span>
+                            className="font-semibold text-black text-lg sm:text-xl">{totalToPaid} {t('Product.currencyUah')}</span>
                         </div>
                         <div className={'mb-5 sm:mb-6'}>
                           <Checkbox control={control} name={'isAgree'} label={t.rich('Checkout.agree.label', {
@@ -521,7 +647,7 @@ export default function CheckoutPageComponent({ pageInfo }: { pageInfo: Page }) 
                           <span
                             className="font-semibold text-black text-lg sm:text-xl">{t('Cart.totalLabelText')}</span>
                           <span className="font-semibold text-black text-lg sm:text-xl ">
-                          {cartTotalPrice} {t('Product.currencyUah')}
+                          {totalToPaid} {t('Product.currencyUah')}
                         </span>
                         </div>
                         <button

@@ -236,6 +236,15 @@ export default function OrderCard({ order, updateOrdersList }: OrderCardProps) {
                   <span>{t('discount')}</span>
                   <span>-{order.discount} ₴</span>
                 </div>
+                {order.promoCode && (
+                  <div className={'flex justify-between'}>
+                    <span>
+                      {t('promoCodeLabel')}{' '}
+                      <span className={'font-mono text-xs uppercase'}>({order.promoCode})</span>
+                    </span>
+                    <span>-{order.promoCodeDiscountAmount ?? 0} ₴</span>
+                  </div>
+                )}
                 <div className={'flex justify-between'}>
                   <span>{t('freeDelivery')}</span>
                   <span>{order.hasFreeDelivery ? tCommon('yes') : tCommon('no')}</span>

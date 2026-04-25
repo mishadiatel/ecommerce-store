@@ -2,6 +2,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument, Types } from 'mongoose';
 import { PaymentMethod, PaymentStatus, OrderStatus } from '../enum/order.enums';
 import { OrderItem } from './order-item.schema';
+import { PromoDiscountType } from '../../promo-code/enum/promo-code.enums';
 
 export type OrderDocument = HydratedDocument<Order>;
 
@@ -30,6 +31,32 @@ export class Order {
 
   @Prop({ required: true, default: false })
   hasFreeDelivery: boolean;
+
+  // ─── Промокод ─────────────────────────────────────────────────────────────
+
+  /** ID застосованого промокоду (посилання на колекцію promocodes). */
+  @Prop({ type: Types.ObjectId, ref: 'PromoCode', default: null })
+  promoCodeId: Types.ObjectId | null;
+
+  /** Код промокоду (денормалізовано, щоб не губити при видаленні промокоду). */
+  @Prop({ type: String, default: null })
+  promoCode: string | null;
+
+  /** Тип застосованої знижки. */
+  @Prop({
+    type: String,
+    enum: [PromoDiscountType.PERCENT, PromoDiscountType.FIXED],
+    default: null,
+  })
+  promoCodeDiscountType: PromoDiscountType | null;
+
+  /** Вихідне значення знижки (відсотки або грн). */
+  @Prop({ type: Number, default: null })
+  promoCodeDiscountValue: number | null;
+
+  /** Фактична сума знижки від промокоду (грн), що вирахувана у total. */
+  @Prop({ type: Number, default: 0 })
+  promoCodeDiscountAmount: number;
 
   @Prop({
     type: String,

@@ -36,7 +36,9 @@
     "total": "Всього",
     "confirmDeleteTitle": "Ви впевнені?",
     "errorLoading": "Помилка завантаження даних",
-    "errorGeneric": "Помилка, спробуйте пізніше"
+    "errorGeneric": "Помилка, спробуйте пізніше",
+    "saving": "Збереження...",
+    "deleting": "Видалення..."
   },
   "header": {
     "brandTag": "ecommerce",
@@ -50,7 +52,8 @@
     "mailTemplates": "Шаблони листів",
     "category": "Категорії",
     "product": "Товари",
-    "orders": "Замовлення"
+    "orders": "Замовлення",
+    "promoCodes": "Промокоди"
   },
   "pages": {
     "dashboard": {
@@ -80,6 +83,10 @@
     "orders": {
       "title": "Замовлення",
       "subtitle": "Відстежуйте замовлення клієнтів, оновлюйте статуси та платежі."
+    },
+    "promoCodes": {
+      "title": "Промокоди",
+      "subtitle": "Створюйте та керуйте промокодами зі знижками для ваших клієнтів."
     }
   },
   "login": {
@@ -184,6 +191,7 @@
     "totals": "Підсумки",
     "subtotal": "Сума",
     "discount": "Знижка",
+    "promoCodeLabel": "Промокод",
     "freeDelivery": "Безкоштовна доставка",
     "shipping": "Доставка",
     "paymentMethod": "Спосіб оплати",
@@ -338,6 +346,64 @@
       "translationUpdated": "Переклад налаштувань оновлено",
       "error": "Помилка, спробуйте пізніше",
       "loadError": "Помилка завантаження перекладів"
+    }
+  },
+  "promoCodes": {
+    "createButton": "Створити промокод",
+    "createTitle": "Створити промокод",
+    "editTitle": "Редагувати промокод",
+    "createDescription": "Заповніть поля нижче, щоб створити новий промокод.",
+    "editDescription": "Оновіть параметри промокоду.",
+    "searchPlaceholder": "Пошук за кодом...",
+    "allStatuses": "Усі статуси",
+    "active": "Активний",
+    "inactive": "Неактивний",
+    "sortNewest": "Спочатку нові",
+    "sortOldest": "Спочатку старі",
+    "empty": "Промокодів не знайдено",
+    "loadError": "Помилка завантаження промокодів",
+    "deleteDescription": "Ви видалите промокод {code}. Цю дію не можна скасувати.",
+    "usesLabel": "Використано",
+    "minOrderAmountLabel": "Мін. сума замовлення",
+    "validFromLabel": "Діє з",
+    "validToLabel": "Діє до",
+    "discountType": {
+      "percent": "Відсоток (%)",
+      "fixed": "Фіксована сума"
+    },
+    "form": {
+      "code": "Код",
+      "codePlaceholder": "Напр. SUMMER2026",
+      "discountType": "Тип знижки",
+      "discountValue": "Розмір знижки",
+      "minOrderAmount": "Мін. сума замовлення",
+      "minOrderAmountHint": "Залиште порожнім, якщо без обмежень",
+      "maxUses": "Максимум активацій",
+      "isUnlimited": "Необмежена кількість активацій",
+      "validFrom": "Діє з",
+      "validTo": "Діє до",
+      "isActive": "Активний",
+      "description": "Опис (внутрішній)",
+      "descriptionPlaceholder": "Для власних нотаток, не показується покупцям"
+    },
+    "validation": {
+      "codeRequired": "Код обов'язковий",
+      "codeTooShort": "Код має бути не менше 2 символів",
+      "discountValueRequired": "Вкажіть розмір знижки",
+      "discountValueMin": "Розмір знижки має бути більше 0",
+      "discountPercentMax": "Відсоток знижки не може перевищувати 100",
+      "maxUsesRequired": "Вкажіть кількість активацій",
+      "maxUsesMin": "Має бути не менше 1",
+      "minOrderAmountMin": "Має бути 0 або більше",
+      "validToBeforeFrom": "Дата закінчення має бути не раніше дати початку"
+    },
+    "toast": {
+      "created": "Промокод успішно створено",
+      "updated": "Промокод успішно оновлено",
+      "deleted": "Промокод видалено",
+      "createError": "Помилка створення промокоду, спробуйте пізніше",
+      "updateError": "Помилка оновлення промокоду, спробуйте пізніше",
+      "deleteError": "Помилка видалення, спробуйте пізніше"
     }
   }
 }

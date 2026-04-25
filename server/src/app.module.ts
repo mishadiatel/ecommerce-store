@@ -32,6 +32,7 @@ import { NovaPoshtaModule } from './nova-poshta/nova-poshta.module';
 import { OrderModule } from './order/order.module';
 import { TelegramModule } from './telegram/telegram.module';
 import { PaymentsModule } from './payments/payments.module';
+import { PromoCodeModule } from './promo-code/promo-code.module';
 
 @Module({
   imports: [
@@ -101,6 +102,7 @@ import { PaymentsModule } from './payments/payments.module';
     OrderModule,
     TelegramModule,
     PaymentsModule,
+    PromoCodeModule,
   ],
   controllers: [AppController],
   providers: [AppService],
