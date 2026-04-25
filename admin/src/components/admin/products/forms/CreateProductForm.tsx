@@ -109,7 +109,7 @@ export default function CreateProductForm({ updateProductsList, categoriesList }
         <DialogTitle>{t('createTitle')}</DialogTitle>
       </DialogHeader>
       <form className={'flex flex-col gap-4'} onSubmit={handleSubmit(onSubmit)}>
-        <div className={'grid grid-cols-2 gap-4'}>
+        <div className={'grid grid-cols-1 sm:grid-cols-2 gap-4'}>
           <InputGroup control={control} name={'slug'} label={tFields('slug')} placeholder={tFields('slug')} />
           <FileInput
             control={control}
@@ -117,11 +117,11 @@ export default function CreateProductForm({ updateProductsList, categoriesList }
             label={tFields('cardImage')}
             placeholder={tFields('cardImage')}
           />
-          <div className="col-span-2 flex flex-col gap-2 w-full">
+          <div className="sm:col-span-2 flex flex-col gap-2 w-full">
             <label>{tFields('images')}</label>
-            <div className={'grid grid-cols-2 gap-4'}>
+            <div className={'grid grid-cols-1 sm:grid-cols-2 gap-4'}>
               {fields.map((field, index) => (
-                <div key={field.id} className="flex gap-2 items-center">
+                <div key={field.id} className="flex flex-col sm:flex-row gap-2 sm:items-center">
                   <FileInput
                     control={control}
                     name={`images.${index}`}
@@ -134,6 +134,7 @@ export default function CreateProductForm({ updateProductsList, categoriesList }
                       type="button"
                       variant="destructive"
                       onClick={() => remove(index)}
+                      className="w-full sm:w-auto"
                     >
                       {tCommon('remove')}
                     </Button>
@@ -167,11 +168,11 @@ export default function CreateProductForm({ updateProductsList, categoriesList }
           <CheckboxInput control={control} name={'isOnePlusOne'} label={tFields('isOnePlusOne')} />
           <CheckboxInput control={control} name={'isVisible'} label={tFields('isVisible')} />
         </div>
-        <DialogFooter>
+        <DialogFooter className="flex-col sm:flex-row gap-2">
           <DialogClose asChild>
-            <Button variant="outline" ref={closeRef}>{tCommon('cancel')}</Button>
+            <Button variant="outline" ref={closeRef} className="w-full sm:w-auto">{tCommon('cancel')}</Button>
           </DialogClose>
-          <Button type="submit">{t('createButton')}</Button>
+          <Button type="submit" className="w-full sm:w-auto">{t('createButton')}</Button>
         </DialogFooter>
       </form>
     </>

@@ -285,13 +285,13 @@ export default function BlockForm({
           {selectedType === 'insta-block' && <InstaBlockForm />}
           {selectedType === 'categories-slider' && <CategoriesSliderBlockForm />}
 
-          <DialogFooter>
+          <DialogFooter className="flex-col sm:flex-row gap-2">
             <DialogClose asChild>
-              <Button variant="outline" ref={closeRef}>
+              <Button variant="outline" ref={closeRef} className="w-full sm:w-auto">
                 Cancel
               </Button>
             </DialogClose>
-            <Button type="submit">{isEdit ? 'Save changes' : 'Create block'}</Button>
+            <Button type="submit" className="w-full sm:w-auto">{isEdit ? 'Save changes' : 'Create block'}</Button>
           </DialogFooter>
         </form>
       </FormProvider>

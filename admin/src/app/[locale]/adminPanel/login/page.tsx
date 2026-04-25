@@ -16,7 +16,7 @@ export default function Login() {
       </div>
 
       <div className="w-full max-w-md">
-        <div className="admin-card p-8 flex flex-col gap-6">
+        <div className="admin-card p-5 sm:p-8 flex flex-col gap-6">
           <div className="flex flex-col items-center gap-3 text-center">
             <div className="size-12 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center text-primary-foreground font-bold text-lg shadow-md">
               EC

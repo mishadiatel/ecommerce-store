@@ -109,8 +109,8 @@ export default function ProductTranslationForm({productTranslation, productId, s
         <EditorInput control={control} name={'longDescription'} label={tFields('longDescription')} placeholder={tFields('longDescription')} />
         <EditorInput control={control} name={'composition'} label={tFields('composition')} placeholder={tFields('composition')} />
         <EditorInput control={control} name={'nutritionalTable'} label={tFields('nutritionalTable')} placeholder={tFields('nutritionalTable')} />
-        <div>
-          <Button type="submit">{isEditMode ? t('updateTranslation') : t('createTranslation')}</Button>
+        <div className="w-full sm:w-fit">
+          <Button type="submit" className="w-full sm:w-auto">{isEditMode ? t('updateTranslation') : t('createTranslation')}</Button>
         </div>
       </form>
     </>

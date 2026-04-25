@@ -86,50 +86,53 @@ export default function ProductsList() {
 
   return (
     <>
-      <div className={'w-fit'}>
+      <div className={'w-full sm:w-fit'}>
         <Dialog>
-          <DialogTrigger className={'w-fit'} asChild>
-            <Button>{t('addButton')}</Button>
+          <DialogTrigger className={'w-full sm:w-fit'} asChild>
+            <Button className={'w-full sm:w-auto'}>{t('addButton')}</Button>
           </DialogTrigger>
-          <DialogContent className={'max-w-[1000px] sm:max-w-[1000px] max-h-screen overflow-y-auto'}>
+          <DialogContent className={'w-[calc(100%-1.5rem)] max-w-[1000px] sm:max-w-[1000px] max-h-screen overflow-y-auto'}>
             <CreateProductForm updateProductsList={updateProductsList} categoriesList={categoriesList} />
           </DialogContent>
         </Dialog>
       </div>
 
-      <div className={'flex gap-4 items-center'}>
-        <Input type={'text'}
-                placeholder={t('searchPlaceholder')}
-                className={'w-[200px] flex-shrink max-w-full max-[500px]:w-full'}
-                value={searchWord}
-                onChange={e => setSearchWord(e.target.value)}
-      />
+      <div className={'admin-filters'}>
+        <div className={'admin-filter-search'}>
+          <Input type={'text'}
+                  placeholder={t('searchPlaceholder')}
+                  value={searchWord}
+                  onChange={e => setSearchWord(e.target.value)}
+          />
+        </div>
         {categoriesList && categoriesList?.length > 0 && (
-          <Select
-            value={selectedCategory}
-            onValueChange={(value) => {
-              setSelectedCategory(value);
-            }}
-          >
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder={t('categoryPlaceholder')} />
-            </SelectTrigger>
+          <div className={'admin-filter-select'}>
+            <Select
+              value={selectedCategory}
+              onValueChange={(value) => {
+                setSelectedCategory(value);
+              }}
+            >
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder={t('categoryPlaceholder')} />
+              </SelectTrigger>
 
-            <SelectContent>
-              <SelectItem value="all">
-                {t('allCategories')}
-              </SelectItem>
-
-              {categoriesList.map((category) => (
-                <SelectItem
-                  key={category._id}
-                  value={category._id}
-                >
-                  {category.text}
+              <SelectContent>
+                <SelectItem value="all">
+                  {t('allCategories')}
                 </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+
+                {categoriesList.map((category) => (
+                  <SelectItem
+                    key={category._id}
+                    value={category._id}
+                  >
+                    {category.text}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
         )}
       </div>
 

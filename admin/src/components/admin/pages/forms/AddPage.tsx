@@ -78,11 +78,11 @@ export default function AddPageForm({updatePagesList}: AddPageFormProps) {
         <CheckboxInput control={control} name={'follow'} label={tFields('follow')} />
         <GroupSelect control={control} name={'language'} values={LANGUAGES_LIST} label={tFields('pageLanguage')}
                      placeholder={tFields('language')} />
-        <DialogFooter>
+        <DialogFooter className="flex-col sm:flex-row gap-2">
           <DialogClose asChild>
-            <Button variant="outline" ref={closeRef}>{tCommon('cancel')}</Button>
+            <Button variant="outline" ref={closeRef} className="w-full sm:w-auto">{tCommon('cancel')}</Button>
           </DialogClose>
-          <Button type="submit">{t('createButton')}</Button>
+          <Button type="submit" className="w-full sm:w-auto">{t('createButton')}</Button>
         </DialogFooter>
       </form>
 

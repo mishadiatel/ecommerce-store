@@ -124,7 +124,7 @@ export default function UpdateProductForm({updateProductsList, product, categori
         <DialogTitle>{t('updateTitle')}</DialogTitle>
       </DialogHeader>
       <form className={'flex flex-col gap-4'} onSubmit={handleSubmit(onSubmit)}>
-        <div className={'grid grid-cols-2 gap-4'}>
+        <div className={'grid grid-cols-1 sm:grid-cols-2 gap-4'}>
           <InputGroup control={control} name={'slug'} label={tFields('slug')} placeholder={tFields('slug')} />
           <FileInput
             control={control}
@@ -132,11 +132,11 @@ export default function UpdateProductForm({updateProductsList, product, categori
             label={tFields('cardImage')}
             placeholder={tFields('cardImage')}
           />
-          <div className="col-span-2 flex flex-col gap-2 w-full">
+          <div className="sm:col-span-2 flex flex-col gap-2 w-full">
             <label>{tFields('images')}</label>
-            <div className={'grid grid-cols-2 gap-4'}>
+            <div className={'grid grid-cols-1 sm:grid-cols-2 gap-4'}>
               {fields.map((field, index) => (
-                <div key={field.id} className="flex gap-2 items-center">
+                <div key={field.id} className="flex flex-col sm:flex-row gap-2 sm:items-center">
                   <FileInput
                     control={control}
                     name={`images.${index}`}
@@ -149,6 +149,7 @@ export default function UpdateProductForm({updateProductsList, product, categori
                       type="button"
                       variant="destructive"
                       onClick={() => remove(index)}
+                      className="w-full sm:w-auto"
                     >
                       {tCommon('remove')}
                     </Button>
@@ -184,15 +185,17 @@ export default function UpdateProductForm({updateProductsList, product, categori
         </div>
 
 
-        <div className={'w-fit'}>
-          <Button type="submit">{t('updateButton')}</Button>
+        <div className={'w-full sm:w-fit'}>
+          <Button type="submit" className="w-full sm:w-auto">{t('updateButton')}</Button>
         </div>
       </form>
 
 
       <div className={'flex flex-col gap-4'}>
-        <div className={'w-fit'}><Button type={'button'} onClick={addProductTranslationForm}>{t('addTranslation')}</Button></div>
-        <div className={'flex gap-4'}>
+        <div className={'w-full sm:w-fit'}>
+          <Button type={'button'} onClick={addProductTranslationForm} className="w-full sm:w-auto">{t('addTranslation')}</Button>
+        </div>
+        <div className={'flex flex-col lg:flex-row gap-4'}>
           {translations.map((translation) => (
             <ProductTranslationForm
               key={translation ? translation._id : Math.random()}
@@ -204,9 +207,9 @@ export default function UpdateProductForm({updateProductsList, product, categori
           ))}
         </div>
       </div>
-      <DialogFooter>
+      <DialogFooter className="flex-col sm:flex-row gap-2">
         <DialogClose asChild>
-          <Button variant="outline"
+          <Button variant="outline" className="w-full sm:w-auto"
             // ref={closeRef}
           >{tCommon('cancel')}</Button>
         </DialogClose>

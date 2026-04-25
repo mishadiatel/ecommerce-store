@@ -41,47 +41,62 @@ export default function CategoryCard({category, updateCategoriesList}: CategoryC
   }
 
   return (
-    <div className={'flex justify-between'}>
-      <div>{category.slug}</div>
-      <div>{category.order}</div>
-      <div>{category.isVisible ? <AiFillEye /> : <AiFillEyeInvisible />}</div>
-
-      <div>
+    <div className={'admin-card flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 p-3 sm:p-4'}>
+      <div className={'flex items-center gap-3 min-w-0 flex-1'}>
         {category.image && (
-          <Image src={generateFileUrl(category.image)} alt={category.slug} width={30} height={30} className={'w-[30px] max-h-[30px]'} />
+          <Image
+            src={generateFileUrl(category.image)}
+            alt={category.slug}
+            width={40}
+            height={40}
+            className={'h-10 w-10 rounded-md object-cover flex-shrink-0'}
+          />
         )}
-      </div>
-      <div>
         {category.backgroundColor && (
-          <div className={'w-[30px] h-[30px]'} style={{backgroundColor: category.backgroundColor}}></div>
+          <div
+            className={'h-8 w-8 rounded-md border border-border flex-shrink-0'}
+            style={{ backgroundColor: category.backgroundColor }}
+            aria-hidden
+          />
         )}
+        <div className={'min-w-0 flex-1'}>
+          <div className={'font-medium truncate'}>{category.slug}</div>
+          <div className={'text-xs text-muted-foreground'}>#{category.order}</div>
+        </div>
+        <div className={'flex-shrink-0'}>
+          {category.isVisible ? (
+            <AiFillEye className={'text-green-600'} />
+          ) : (
+            <AiFillEyeInvisible className={'text-red-600'} />
+          )}
+        </div>
       </div>
 
-      <div className={'flex gap-5'}>
+      <div className={'flex gap-4 sm:gap-5 justify-end sm:justify-start sm:ml-auto'}>
         <Dialog>
           <DialogTrigger>
-            <div className={'cursor-pointer'}>
+            <div className={'cursor-pointer p-1'} aria-label={tCommon('edit')}>
               <FaEdit />
             </div>
           </DialogTrigger>
-          <DialogContent className={'max-w-[1000px] sm:max-w-[1000px] max-h-screen overflow-y-auto'}>
+          <DialogContent className={'w-[calc(100%-1.5rem)] max-w-[1000px] sm:max-w-[1000px] max-h-screen overflow-y-auto'}>
             <UpdateCategoryForm updateCategoriesList={updateCategoriesList} category={category} />
           </DialogContent>
         </Dialog>
         <Dialog>
           <DialogTrigger>
-            <div className={'cursor-pointer'}>
+            <div className={'cursor-pointer p-1'} aria-label={tCommon('delete')}>
               <MdDelete />
             </div>
           </DialogTrigger>
-          <DialogContent>
+          <DialogContent className={'w-[calc(100%-1.5rem)] max-w-md'}>
             <DialogHeader>
               <DialogTitle>{tCommon('confirmDeleteTitle')}</DialogTitle>
               <DialogDescription>
                 {t('deleteDescription', { slug: category.slug })}
               </DialogDescription>
             </DialogHeader>
-            <DialogFooter>
+            <DialogFooter className={'flex-col sm:flex-row gap-2'}>
               <DialogClose asChild>
                 <Button variant="outline" ref={closeRemoveModalRef}>{tCommon('cancel')}</Button>
               </DialogClose>

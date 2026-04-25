@@ -80,57 +80,64 @@ export default function OrdersList() {
 
   return (
     <>
-      <div className={'flex gap-4 items-center flex-wrap'}>
-        <Input
-          type={'text'}
-          placeholder={t('searchPlaceholder')}
-          className={'w-[280px] flex-shrink max-w-full max-[500px]:w-full'}
-          value={searchWord}
-          onChange={(e) => setSearchWord(e.target.value)}
-        />
+      <div className={'admin-filters'}>
+        <div className={'admin-filter-search'}>
+          <Input
+            type={'text'}
+            placeholder={t('searchPlaceholder')}
+            value={searchWord}
+            onChange={(e) => setSearchWord(e.target.value)}
+          />
+        </div>
 
-        <Select value={selectedStatus} onValueChange={(value) => setSelectedStatus(value)}>
-          <SelectTrigger className={'w-[180px]'}>
-            <SelectValue placeholder={t('statusPlaceholder')} />
-          </SelectTrigger>
+        <div className={'admin-filter-select'}>
+          <Select value={selectedStatus} onValueChange={(value) => setSelectedStatus(value)}>
+            <SelectTrigger className={'w-full'}>
+              <SelectValue placeholder={t('statusPlaceholder')} />
+            </SelectTrigger>
 
-          <SelectContent>
-            <SelectItem value={'all'}>{t('allStatuses')}</SelectItem>
-            <SelectItem value={'pending'}>{t('status.pending')}</SelectItem>
-            <SelectItem value={'processing'}>{t('status.processing')}</SelectItem>
-            <SelectItem value={'shipped'}>{t('status.shipped')}</SelectItem>
-            <SelectItem value={'delivered'}>{t('status.delivered')}</SelectItem>
-            <SelectItem value={'completed'}>{t('status.completed')}</SelectItem>
-            <SelectItem value={'cancelled'}>{t('status.cancelled')}</SelectItem>
-          </SelectContent>
-        </Select>
+            <SelectContent>
+              <SelectItem value={'all'}>{t('allStatuses')}</SelectItem>
+              <SelectItem value={'pending'}>{t('status.pending')}</SelectItem>
+              <SelectItem value={'processing'}>{t('status.processing')}</SelectItem>
+              <SelectItem value={'shipped'}>{t('status.shipped')}</SelectItem>
+              <SelectItem value={'delivered'}>{t('status.delivered')}</SelectItem>
+              <SelectItem value={'completed'}>{t('status.completed')}</SelectItem>
+              <SelectItem value={'cancelled'}>{t('status.cancelled')}</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
 
-        <Select
-          value={selectedPaymentStatus}
-          onValueChange={(value) => setSelectedPaymentStatus(value)}
-        >
-          <SelectTrigger className={'w-[180px]'}>
-            <SelectValue placeholder={t('paymentStatusPlaceholder')} />
-          </SelectTrigger>
+        <div className={'admin-filter-select'}>
+          <Select
+            value={selectedPaymentStatus}
+            onValueChange={(value) => setSelectedPaymentStatus(value)}
+          >
+            <SelectTrigger className={'w-full'}>
+              <SelectValue placeholder={t('paymentStatusPlaceholder')} />
+            </SelectTrigger>
 
-          <SelectContent>
-            <SelectItem value={'all'}>{t('allPayments')}</SelectItem>
-            <SelectItem value={'pending'}>{t('payment.pending')}</SelectItem>
-            <SelectItem value={'paid'}>{t('payment.paid')}</SelectItem>
-            <SelectItem value={'failed'}>{t('payment.failed')}</SelectItem>
-          </SelectContent>
-        </Select>
+            <SelectContent>
+              <SelectItem value={'all'}>{t('allPayments')}</SelectItem>
+              <SelectItem value={'pending'}>{t('payment.pending')}</SelectItem>
+              <SelectItem value={'paid'}>{t('payment.paid')}</SelectItem>
+              <SelectItem value={'failed'}>{t('payment.failed')}</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
 
-        <Select value={sortOrder} onValueChange={(value) => setSortOrder(value)}>
-          <SelectTrigger className={'w-[180px]'}>
-            <SelectValue placeholder={t('sortPlaceholder')} />
-          </SelectTrigger>
+        <div className={'admin-filter-select'}>
+          <Select value={sortOrder} onValueChange={(value) => setSortOrder(value)}>
+            <SelectTrigger className={'w-full'}>
+              <SelectValue placeholder={t('sortPlaceholder')} />
+            </SelectTrigger>
 
-          <SelectContent>
-            <SelectItem value={'desc'}>{t('sortNewest')}</SelectItem>
-            <SelectItem value={'asc'}>{t('sortOldest')}</SelectItem>
-          </SelectContent>
-        </Select>
+            <SelectContent>
+              <SelectItem value={'desc'}>{t('sortNewest')}</SelectItem>
+              <SelectItem value={'asc'}>{t('sortOldest')}</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
       </div>
 
       <div className={'flex flex-col gap-5'}>

@@ -171,6 +171,56 @@
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.35), 0 4px 16px rgba(0, 0, 0, 0.2);
 }
 
+/* Запобігаємо горизонтальному overflow на мобільних */
+.admin-panel-shell {
+    /*overflow-x: hidden;*/
+}
+
+/* Адаптивний рядок фільтрів: stack на мобільних, inline на ≥sm */
+.admin-filters {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+@media (min-width: 640px) {
+    .admin-filters {
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 1rem;
+    }
+}
+
+.admin-filters > * {
+    width: 100%;
+}
+
+@media (min-width: 640px) {
+    .admin-filters > * {
+        width: auto;
+    }
+    .admin-filters > .admin-filter-search {
+        width: 280px;
+    }
+    .admin-filters > .admin-filter-select {
+        width: 180px;
+    }
+}
+
+/* На мобільних розширюємо select-тригер на всю ширину контейнера */
+.admin-filter-select [data-slot="select-trigger"],
+.admin-filter-select button[role="combobox"] {
+    width: 100%;
+}
+
+@media (min-width: 640px) {
+    .admin-filter-select [data-slot="select-trigger"],
+    .admin-filter-select button[role="combobox"] {
+        width: 100%;
+    }
+}
+
 /* Subtle gradient background for dark mode shell */
 .dark .admin-panel-shell {
     background:

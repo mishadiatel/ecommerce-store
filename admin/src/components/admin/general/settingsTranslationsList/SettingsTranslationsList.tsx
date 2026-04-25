@@ -28,12 +28,12 @@ export default function SettingsTranslationsList({ translations }: SettingsTrans
 
   return (
     <div className={'flex flex-col gap-8'}>
-      <div className={'w-fit'}>
+      <div className={'w-full sm:w-fit'}>
         <Dialog>
-          <DialogTrigger className={'w-fit'} asChild>
-            <Button>{t('addTranslation')}</Button>
+          <DialogTrigger className={'w-full sm:w-fit'} asChild>
+            <Button className="w-full sm:w-auto">{t('addTranslation')}</Button>
           </DialogTrigger>
-          <DialogContent className={'max-w-[1000px] sm:max-w-[1000px] max-h-screen overflow-y-auto'}>
+          <DialogContent className={'w-[calc(100%-1.5rem)] max-w-[1000px] sm:max-w-[1000px] max-h-screen overflow-y-auto'}>
             <SettingsTranslationForm onSuccess={updateTranslationsList} />
           </DialogContent>
         </Dialog>

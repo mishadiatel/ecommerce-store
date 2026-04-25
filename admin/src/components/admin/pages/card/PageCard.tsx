@@ -50,18 +50,27 @@ export default function PageCard({ page, updatePagesList }: PageCardProps) {
     });
   };
   return (
-    <div className={'flex justify-between'}>
-      <div> {page.slug}</div>
-      <div> {page.language}</div>
-      <div>{page.title}</div>
-      <div>{page.index ? 'index' : 'noindex'}, {page.follow ? 'follow' : 'nofollow'}</div>
-      <div className={'flex gap-5'}>
-
+    <div className={'admin-card flex flex-col gap-3 p-3 sm:p-4'}>
+      <div className={'flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3'}>
+        <div className={'min-w-0 flex-1'}>
+          <div className={'font-medium truncate'}>{page.title}</div>
+          <div className={'text-xs text-muted-foreground truncate'}>/{page.slug}</div>
+        </div>
+        <div className={'flex flex-wrap gap-2 text-xs'}>
+          <span className={'rounded-md bg-muted px-2 py-1 text-muted-foreground ring-1 ring-border uppercase'}>
+            {page.language}
+          </span>
+          <span className={'rounded-md bg-muted px-2 py-1 text-muted-foreground ring-1 ring-border'}>
+            {page.index ? 'index' : 'noindex'}, {page.follow ? 'follow' : 'nofollow'}
+          </span>
+        </div>
+      </div>
+      <div className={'flex flex-wrap items-center gap-3 sm:gap-5'}>
         <Dialog>
-          <DialogTrigger className={'w-fit'} asChild>
-            <Button>{t('blocksList')}</Button>
+          <DialogTrigger className={'w-full sm:w-fit'} asChild>
+            <Button className={'w-full sm:w-auto'} variant={'outline'} size={'sm'}>{t('blocksList')}</Button>
           </DialogTrigger>
-          <DialogContent className={'max-w-[1000px] sm:max-w-[1000px] max-h-screen overflow-y-auto'}>
+          <DialogContent className={'w-[calc(100%-1.5rem)] max-w-[1000px] sm:max-w-[1000px] max-h-screen overflow-y-auto'}>
             <DialogHeader>
               <DialogTitle>{t('blocksListTitle')}</DialogTitle>
             </DialogHeader>
@@ -75,37 +84,39 @@ export default function PageCard({ page, updatePagesList }: PageCardProps) {
             </div>
           </DialogContent>
         </Dialog>
-        <Dialog>
-          <DialogTrigger>
-            <div className={'cursor-pointer'}>
-              <FaEdit />
-            </div>
-          </DialogTrigger>
-          <DialogContent className={'max-h-screen overflow-y-auto'}>
-            <EditPageForm page={page} updatePageList={updatePagesList} />
-          </DialogContent>
-        </Dialog>
-        <Dialog>
-          <DialogTrigger>
-            <div className={'cursor-pointer'}>
-              <MdDelete />
-            </div>
-          </DialogTrigger>
-          <DialogContent className={'max-h-screen overflow-y-auto'}>
-            <DialogHeader>
-              <DialogTitle>{tCommon('confirmDeleteTitle')}</DialogTitle>
-              <DialogDescription>
-                {t('deleteDescription', { language: page.language, slug: page.slug, title: page.title })}
-              </DialogDescription>
-            </DialogHeader>
-            <DialogFooter>
-              <DialogClose asChild>
-                <Button variant="outline" ref={closeRemoveModalRef}>{tCommon('cancel')}</Button>
-              </DialogClose>
-              <Button type="button" onClick={onRemovePageClick}>{tCommon('delete')}</Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
+        <div className={'flex gap-4 sm:gap-5 sm:ml-auto'}>
+          <Dialog>
+            <DialogTrigger>
+              <div className={'cursor-pointer p-1'} aria-label={tCommon('edit')}>
+                <FaEdit />
+              </div>
+            </DialogTrigger>
+            <DialogContent className={'w-[calc(100%-1.5rem)] max-h-screen overflow-y-auto'}>
+              <EditPageForm page={page} updatePageList={updatePagesList} />
+            </DialogContent>
+          </Dialog>
+          <Dialog>
+            <DialogTrigger>
+              <div className={'cursor-pointer p-1'} aria-label={tCommon('delete')}>
+                <MdDelete />
+              </div>
+            </DialogTrigger>
+            <DialogContent className={'w-[calc(100%-1.5rem)] max-w-md max-h-screen overflow-y-auto'}>
+              <DialogHeader>
+                <DialogTitle>{tCommon('confirmDeleteTitle')}</DialogTitle>
+                <DialogDescription>
+                  {t('deleteDescription', { language: page.language, slug: page.slug, title: page.title })}
+                </DialogDescription>
+              </DialogHeader>
+              <DialogFooter className={'flex-col sm:flex-row gap-2'}>
+                <DialogClose asChild>
+                  <Button variant="outline" ref={closeRemoveModalRef}>{tCommon('cancel')}</Button>
+                </DialogClose>
+                <Button type="button" onClick={onRemovePageClick}>{tCommon('delete')}</Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        </div>
       </div>
     </div>
   );

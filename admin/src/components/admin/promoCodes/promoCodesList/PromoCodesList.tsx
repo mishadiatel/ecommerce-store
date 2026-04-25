@@ -76,38 +76,43 @@ export default function PromoCodesList() {
 
   return (
     <>
-      <div className={'flex gap-4 items-center flex-wrap'}>
-        <Input
-          type={'text'}
-          placeholder={t('searchPlaceholder')}
-          className={'w-[280px] flex-shrink max-w-full max-[500px]:w-full'}
-          value={searchWord}
-          onChange={(e) => setSearchWord(e.target.value)}
-        />
+      <div className={'admin-filters'}>
+        <div className={'admin-filter-search'}>
+          <Input
+            type={'text'}
+            placeholder={t('searchPlaceholder')}
+            value={searchWord}
+            onChange={(e) => setSearchWord(e.target.value)}
+          />
+        </div>
 
-        <Select value={status} onValueChange={(v) => setStatus(v)}>
-          <SelectTrigger className={'w-[180px]'}>
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value={'all'}>{t('allStatuses')}</SelectItem>
-            <SelectItem value={'active'}>{t('active')}</SelectItem>
-            <SelectItem value={'inactive'}>{t('inactive')}</SelectItem>
-          </SelectContent>
-        </Select>
+        <div className={'admin-filter-select'}>
+          <Select value={status} onValueChange={(v) => setStatus(v)}>
+            <SelectTrigger className={'w-full'}>
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value={'all'}>{t('allStatuses')}</SelectItem>
+              <SelectItem value={'active'}>{t('active')}</SelectItem>
+              <SelectItem value={'inactive'}>{t('inactive')}</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
 
-        <Select value={sortOrder} onValueChange={(v) => setSortOrder(v)}>
-          <SelectTrigger className={'w-[180px]'}>
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value={'desc'}>{t('sortNewest')}</SelectItem>
-            <SelectItem value={'asc'}>{t('sortOldest')}</SelectItem>
-          </SelectContent>
-        </Select>
+        <div className={'admin-filter-select'}>
+          <Select value={sortOrder} onValueChange={(v) => setSortOrder(v)}>
+            <SelectTrigger className={'w-full'}>
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value={'desc'}>{t('sortNewest')}</SelectItem>
+              <SelectItem value={'asc'}>{t('sortOldest')}</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
 
-        <div className={'ml-auto'}>
-          <Button onClick={() => setCreateOpen(true)}>
+        <div className={'sm:ml-auto w-full sm:w-auto'}>
+          <Button className={'w-full sm:w-auto'} onClick={() => setCreateOpen(true)}>
             + {t('createButton')}
           </Button>
         </div>

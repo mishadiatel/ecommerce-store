@@ -203,7 +203,7 @@ export default function PromoCodeForm({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className={'max-w-[600px] sm:max-w-[600px] max-h-screen overflow-y-auto'}>
+      <DialogContent className={'w-[calc(100%-1.5rem)] max-w-[600px] sm:max-w-[600px] max-h-screen overflow-y-auto'}>
         <DialogHeader>
           <DialogTitle>
             {isEdit ? t('editTitle') : t('createTitle')}
@@ -295,16 +295,17 @@ export default function PromoCodeForm({
             label={t('form.isActive')}
           />
 
-          <DialogFooter>
+          <DialogFooter className="flex-col sm:flex-row gap-2">
             <Button
               type={'button'}
               variant={'outline'}
               onClick={() => onOpenChange(false)}
               disabled={submitting}
+              className="w-full sm:w-auto"
             >
               {tCommon('cancel')}
             </Button>
-            <Button type={'submit'} disabled={submitting}>
+            <Button type={'submit'} disabled={submitting} className="w-full sm:w-auto">
               {submitting
                 ? tCommon('saving')
                 : isEdit

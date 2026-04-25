@@ -154,9 +154,9 @@ export default function OrderCard({ order, updateOrdersList }: OrderCardProps) {
         </div>
       </div>
 
-      <div className={'flex gap-2 items-center flex-wrap mt-2'}>
+      <div className={'flex flex-col sm:flex-row gap-2 items-stretch sm:items-center sm:flex-wrap mt-2'}>
         <Select value={status} onValueChange={handleStatusChange} disabled={saving}>
-          <SelectTrigger className={'w-[180px]'}>
+          <SelectTrigger className={'w-full sm:w-[180px]'}>
             <SelectValue placeholder={t('statusPlaceholder')} />
           </SelectTrigger>
           <SelectContent>
@@ -170,16 +170,16 @@ export default function OrderCard({ order, updateOrdersList }: OrderCardProps) {
         </Select>
 
         {order.paymentStatus !== 'paid' && (
-          <Button variant={'outline'} disabled={saving} onClick={handleMarkPaid}>
+          <Button className={'w-full sm:w-auto'} variant={'outline'} disabled={saving} onClick={handleMarkPaid}>
             {t('markAsPaid')}
           </Button>
         )}
 
         <Dialog>
           <DialogTrigger asChild>
-            <Button variant={'outline'}>{t('viewDetails')}</Button>
+            <Button className={'w-full sm:w-auto'} variant={'outline'}>{t('viewDetails')}</Button>
           </DialogTrigger>
-          <DialogContent className={'max-w-[700px] sm:max-w-[700px] max-h-screen overflow-y-auto'}>
+          <DialogContent className={'w-[calc(100%-1.5rem)] max-w-[700px] sm:max-w-[700px] max-h-screen overflow-y-auto'}>
             <DialogHeader>
               <DialogTitle>{t('orderNumber')} {order.orderNumber}</DialogTitle>
               <DialogDescription>{t('detailsDescription')}</DialogDescription>

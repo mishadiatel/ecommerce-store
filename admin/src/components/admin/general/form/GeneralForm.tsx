@@ -107,7 +107,7 @@ export default function GeneralForm({generalSettings}: GeneralFormProps) {
         <InputGroup control={control} name={'mailjetEmail'} label={tFields('mailjetEmail')} placeholder={tFields('mailjetEmail')} />
         <InputGroup control={control} name={'mailjetName'} label={tFields('mailjetName')} placeholder={tFields('mailjetName')} />
       </div>
-      <Button type="submit" className={'w-fit'}>{tCommon('saveChanges')}</Button>
+      <Button type="submit" className={'w-full sm:w-fit'}>{tCommon('saveChanges')}</Button>
 
     </form>
   )

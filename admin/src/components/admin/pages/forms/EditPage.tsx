@@ -81,11 +81,11 @@ export default function EditPageForm({ page, updatePageList }: EditPageFormProps
         <CheckboxInput control={control} name={'follow'} label={tFields('follow')} />
         <GroupSelect control={control} name={'language'} values={LANGUAGES_LIST} label={tFields('pageLanguage')}
                      placeholder={tFields('language')} />
-        <DialogFooter>
+        <DialogFooter className="flex-col sm:flex-row gap-2">
           <DialogClose asChild>
-            <Button variant="outline" ref={closeRef}>{tCommon('cancel')}</Button>
+            <Button variant="outline" ref={closeRef} className="w-full sm:w-auto">{tCommon('cancel')}</Button>
           </DialogClose>
-          <Button type="submit">{tCommon('saveChanges')}</Button>
+          <Button type="submit" className="w-full sm:w-auto">{tCommon('saveChanges')}</Button>
         </DialogFooter>
       </form>
 

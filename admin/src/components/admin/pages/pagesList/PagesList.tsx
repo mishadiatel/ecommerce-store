@@ -59,23 +59,26 @@ export default function PagesList() {
   }, [searchWord]);
   return (
     <>
-      <div className={'w-fit'}>
+      <div className={'w-full sm:w-fit'}>
         <Dialog>
-          <DialogTrigger className={'w-fit'} asChild>
-            <Button>{t('addButton')}</Button>
+          <DialogTrigger className={'w-full sm:w-fit'} asChild>
+            <Button className={'w-full sm:w-auto'}>{t('addButton')}</Button>
           </DialogTrigger>
-          <DialogContent className={'max-h-screen overflow-y-auto'}>
+          <DialogContent className={'w-[calc(100%-1.5rem)] max-h-screen overflow-y-auto'}>
             <AddPageForm updatePagesList={updatePagesList} />
           </DialogContent>
         </Dialog>
       </div>
 
-      <Input type={'text'}
-             placeholder={t('searchPlaceholder')}
-             className={'w-[200px] flex-shrink max-w-full max-[500px]:w-full'}
-             value={searchWord}
-             onChange={e => setSearchWord(e.target.value)}
-      />
+      <div className={'admin-filters'}>
+        <div className={'admin-filter-search'}>
+          <Input type={'text'}
+                 placeholder={t('searchPlaceholder')}
+                 value={searchWord}
+                 onChange={e => setSearchWord(e.target.value)}
+          />
+        </div>
+      </div>
 
       <div className={'flex flex-col gap-5'}>
         {pagesState && pagesState.length > 0 ? (

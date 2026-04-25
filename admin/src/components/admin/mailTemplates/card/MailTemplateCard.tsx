@@ -39,37 +39,45 @@ export default function MailTemplateCard({ mailTemplate, updateMailTemplatesList
     });
   };
   return (
-    <div className={'flex justify-between'}>
-      <div> {mailTemplate.slug}</div>
-      <div> {mailTemplate.language}</div>
-      <div>{mailTemplate.subject}</div>
+    <div className={'admin-card flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 p-3 sm:p-4'}>
+      <div className={'min-w-0 flex-1'}>
+        <div className={'flex items-center gap-2'}>
+          <span className={'font-medium truncate'}>{mailTemplate.slug}</span>
+          <span className={'rounded-md bg-muted px-2 py-0.5 text-xs text-muted-foreground ring-1 ring-border uppercase flex-shrink-0'}>
+            {mailTemplate.language}
+          </span>
+        </div>
+        <div className={'text-xs text-muted-foreground truncate mt-1'}>
+          {mailTemplate.subject}
+        </div>
+      </div>
 
-      <div className={'flex gap-5'}>
+      <div className={'flex gap-4 sm:gap-5 justify-end sm:justify-start sm:ml-auto'}>
         <Dialog>
           <DialogTrigger>
-            <div className={'cursor-pointer'}>
+            <div className={'cursor-pointer p-1'} aria-label={tCommon('edit')}>
               <FaEdit />
             </div>
           </DialogTrigger>
-          <DialogContent className={'max-w-[1000px] sm:max-w-[1000px] max-h-screen overflow-y-auto'}>
+          <DialogContent className={'w-[calc(100%-1.5rem)] max-w-[1000px] sm:max-w-[1000px] max-h-screen overflow-y-auto'}>
             {/*<EditPageForm page={page} updatePageList={updatePagesList} />*/}
             <MailTemplateForm mailTemplate={mailTemplate} onSuccess={updateMailTemplatesList} />
           </DialogContent>
         </Dialog>
         <Dialog>
           <DialogTrigger>
-            <div className={'cursor-pointer'}>
+            <div className={'cursor-pointer p-1'} aria-label={tCommon('delete')}>
               <MdDelete />
             </div>
           </DialogTrigger>
-          <DialogContent className={'max-h-screen overflow-y-auto'}>
+          <DialogContent className={'w-[calc(100%-1.5rem)] max-w-md max-h-screen overflow-y-auto'}>
             <DialogHeader>
               <DialogTitle>{tCommon('confirmDeleteTitle')}</DialogTitle>
               <DialogDescription>
                 {t('deleteDescription', { language: mailTemplate.language, slug: mailTemplate.slug })}
               </DialogDescription>
             </DialogHeader>
-            <DialogFooter>
+            <DialogFooter className={'flex-col sm:flex-row gap-2'}>
               <DialogClose asChild>
                 <Button variant="outline" ref={closeRemoveModalRef}>{tCommon('cancel')}</Button>
               </DialogClose>

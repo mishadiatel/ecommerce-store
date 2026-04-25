@@ -76,11 +76,11 @@ export default function CreateCategoryForm({updateCategoriesList}: CreateCategor
         <InputGroup control={control} name={'order'} label={tFields('order')} placeholder={tFields('order')} type={'number'} />
         <CheckboxInput control={control} name={'isVisible'} label={tFields('isVisible')} />
 
-        <DialogFooter>
+        <DialogFooter className="flex-col sm:flex-row gap-2">
           <DialogClose asChild>
-            <Button variant="outline" ref={closeRef}>{tCommon('cancel')}</Button>
+            <Button variant="outline" ref={closeRef} className="w-full sm:w-auto">{tCommon('cancel')}</Button>
           </DialogClose>
-          <Button type="submit">{t('createButton')}</Button>
+          <Button type="submit" className="w-full sm:w-auto">{t('createButton')}</Button>
         </DialogFooter>
       </form>
 

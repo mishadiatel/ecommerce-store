@@ -87,13 +87,15 @@ export default function UpdateCategoryForm({updateCategoriesList, category}: Upd
         <InputGroup control={control} name={'backgroundColor'} label={tFields('backgroundColor')} placeholder={tFields('backgroundColor')} />
         <InputGroup control={control} name={'order'} label={tFields('order')} placeholder={tFields('order')} type={'number'} />
         <CheckboxInput control={control} name={'isVisible'} label={tFields('isVisible')} />
-        <div className={'w-fit'}>
-          <Button type="submit">{t('updateButton')}</Button>
+        <div className={'w-full sm:w-fit'}>
+          <Button type="submit" className="w-full sm:w-auto">{t('updateButton')}</Button>
         </div>
       </form>
       <div className={'flex flex-col gap-4'}>
-        <div className={'w-fit'}><Button type={'button'} onClick={addCategoryTranslationForm}>{t('addTranslation')}</Button></div>
-        <div className={'flex gap-4'}>
+        <div className={'w-full sm:w-fit'}>
+          <Button type={'button'} onClick={addCategoryTranslationForm} className="w-full sm:w-auto">{t('addTranslation')}</Button>
+        </div>
+        <div className={'flex flex-col lg:flex-row gap-4'}>
           {translations.map((translation) => (
             <CategoryTranslationForm
               key={translation ? translation._id : Math.random()}
@@ -105,9 +107,9 @@ export default function UpdateCategoryForm({updateCategoriesList, category}: Upd
           ))}
         </div>
       </div>
-      <DialogFooter>
+      <DialogFooter className="flex-col sm:flex-row gap-2">
         <DialogClose asChild>
-          <Button variant="outline"
+          <Button variant="outline" className="w-full sm:w-auto"
                   // ref={closeRef}
           >{tCommon('cancel')}</Button>
         </DialogClose>

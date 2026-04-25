@@ -113,18 +113,18 @@ export default function PromoCodeCard({
 
           <Dialog>
             <DialogTrigger asChild>
-              <button className={'cursor-pointer'} aria-label={tCommon('delete')}>
+              <button className={'cursor-pointer p-1'} aria-label={tCommon('delete')}>
                 <MdDelete />
               </button>
             </DialogTrigger>
-            <DialogContent>
+            <DialogContent className={'w-[calc(100%-1.5rem)] max-w-md'}>
               <DialogHeader>
                 <DialogTitle>{tCommon('confirmDeleteTitle')}</DialogTitle>
                 <DialogDescription>
                   {t('deleteDescription', { code: promoCode.code })}
                 </DialogDescription>
               </DialogHeader>
-              <DialogFooter>
+              <DialogFooter className={'flex-col sm:flex-row gap-2'}>
                 <DialogClose asChild>
                   <Button variant={'outline'} ref={closeDeleteRef}>
                     {tCommon('cancel')}

@@ -97,8 +97,8 @@ export default function CategoryTranslationForm({categoryTranslation, categoryId
         <InputGroup control={control} name={'name'} label={tFields('name')} placeholder={tFields('name')} />
         <InputGroup control={control} name={'pageTitle'} label={tFields('pageTitle')} placeholder={tFields('pageTitle')} />
         <InputGroup control={control} name={'pageDescription'} label={tFields('pageDescription')} placeholder={tFields('pageDescription')} />
-        <div>
-          <Button type="submit">{isEditMode ? t('updateTranslation') : t('createTranslation')}</Button>
+        <div className="w-full sm:w-fit">
+          <Button type="submit" className="w-full sm:w-auto">{isEditMode ? t('updateTranslation') : t('createTranslation')}</Button>
         </div>
       </form>
     </>

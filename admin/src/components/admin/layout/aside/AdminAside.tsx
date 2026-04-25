@@ -11,9 +11,12 @@ import {
   ShoppingBag,
   ClipboardList,
   Ticket,
+  X,
   type LucideIcon,
 } from 'lucide-react';
 import { usePathname } from '@/i18n/navigation';
+import { useSidebar } from '@/components/admin/layout/sidebarContext/SidebarContext';
+import LanguageSwitcher from "@/components/admin/layout/languageSwitcher/LanguageSwitcher";
 
 interface NavItem {
   key:
@@ -42,51 +45,104 @@ const NAV_ITEMS: NavItem[] = [
 
 export default function AdminAside() {
   const t = useTranslations('nav');
+  const tCommon = useTranslations('common');
   const pathname = usePathname();
   const segments = pathname.split('/').filter(Boolean);
   const lastSegment = segments[segments.length - 1];
+  const { isOpen, close } = useSidebar();
 
-  return (
-    <aside
-      className={[
-        'flex flex-col flex-[0_0_240px] self-start sticky top-[80px]',
-        'rounded-xl border border-border bg-sidebar text-sidebar-foreground',
-        'p-3 shadow-sm',
-      ].join(' ')}
-    >
-      <nav className="flex flex-col gap-1">
-        {NAV_ITEMS.map(({ key, href, icon: Icon }) => {
-          const isActive = lastSegment === key;
-          return (
-            <Link
-              key={key}
-              href={href}
+  const navContent = (
+    <nav className="flex flex-col gap-1">
+      {NAV_ITEMS.map(({ key, href, icon: Icon }) => {
+        const isActive = lastSegment === key;
+        return (
+          <Link
+            key={key}
+            href={href}
+            onClick={close}
+            className={[
+              'group flex items-center gap-3 rounded-lg px-3 py-2.5',
+              'text-sm font-medium transition-colors',
+              isActive
+                ? 'bg-sidebar-accent text-sidebar-accent-foreground shadow-sm'
+                : 'text-sidebar-foreground/80 hover:bg-sidebar-accent/60 hover:text-sidebar-accent-foreground',
+            ].join(' ')}
+          >
+            <span
               className={[
-                'group flex items-center gap-3 rounded-lg px-3 py-2.5',
-                'text-sm font-medium transition-colors',
+                'grid h-8 w-8 place-items-center rounded-md',
                 isActive
-                  ? 'bg-sidebar-accent text-sidebar-accent-foreground shadow-sm'
-                  : 'text-sidebar-foreground/80 hover:bg-sidebar-accent/60 hover:text-sidebar-accent-foreground',
+                  ? 'bg-primary/15 text-primary'
+                  : 'bg-sidebar-accent/40 text-sidebar-foreground/70 group-hover:text-sidebar-accent-foreground',
               ].join(' ')}
             >
-              <span
-                className={[
-                  'grid h-8 w-8 place-items-center rounded-md',
-                  isActive
-                    ? 'bg-primary/15 text-primary'
-                    : 'bg-sidebar-accent/40 text-sidebar-foreground/70 group-hover:text-sidebar-accent-foreground',
-                ].join(' ')}
-              >
-                <Icon className="h-4 w-4" />
-              </span>
-              <span className="flex-1 truncate">{t(key)}</span>
-              {isActive && (
-                <span className="h-1.5 w-1.5 rounded-full bg-primary" aria-hidden />
-              )}
-            </Link>
-          );
-        })}
-      </nav>
-    </aside>
+              <Icon className="h-4 w-4" />
+            </span>
+            <span className="flex-1 truncate">{t(key)}</span>
+            {isActive && (
+              <span className="h-1.5 w-1.5 rounded-full bg-primary" aria-hidden />
+            )}
+          </Link>
+        );
+      })}
+    </nav>
+  );
+
+  return (
+    <>
+      {/* Desktop sidebar (≥ lg) */}
+      <aside
+        className={[
+          'hidden lg:flex flex-col flex-[0_0_240px] self-start sticky top-[80px]',
+          'rounded-xl border border-border bg-sidebar text-sidebar-foreground',
+          'p-3 shadow-sm',
+        ].join(' ')}
+      >
+        {navContent}
+      </aside>
+
+      {/* Mobile overlay */}
+      <div
+        className={[
+          'lg:hidden fixed inset-0 z-40 bg-black/50 backdrop-blur-sm transition-opacity',
+          isOpen ? 'opacity-100' : 'pointer-events-none opacity-0',
+        ].join(' ')}
+        aria-hidden={!isOpen}
+        onClick={close}
+      />
+
+      {/* Mobile drawer (< lg) */}
+      <aside
+        className={[
+          'lg:hidden fixed left-0 top-0 bottom-0 z-50 w-[280px] max-w-[85vw]',
+          'flex flex-col bg-sidebar text-sidebar-foreground',
+          'border-r border-border shadow-xl',
+          'transform transition-transform duration-200 ease-out',
+          isOpen ? 'translate-x-0' : '-translate-x-full',
+        ].join(' ')}
+        aria-hidden={!isOpen}
+      >
+        <div className="flex items-center justify-between border-b border-border p-3">
+          <span className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+            {tCommon('navigation')}
+          </span>
+          <button
+            type="button"
+            onClick={close}
+            aria-label={tCommon('close')}
+            className="grid h-8 w-8 place-items-center rounded-md hover:bg-sidebar-accent/60"
+          >
+            <X className="h-4 w-4" />
+          </button>
+        </div>
+        <div className="flex-1 overflow-y-auto p-3">
+            {navContent}
+            <div className={'py-4 sm:hidden'}>
+                <LanguageSwitcher />
+            </div>
+        </div>
+
+      </aside>
+    </>
   );
 }

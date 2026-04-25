@@ -87,13 +87,13 @@ export default function MailTemplateForm({ mailTemplate, onSuccess }: MailTempla
         <TextareaWithPreview control={control} name={'html'} label={tFields('html')} placeholder={tFields('html')} />
 
 
-        <DialogFooter>
+        <DialogFooter className="flex-col sm:flex-row gap-2">
           <DialogClose asChild>
-            <Button variant="outline" className={'w-fit'} ref={closeRef}>
+            <Button variant="outline" className={'w-full sm:w-fit'} ref={closeRef}>
               {tCommon('cancel')}
             </Button>
           </DialogClose>
-          <Button type="submit" className={'w-fit'}>{isEdit ? tCommon('saveChanges') : t('createButton')}</Button>
+          <Button type="submit" className={'w-full sm:w-fit'}>{isEdit ? tCommon('saveChanges') : t('createButton')}</Button>
         </DialogFooter>
       </form>
     </>

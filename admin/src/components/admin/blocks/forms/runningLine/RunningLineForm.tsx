@@ -15,7 +15,7 @@ export default function RunningLineForm() {
     <div className="flex flex-col gap-4 border p-4 rounded-xl bg-muted">
       <h3 className="font-semibold text-lg">Running line items</h3>
       {fields.map((item, index) => (
-        <div key={item.id} className="border p-4 rounded-md grid grid-cols-2 gap-3">
+        <div key={item.id} className="border p-4 rounded-md grid grid-cols-1 sm:grid-cols-2 gap-3">
           <InputGroup control={control} name={`blockData.items.${index}._id`} label="id" />
           <InputGroup control={control} name={`blockData.items.${index}.text`} label="text" />
 

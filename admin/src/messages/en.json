@@ -38,7 +38,9 @@
     "errorLoading": "Error loading data",
     "errorGeneric": "Error, try again later",
     "saving": "Saving...",
-    "deleting": "Deleting..."
+    "deleting": "Deleting...",
+    "navigation": "Navigation",
+    "openMenu": "Open menu"
   },
   "header": {
     "brandTag": "ecommerce",

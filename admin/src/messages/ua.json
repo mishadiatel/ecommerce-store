@@ -38,7 +38,9 @@
     "errorLoading": "Помилка завантаження даних",
     "errorGeneric": "Помилка, спробуйте пізніше",
     "saving": "Збереження...",
-    "deleting": "Видалення..."
+    "deleting": "Видалення...",
+    "navigation": "Навігація",
+    "openMenu": "Відкрити меню"
   },
   "header": {
     "brandTag": "ecommerce",

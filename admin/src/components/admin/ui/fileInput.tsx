@@ -82,6 +82,7 @@ export default function FileInput<T extends FieldValues>({
                     toast.error('Upload failed')
                   }
                 }}
+                style={{width: 'calc(100% - 50px)'}}
               />
               <FilePreview fileName={field.value} />
 

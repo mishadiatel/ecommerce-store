@@ -91,16 +91,16 @@ export default function SettingsTranslationForm ({settingsTranslation, onSuccess
 
 
         {!isEdit ? (
-          <DialogFooter>
+          <DialogFooter className="flex-col sm:flex-row gap-2">
             <DialogClose asChild>
-              <Button variant="outline" className={'w-fit'} ref={closeRef}>
+              <Button variant="outline" className={'w-full sm:w-fit'} ref={closeRef}>
                 {tCommon('cancel')}
               </Button>
             </DialogClose>
-            <Button type="submit" className={'w-fit'}>{isEdit ? tCommon('saveChanges') : t('createTranslation')}</Button>
+            <Button type="submit" className={'w-full sm:w-fit'}>{isEdit ? tCommon('saveChanges') : t('createTranslation')}</Button>
           </DialogFooter>
         ) : (
-          <Button type="submit" className={'w-fit'}>{isEdit ? tCommon('saveChanges') : t('createTranslation')}</Button>
+          <Button type="submit" className={'w-full sm:w-fit'}>{isEdit ? tCommon('saveChanges') : t('createTranslation')}</Button>
         )}
 
       </form>
