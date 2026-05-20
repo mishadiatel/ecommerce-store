@@ -37,6 +37,7 @@ export default function CheckoutPageComponent({ pageInfo }: { pageInfo: Page }) 
     s.cart?.items.reduce((sum, item) => sum + item.quantity, 0) ?? 0,
   );
   const isAuth = useAuthStore(s => s.isAuth);
+  const user = useAuthStore(s => s.user);
   const asideRef = useRef<HTMLDivElement | null>(null);
   const [showBottom, setShowBottom] = useState(false);
   const [warehouseOptions, setWarehouseOptions] = useState<Array<{label: string, value: string}>>([]);
@@ -170,6 +171,7 @@ export default function CheckoutPageComponent({ pageInfo }: { pageInfo: Page }) 
     handleSubmit,
     watch,
     setValue,
+    getValues,
   } = useForm<CheckoutFormData>({
     resolver: zodResolver(checkoutFormSchema),
     mode: 'all',
@@ -201,6 +203,24 @@ export default function CheckoutPageComponent({ pageInfo }: { pageInfo: Page }) 
       loadWarehouses('')
     }
   }, [selectedCity, setValue]);
+
+  // Prefill checkout form from logged-in user without overwriting user input
+  useEffect(() => {
+    if (!user) return;
+    const current = getValues();
+    if (!current.firstName && user.firstName) {
+      setValue('firstName', user.firstName, { shouldValidate: true });
+    }
+    if (!current.lastName && user.lastName) {
+      setValue('lastName', user.lastName, { shouldValidate: true });
+    }
+    if (!current.email && user.email) {
+      setValue('email', user.email, { shouldValidate: true });
+    }
+    if (!current.phoneNumber && user.phoneNumber) {
+      setValue('phoneNumber', user.phoneNumber, { shouldValidate: true });
+    }
+  }, [user, getValues, setValue]);
 
   const handleApplyPromoCode = async () => {
     const code = promoCodeInput.trim();

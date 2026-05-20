@@ -38,6 +38,12 @@ export function PhoneInput<T extends FieldValues>({
 
   const inputRef = useRef<HTMLInputElement | null>(null);
   const itiRef = useRef<Instance | null>(null);
+  const isInitializedRef = useRef(false);
+  // Suppress callback emissions while we programmatically sync the value
+  // (setNumber() fires `input`/`countrychange` events, and getNumber()
+  // can transiently return '' while intl-tel-input's utils are still loading).
+  const isSyncingRef = useRef(false);
+  const lastSyncedValueRef = useRef<string>('');
 
   useEffect(() => {
     if (!inputRef.current) return;
@@ -51,14 +57,27 @@ export function PhoneInput<T extends FieldValues>({
       loadUtils: () => import('intl-tel-input/build/js/utils.js')
     });
 
+    isInitializedRef.current = true;
+
     // set default value if exists
     if (field.value) {
+      isSyncingRef.current = true;
       itiRef.current.setNumber(field.value);
+      lastSyncedValueRef.current = field.value;
+      // release the flag after current event loop tick so iti-emitted events are ignored
+      setTimeout(() => {
+        isSyncingRef.current = false;
+      }, 0);
     }
 
     const handleChange = () => {
       if (!itiRef.current) return;
+      if (isSyncingRef.current) return;
       const fullNumber = itiRef.current.getNumber(); // E.164
+      // Guard: if utils still resolve to '' but we know a value was set
+      // externally, don't wipe it out.
+      if (!fullNumber && lastSyncedValueRef.current) return;
+      lastSyncedValueRef.current = fullNumber;
       field.onChange(fullNumber);
     };
 
@@ -69,8 +88,28 @@ export function PhoneInput<T extends FieldValues>({
       inputRef.current?.removeEventListener('input', handleChange);
       inputRef.current?.removeEventListener('countrychange', handleChange);
       itiRef.current?.destroy();
+      isInitializedRef.current = false;
     };
   }, []);
+
+  // Sync external value changes (e.g. setValue / form.reset after async user load)
+  useEffect(() => {
+    if (!isInitializedRef.current || !itiRef.current) return;
+    const incoming = field.value ?? '';
+    if (incoming === lastSyncedValueRef.current) return;
+    const currentNumber = itiRef.current.getNumber();
+    if (incoming === currentNumber) {
+      lastSyncedValueRef.current = incoming;
+      return;
+    }
+
+    isSyncingRef.current = true;
+    itiRef.current.setNumber(incoming);
+    lastSyncedValueRef.current = incoming;
+    setTimeout(() => {
+      isSyncingRef.current = false;
+    }, 0);
+  }, [field.value]);
 
   return (
     <label

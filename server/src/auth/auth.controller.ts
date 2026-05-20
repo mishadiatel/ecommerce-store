@@ -15,6 +15,7 @@ import { AuthDto } from './dto/auth.dto';
 import { AccessTokenGuard } from './guards/accessToken.guard';
 import { RefreshTokenGuard } from './guards/refreshToken.guard';
 import * as process from 'node:process';
+import { ConfigService } from '@nestjs/config';
 import { UsersService } from '../users/users.service';
 import { ForgotPasswordDto } from './dto/forgot-password.dto';
 import { ResetPasswordDto } from './dto/reset-password.dto';
@@ -29,6 +30,7 @@ export class AuthController {
   constructor(
     private authService: AuthService,
     private usersService: UsersService,
+    private configService: ConfigService,
   ) {}
 
   @Post('signup')
@@ -37,8 +39,19 @@ export class AuthController {
   }
 
   @Get('activateAccount/:token')
-  activate(@Param('token') token: string) {
-    return this.authService.activateAccount(token);
+  async activate(@Param('token') token: string, @Res() response: Response) {
+    const appUrl =
+      this.configService.get<string>('APP_PUBLIC_URL') ??
+      process.env.APP_PUBLIC_URL ??
+      '';
+    const baseUrl = appUrl.replace(/\/+$/, '');
+
+    try {
+      await this.authService.activateAccount(token);
+      return response.redirect(`${baseUrl}/account/login?activated=1`);
+    } catch {
+      return response.redirect(`${baseUrl}/account/login?activated=0`);
+    }
   }
 
   @Post('resendActivationToken')

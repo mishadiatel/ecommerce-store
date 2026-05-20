@@ -1,6 +1,11 @@
 import { create } from 'zustand';
 
-type ModalType = 'cart' | 'search' | 'message' | 'promoCodeResult';
+type ModalType =
+  | 'cart'
+  | 'search'
+  | 'message'
+  | 'promoCodeResult'
+  | 'orderDetails';
 
 interface MessagePayload {
   text: string;
@@ -14,11 +19,16 @@ export interface PromoCodeResultPayload {
   discountAmount?: number;
 }
 
+export interface OrderDetailsPayload {
+  orderId: string;
+}
+
 type PopupPayloadMap = {
   cart: undefined;
   search: undefined;
   message: MessagePayload;
   promoCodeResult: PromoCodeResultPayload;
+  orderDetails: OrderDetailsPayload;
 };
 
 interface ModalState<T extends ModalType = ModalType> {

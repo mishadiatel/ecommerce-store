@@ -62,6 +62,53 @@ export interface ValidatePromoCodeResponse {
   discountAmount: number;
 }
 
+export interface MyOrderItem {
+  productId: string;
+  name: string;
+  price: number;
+  oldPrice: number;
+  quantity: number;
+}
+
+export interface MyOrder {
+  _id: string;
+  orderNumber: string;
+  status: string;
+  paymentStatus: string;
+  paymentMethod: string;
+  total: number;
+  subtotal: number;
+  discount: number;
+  hasFreeDelivery: boolean;
+  promoCode?: string | null;
+  promoCodeDiscountAmount?: number;
+  items: MyOrderItem[];
+  email?: string;
+  firstName?: string;
+  lastName?: string;
+  phoneNumber?: string;
+  orderForAnotherPerson?: boolean;
+  anotherFirstName?: string;
+  anotherLastName?: string;
+  anotherEmail?: string;
+  anotherPhoneNumber?: string;
+  deliveryType?: string;
+  deliveryCity?: string;
+  deliveryWarehouse?: string;
+  message?: string;
+  dontCallMe?: boolean;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface MyOrdersPage {
+  data: MyOrder[];
+  totalDocuments: number;
+  totalPages: number;
+  page: number;
+  limit: number;
+}
+
 export const createOrder = async (
   payload: CreateOrderPayload,
 ): Promise<CreatedOrder> => {
@@ -95,5 +142,20 @@ export const validatePromoCode = async (
     '/api/promo-code/validate',
     payload,
   );
+  return data;
+};
+
+export const getMyOrders = async (
+  page: number,
+  limit: number,
+): Promise<MyOrdersPage> => {
+  const { data } = await projectApi.get<MyOrdersPage>('/api/order/my', {
+    params: { page, limit },
+  });
+  return data;
+};
+
+export const getMyOrder = async (id: string): Promise<MyOrder> => {
+  const { data } = await projectApi.get<MyOrder>(`/api/order/my/${id}`);
   return data;
 };

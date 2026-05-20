@@ -190,5 +190,164 @@
     "validEmailMessage": "The {fieldName} field must contain a valid email address",
     "agreeRequiredMessage": "You must agree to the processing of personal data",
     "validPhoneMessage": "Invalid phone number"
+  },
+  "Account": {
+    "personalAccountTitle": "Personal account",
+    "loginPageTitle": "Sign in",
+    "loginSubtitle": "Sign in to your account to continue",
+    "loginButtonText": "Sign in",
+    "loginLinkText": "Sign in",
+    "loginSuccessMessage": "You have signed in successfully",
+    "loginErrorMessage": "Could not sign in. Please check your credentials",
+    "noAccountQuestion": "Don't have an account yet?",
+    "signupLinkText": "Sign up",
+    "signupPageTitle": "Sign up",
+    "signupSubtitle": "Create an account to make shopping faster",
+    "signupButtonText": "Sign up",
+    "signupSuccessMessage": "Registration successful!",
+    "signupErrorMessage": "Could not sign up. Please try again",
+    "haveAccountQuestion": "Already have an account?",
+    "logoutMessage": "You have signed out",
+    "loggingOutText": "Signing out...",
+    "submittingText": "Submitting...",
+    "saveButtonText": "Save",
+    "menuMyData": "My data",
+    "menuChangePassword": "Change password",
+    "menuLogout": "Sign out",
+    "myDataPageTitle": "My data",
+    "myDataSubtitle": "View and edit your personal information",
+    "changePasswordPageTitle": "Change password",
+    "changePasswordSubtitle": "Update your password to keep your account secure",
+    "updatePasswordButtonText": "Update password",
+    "profileUpdateSuccess": "Profile updated successfully",
+    "profileUpdateError": "Could not update profile. Please try again",
+    "passwordUpdateSuccess": "Password updated successfully",
+    "passwordUpdateError": "Could not update password. Please check your data",
+    "passwordsDoNotMatch": "Passwords do not match",
+    "passwordMinLengthMessage": "Password must be at least {length} characters",
+    "email": {
+      "label": "Email",
+      "placeholder": "Enter your email"
+    },
+    "firstName": {
+      "label": "First name",
+      "placeholder": "Enter your first name"
+    },
+    "lastName": {
+      "label": "Last name",
+      "placeholder": "Enter your last name"
+    },
+    "phoneNumber": {
+      "label": "Phone number",
+      "placeholder": "Enter phone number"
+    },
+    "birthDay": {
+      "label": "Date of birth",
+      "placeholder": "Select date of birth"
+    },
+    "password": {
+      "label": "Password",
+      "placeholder": "Enter your password"
+    },
+    "confirmPassword": {
+      "label": "Confirm password",
+      "placeholder": "Repeat password"
+    },
+    "currentPassword": {
+      "label": "Current password",
+      "placeholder": "Enter current password"
+    },
+    "newPassword": {
+      "label": "New password",
+      "placeholder": "Enter new password"
+    },
+    "confirmNewPassword": {
+      "label": "Confirm new password",
+      "placeholder": "Repeat new password"
+    },
+    "verifyEmail": {
+      "title": "Confirm your email",
+      "message": "We sent a confirmation link to <email></email>. The email should arrive within 1-2 minutes",
+      "yourEmailFallback": "your email",
+      "didntReceiveQuestion": "Didn't receive the email?",
+      "resendButton": "Resend",
+      "inSeconds": "in {seconds} s.",
+      "sendingText": "Sending...",
+      "resentSuccess": "Email resent successfully",
+      "resentError": "Could not resend the email. Please try again later",
+      "missingEmailError": "Email is missing"
+    },
+    "forgotPassword": {
+      "link": "Forgot password?",
+      "pageTitle": "Reset password",
+      "subtitle": "Enter the email associated with your account",
+      "helperText": "We will send a password reset link to your email",
+      "submitButton": "Send link",
+      "successMessage": "Reset link sent",
+      "errorMessage": "Could not send reset link. Please check your email",
+      "sentMessage": "If an account exists for <email></email>, we have sent a reset link to it. Please check your inbox.",
+      "backToLogin": "Back to sign in"
+    },
+    "resetPassword": {
+      "pageTitle": "New password",
+      "subtitle": "Enter and confirm your new password",
+      "submitButton": "Save password",
+      "successMessage": "Password updated successfully. Redirecting you to the sign-in page",
+      "errorMessage": "Could not update password. The link may have expired"
+    },
+    "activation": {
+      "successMessage": "Account activated successfully. You can sign in now",
+      "errorMessage": "Could not activate the account. The link is invalid or expired"
+    },
+    "menuOrders": "Order history",
+    "showMenuAriaLabel": "Show menu",
+    "orders": {
+      "pageTitle": "Order history",
+      "subtitle": "View all your orders",
+      "emptyMessage": "You don't have any orders yet",
+      "loadError": "Could not load orders",
+      "loadDetailsError": "Could not load order details",
+      "showMoreButton": "Show more",
+      "closeButton": "Close",
+      "detailsTitle": "Order details",
+      "detailsTitleWithNumber": "Order {number}",
+      "fields": {
+        "orderNumber": "Order number",
+        "status": "Status",
+        "paymentStatus": "Payment status",
+        "paymentMethod": "Payment method",
+        "createdAt": "Created",
+        "total": "Total",
+        "subtotal": "Subtotal",
+        "discount": "Discount",
+        "promoCode": "Promo code",
+        "items": "Items",
+        "quantity": "Quantity",
+        "delivery": "Delivery",
+        "deliveryType": "Type",
+        "deliveryCity": "City",
+        "deliveryWarehouse": "Warehouse",
+        "contact": "Contact info",
+        "recipient": "Recipient",
+        "message": "Comment"
+      },
+      "statuses": {
+        "pending": "Pending",
+        "processing": "Processing",
+        "shipped": "Shipped",
+        "delivered": "Delivered",
+        "completed": "Completed",
+        "cancelled": "Cancelled"
+      },
+      "paymentStatuses": {
+        "pending": "Pending",
+        "paid": "Paid",
+        "failed": "Failed"
+      },
+      "paymentMethods": {
+        "online": "Online payment",
+        "cash_on_delivery": "Cash on delivery"
+      }
+    }
   }
 }

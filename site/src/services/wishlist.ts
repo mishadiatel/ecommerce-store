@@ -4,7 +4,7 @@ import { Wishlist } from '@/types/wishlist';
 
 export const getWishlist = async (): Promise<Wishlist> => {
   try {
-    const { data } = await projectApi.get(`/wishlist`);
+    const { data } = await projectApi.get(`/api/wishlist`);
     return data;
   } catch (err) {
     console.error(err);
@@ -14,7 +14,7 @@ export const getWishlist = async (): Promise<Wishlist> => {
 
 export const addToWishlist = async (productId: string): Promise<Wishlist> => {
   try {
-    const { data } = await projectApi.post(`/wishlist/${productId}`);
+    const { data } = await projectApi.post(`/api/wishlist/${productId}`);
     return data;
   } catch (err) {
     console.error(err);
@@ -24,7 +24,7 @@ export const addToWishlist = async (productId: string): Promise<Wishlist> => {
 
 export const removeFromWishlist = async (productId: string): Promise<Wishlist> => {
   try {
-    const { data } = await projectApi.delete(`/wishlist/${productId}`);
+    const { data } = await projectApi.delete(`/api/wishlist/${productId}`);
     return data;
   } catch (err) {
     console.error(err);
@@ -34,7 +34,7 @@ export const removeFromWishlist = async (productId: string): Promise<Wishlist> =
 
 export const mergeWishlist = async (productIds: string[]): Promise<Wishlist> => {
   try {
-    const { data } = await projectApi.post(`/wishlist/merge`, { productIds });
+    const { data } = await projectApi.post(`/api/wishlist/merge`, { productIds });
     return data;
   } catch (err) {
     console.error(err);

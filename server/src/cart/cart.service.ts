@@ -16,13 +16,13 @@ export class CartService {
   ) {}
 
   private async findOrCreateCart(user: JwtUser | null, guestId?: string) {
-    const query = user ? { userId: user.sub } : { guestId };
+    const query = user ? { userId: new Types.ObjectId(user.sub) } : { guestId };
 
     let cart = await this.cartModel.findOne(query);
 
     if (!cart) {
       cart = await this.cartModel.create({
-        userId: user?.sub ?? null,
+        userId: user?.sub ? new Types.ObjectId(user.sub) : null,
         guestId: user ? null : guestId,
         items: [],
       });
@@ -76,8 +76,6 @@ export class CartService {
       product: products.find((p) => String(p._id) === i.productId.toString())!,
       quantity: i.quantity,
     }));
-
-    console.log(items);
 
     const totals = this.calculateTotals(items);
 

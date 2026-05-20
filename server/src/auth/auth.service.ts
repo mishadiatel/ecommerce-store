@@ -76,7 +76,7 @@ export class AuthService {
 
   async resendActivation(dto: ResendActivationDto, req: Request) {
     const user = await this.usersService.findByEmail(dto.email);
-    const token = crypto.randomUUID()
+    const token = crypto.randomUUID();
     if (!user) {
       throw new BadRequestException('User does not exist');
     }
@@ -237,10 +237,16 @@ export class AuthService {
     await user.save({ validateBeforeSave: true });
 
     try {
-      // const resetURL = `${process.env.FRNTEND_URL}/${resetToken}`;
-      // await new Email(user, resetURL).sendPasswordReset();
+      const appUrl =
+        this.configService.get<string>('APP_PUBLIC_URL') ??
+        process.env.APP_PUBLIC_URL ??
+        '';
+      const baseUrl = appUrl.replace(/\/+$/, '');
+      const resetURL = `${baseUrl}/account/resetPassword/${resetToken}`;
+      await this.mailService.sendResetPasswordEmail(user.email, resetURL);
       return {
-        resetToken,
+        success: true,
+        message: `Reset password link has been sent to ${user.email}`,
       };
     } catch (err) {
       console.error(err);
@@ -248,7 +254,7 @@ export class AuthService {
       user.passwordResetExpires = undefined;
       await user.save({ validateBeforeSave: false });
       throw new HttpException(
-        'errot sending reset link',
+        'Error sending reset link',
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }

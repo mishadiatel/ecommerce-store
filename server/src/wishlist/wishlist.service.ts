@@ -10,7 +10,9 @@ export class WishlistService {
     private wishlistModel: Model<WishlistDocument>,
   ) {}
   async getOrCreate(userId: string) {
-    let wishlist = await this.wishlistModel.findOne({ userId });
+    let wishlist = await this.wishlistModel.findOne({
+      userId: new Types.ObjectId(userId),
+    });
     if (!wishlist) {
       wishlist = await this.wishlistModel.create({
         userId: new Types.ObjectId(userId),
@@ -22,7 +24,7 @@ export class WishlistService {
 
   async add(userId: string, productId: string) {
     return this.wishlistModel.findOneAndUpdate(
-      { userId },
+      { userId: new Types.ObjectId(userId) },
       { $addToSet: { productIds: new Types.ObjectId(productId) } },
       { new: true, upsert: true },
     );
@@ -30,15 +32,15 @@ export class WishlistService {
 
   async remove(userId: string, productId: string) {
     return this.wishlistModel.findOneAndUpdate(
-      { userId },
-      { $pull: { productIds: productId } },
+      { userId: new Types.ObjectId(userId) },
+      { $pull: { productIds: new Types.ObjectId(productId) } },
       { new: true },
     );
   }
 
   async clear(userId: string) {
     return this.wishlistModel.updateOne(
-      { userId },
+      { userId: new Types.ObjectId(userId) },
       { $set: { productIds: [] } },
     );
   }

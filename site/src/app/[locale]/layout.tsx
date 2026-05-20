@@ -20,6 +20,7 @@ import Setup from '@/components/setup/Setup';
 import { getPublicCategories } from '@/services/category';
 import Footer from '@/components/layout/footer/footer';
 import ModalsRoot from '@/components/modals/ModalsRoot';
+import {ToastContainer} from "react-toastify";
 // import { ToastContainer } from 'react-toastify';
 
 
@@ -77,7 +78,7 @@ export default async function RootLayout({
             </div>
             <ModalsRoot />
         </Provider>
-        {/*<ToastContainer />*/}
+        <ToastContainer />
         </body>
         </html>
     );

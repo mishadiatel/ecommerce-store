@@ -36,6 +36,18 @@ export class OrderController {
     return this.orderService.findAllOrdersAdmin(query);
   }
 
+  @UseGuards(AccessTokenGuard)
+  @Get('my')
+  findMyOrders(@CurrentUser() user: JwtUser, @Query() query: OrderQueryDto) {
+    return this.orderService.findMyOrders(String(user.sub), query);
+  }
+
+  @UseGuards(AccessTokenGuard)
+  @Get('my/:id')
+  findMyOrder(@CurrentUser() user: JwtUser, @Param('id') id: string) {
+    return this.orderService.findMyOrderById(String(user.sub), id);
+  }
+
   @UseGuards(AccessTokenGuard, RolesGuard)
   @Roles('admin')
   @Get(':id')

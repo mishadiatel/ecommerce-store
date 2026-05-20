@@ -190,5 +190,164 @@
     "validEmailMessage": "Поле {fieldName} має містити коректну електронну адресу",
     "agreeRequiredMessage": "Ви повинні погодитись на обробку даних",
     "validPhoneMessage": "Не коректний номер телефону"
+  },
+  "Account": {
+    "personalAccountTitle": "Особистий кабінет",
+    "loginPageTitle": "Вхід",
+    "loginSubtitle": "Увійдіть у свій акаунт, щоб продовжити",
+    "loginButtonText": "Увійти",
+    "loginLinkText": "Увійти",
+    "loginSuccessMessage": "Ви успішно увійшли в акаунт",
+    "loginErrorMessage": "Не вдалося увійти. Перевірте дані",
+    "noAccountQuestion": "Ще не маєте акаунту?",
+    "signupLinkText": "Зареєструватись",
+    "signupPageTitle": "Реєстрація",
+    "signupSubtitle": "Створіть акаунт, щоб зробити покупки швидше",
+    "signupButtonText": "Зареєструватись",
+    "signupSuccessMessage": "Реєстрація успішна!",
+    "signupErrorMessage": "Не вдалося зареєструватись. Спробуйте ще раз",
+    "haveAccountQuestion": "Вже маєте акаунт?",
+    "logoutMessage": "Ви вийшли з акаунту",
+    "loggingOutText": "Вихід...",
+    "submittingText": "Обробка...",
+    "saveButtonText": "Зберегти",
+    "menuMyData": "Мої дані",
+    "menuChangePassword": "Зміна паролю",
+    "menuLogout": "Вийти з акаунту",
+    "myDataPageTitle": "Мої дані",
+    "myDataSubtitle": "Перегляд та редагування персональних даних",
+    "changePasswordPageTitle": "Зміна паролю",
+    "changePasswordSubtitle": "Оновіть пароль, щоб зберігати акаунт у безпеці",
+    "updatePasswordButtonText": "Оновити пароль",
+    "profileUpdateSuccess": "Дані успішно оновлено",
+    "profileUpdateError": "Не вдалося оновити дані. Спробуйте ще раз",
+    "passwordUpdateSuccess": "Пароль успішно оновлено",
+    "passwordUpdateError": "Не вдалося оновити пароль. Перевірте дані",
+    "passwordsDoNotMatch": "Паролі не співпадають",
+    "passwordMinLengthMessage": "Пароль має містити не менше {length} символів",
+    "email": {
+      "label": "Електронна пошта",
+      "placeholder": "Введіть електронну пошту"
+    },
+    "firstName": {
+      "label": "Ім'я",
+      "placeholder": "Введіть ім'я"
+    },
+    "lastName": {
+      "label": "Прізвище",
+      "placeholder": "Введіть прізвище"
+    },
+    "phoneNumber": {
+      "label": "Номер телефону",
+      "placeholder": "Введіть номер телефону"
+    },
+    "birthDay": {
+      "label": "Дата народження",
+      "placeholder": "Оберіть дату народження"
+    },
+    "password": {
+      "label": "Пароль",
+      "placeholder": "Введіть пароль"
+    },
+    "confirmPassword": {
+      "label": "Підтвердження паролю",
+      "placeholder": "Повторіть пароль"
+    },
+    "currentPassword": {
+      "label": "Поточний пароль",
+      "placeholder": "Введіть поточний пароль"
+    },
+    "newPassword": {
+      "label": "Новий пароль",
+      "placeholder": "Введіть новий пароль"
+    },
+    "confirmNewPassword": {
+      "label": "Підтвердження нового паролю",
+      "placeholder": "Повторіть новий пароль"
+    },
+    "verifyEmail": {
+      "title": "Підтвердіть вашу пошту",
+      "message": "Ми надіслали посилання для підтвердження на пошту <email></email>. Лист має надійти протягом 1-2 хвилин",
+      "yourEmailFallback": "вашу пошту",
+      "didntReceiveQuestion": "Не отримали лист?",
+      "resendButton": "Надіслати повторно",
+      "inSeconds": "через {seconds} с.",
+      "sendingText": "Надсилання...",
+      "resentSuccess": "Лист надіслано повторно",
+      "resentError": "Не вдалося надіслати лист. Спробуйте пізніше",
+      "missingEmailError": "Не вказана електронна пошта"
+    },
+    "forgotPassword": {
+      "link": "Забули пароль?",
+      "pageTitle": "Відновлення паролю",
+      "subtitle": "Введіть email, на який зареєстровано акаунт",
+      "helperText": "Ми надішлемо посилання для скидання паролю на вашу пошту",
+      "submitButton": "Надіслати посилання",
+      "successMessage": "Лист з посиланням надіслано",
+      "errorMessage": "Не вдалося надіслати лист. Перевірте email",
+      "sentMessage": "Якщо акаунт з адресою <email></email> існує, ми надіслали на нього посилання для відновлення паролю. Перевірте поштову скриньку.",
+      "backToLogin": "Повернутись до входу"
+    },
+    "resetPassword": {
+      "pageTitle": "Новий пароль",
+      "subtitle": "Введіть та підтвердіть новий пароль",
+      "submitButton": "Зберегти пароль",
+      "successMessage": "Пароль успішно оновлено. Зараз вас перенаправить на сторінку входу",
+      "errorMessage": "Не вдалося оновити пароль. Посилання могло застаріти"
+    },
+    "activation": {
+      "successMessage": "Акаунт успішно активовано. Тепер ви можете увійти",
+      "errorMessage": "Не вдалося активувати акаунт. Посилання недійсне або застаріло"
+    },
+    "menuOrders": "Історія замовлень",
+    "showMenuAriaLabel": "Показати меню",
+    "orders": {
+      "pageTitle": "Історія замовлень",
+      "subtitle": "Перегляд усіх ваших замовлень",
+      "emptyMessage": "У вас ще немає замовлень",
+      "loadError": "Не вдалося завантажити замовлення",
+      "loadDetailsError": "Не вдалося завантажити деталі замовлення",
+      "showMoreButton": "Показати більше",
+      "closeButton": "Закрити",
+      "detailsTitle": "Деталі замовлення",
+      "detailsTitleWithNumber": "Замовлення {number}",
+      "fields": {
+        "orderNumber": "Номер замовлення",
+        "status": "Статус",
+        "paymentStatus": "Статус оплати",
+        "paymentMethod": "Спосіб оплати",
+        "createdAt": "Створено",
+        "total": "Сума",
+        "subtotal": "Підсумок",
+        "discount": "Знижка",
+        "promoCode": "Промокод",
+        "items": "Товари",
+        "quantity": "Кількість",
+        "delivery": "Доставка",
+        "deliveryType": "Тип",
+        "deliveryCity": "Місто",
+        "deliveryWarehouse": "Відділення",
+        "contact": "Контактні дані",
+        "recipient": "Дані отримувача",
+        "message": "Коментар"
+      },
+      "statuses": {
+        "pending": "В очікуванні",
+        "processing": "В обробці",
+        "shipped": "Відправлено",
+        "delivered": "Доставлено",
+        "completed": "Завершено",
+        "cancelled": "Скасовано"
+      },
+      "paymentStatuses": {
+        "pending": "В очікуванні",
+        "paid": "Сплачено",
+        "failed": "Помилка"
+      },
+      "paymentMethods": {
+        "online": "Онлайн оплата",
+        "cash_on_delivery": "Оплата при отриманні"
+      }
+    }
   }
 }

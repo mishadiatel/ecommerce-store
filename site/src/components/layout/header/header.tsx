@@ -1,7 +1,7 @@
 'use client';
 
 import { useSettings } from '@/context/generalSettings/GeneralSettingsContext';
-import { Link } from '@/i18n/navigation';
+import { Link, useRouter } from '@/i18n/navigation';
 import LanguageSelect from '@/components/language/languageSelect/LanguageSelect';
 import Image from 'next/image';
 import { generateFileUrl } from '@/lib/utils';
@@ -13,19 +13,44 @@ import SearchForm from '@/components/search/form/SearchForm';
 import { useModalStore } from '@/stores/useModalStore';
 import { useWishlistStore } from '@/stores/wishlistStore';
 import { useCartStore } from '@/stores/cartStore';
+import { useAuthStore } from '@/stores/authStore';
+import { authLogout } from '@/services/auth';
+import { toast } from 'react-toastify';
 
 export default function Header() {
   const t = useTranslations('Header');
+  const tAccount = useTranslations('Account');
   const settings = useSettings();
+  const router = useRouter();
   const [isOpenLoginPopup, setIsOpenLoginPopup] = useState(false);
   const [isOpenMobileMenu, setIsOpenMobileMenu] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
   const loginPopupRef = useRef<HTMLDivElement>(null);
   const [isHeaderFixed, setIsHeaderFixed] = useState(false);
   const openModal = useModalStore(state => state.openModal);
   const wishlistLength = useWishlistStore(s => s.items.length);
   const cartLength = useCartStore(s => s.cart?.items.length) || 0;
+  const isAuth = useAuthStore(s => s.isAuth);
+  const logoutFromStore = useAuthStore(s => s.logout);
   const closeMobileMenu = () => {
     setIsOpenMobileMenu(false);
+  };
+
+  const handleLogout = async () => {
+    if (isLoggingOut) return;
+    setIsLoggingOut(true);
+    try {
+      await authLogout();
+    } catch {
+      // ignore — still log out locally
+    } finally {
+      logoutFromStore();
+      toast.info(tAccount('logoutMessage'));
+      setIsOpenLoginPopup(false);
+      setIsOpenMobileMenu(false);
+      router.replace('/account/login');
+      setIsLoggingOut(false);
+    }
   };
 
   useEffect(() => {
@@ -142,18 +167,44 @@ export default function Header() {
                     <div
                       className={`login-popup flex items-center flex-col p-5 sm:p-8 rounded-2xl bg-white border border-gray-20 ${isOpenLoginPopup ? 'open' : ''}`}
                     >
-                      <Link href={'/account/login'}
-                            className="button-main !w-full text-center">
-                        {t('loginPopupButton')}
-                      </Link>
-                      <div className="caprion1 text-gray-90 text-center mt-7 sm:mt-8">
-                        {t('loginPopupHaveAccount')}
-                        <Link
-                          href={'/account/signup'}
-                          className="text-sm text-primary-green uppercase font-bold pl-1 ">
-                          {t('loginPopupSignupButton')}
-                        </Link>
-                      </div>
+                      {isAuth ? (
+                        <>
+                          <Link
+                            href={'/account/profile'}
+                            onClick={() => setIsOpenLoginPopup(false)}
+                            className="button-main !w-full text-center"
+                          >
+                            {tAccount('personalAccountTitle')}
+                          </Link>
+                          <button
+                            type="button"
+                            onClick={handleLogout}
+                            disabled={isLoggingOut}
+                            className="text-sm text-primary-green uppercase font-bold mt-7 sm:mt-8 hover:underline disabled:opacity-60 disabled:cursor-not-allowed"
+                          >
+                            {isLoggingOut
+                              ? tAccount('loggingOutText')
+                              : tAccount('menuLogout')}
+                          </button>
+                        </>
+                      ) : (
+                        <>
+                          <Link href={'/account/login'}
+                                onClick={() => setIsOpenLoginPopup(false)}
+                                className="button-main !w-full text-center">
+                            {t('loginPopupButton')}
+                          </Link>
+                          <div className="caprion1 text-gray-90 text-center mt-7 sm:mt-8">
+                            {t('loginPopupHaveAccount')}
+                            <Link
+                              href={'/account/signup'}
+                              onClick={() => setIsOpenLoginPopup(false)}
+                              className="text-sm text-primary-green uppercase font-bold pl-1 ">
+                              {t('loginPopupSignupButton')}
+                            </Link>
+                          </div>
+                        </>
+                      )}
                     </div>
                   </div>
 
@@ -239,16 +290,56 @@ export default function Header() {
                               ref={listRef}
                               className="flex flex-col gap-3"
                             >
-                              <li>
-                                <Link href={'/account/login'}
-                                      className="link text-secondary duration-300 hover:underline"
-                                      onClick={closeMobileMenu}>{t('login')}</Link>
-                              </li>
-                              <li>
-                                <Link href={'/account/signup'}
-                                      className="link text-secondary duration-300 hover:underline"
-                                      onClick={closeMobileMenu}>{t('register')}</Link>
-                              </li>
+                              {isAuth ? (
+                                <>
+                                  <li>
+                                    <Link href={'/account/profile'}
+                                          className="link text-secondary duration-300 hover:underline"
+                                          onClick={closeMobileMenu}>
+                                      {tAccount('menuMyData')}
+                                    </Link>
+                                  </li>
+                                  <li>
+                                    <Link href={'/account/orders'}
+                                          className="link text-secondary duration-300 hover:underline"
+                                          onClick={closeMobileMenu}>
+                                      {tAccount('menuOrders')}
+                                    </Link>
+                                  </li>
+                                  <li>
+                                    <Link href={'/account/changePassword'}
+                                          className="link text-secondary duration-300 hover:underline"
+                                          onClick={closeMobileMenu}>
+                                      {tAccount('menuChangePassword')}
+                                    </Link>
+                                  </li>
+                                  <li>
+                                    <button
+                                      type="button"
+                                      onClick={handleLogout}
+                                      disabled={isLoggingOut}
+                                      className="link text-red-700 duration-300 hover:underline text-left disabled:opacity-60 disabled:cursor-not-allowed"
+                                    >
+                                      {isLoggingOut
+                                        ? tAccount('loggingOutText')
+                                        : tAccount('menuLogout')}
+                                    </button>
+                                  </li>
+                                </>
+                              ) : (
+                                <>
+                                  <li>
+                                    <Link href={'/account/login'}
+                                          className="link text-secondary duration-300 hover:underline"
+                                          onClick={closeMobileMenu}>{t('login')}</Link>
+                                  </li>
+                                  <li>
+                                    <Link href={'/account/signup'}
+                                          className="link text-secondary duration-300 hover:underline"
+                                          onClick={closeMobileMenu}>{t('register')}</Link>
+                                  </li>
+                                </>
+                              )}
                             </ul>
                           </div>
 

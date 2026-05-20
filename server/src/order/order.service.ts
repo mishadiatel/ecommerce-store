@@ -49,7 +49,10 @@ export class OrderService {
   // ─── Підрахунок сум ─────────────────────────────────────────────────────────
 
   private calculateTotals(
-    cartItems: Array<{ quantity: number; product: FullProductWithTranslations }>,
+    cartItems: Array<{
+      quantity: number;
+      product: FullProductWithTranslations;
+    }>,
   ) {
     let subtotal = 0;
     let discount = 0;
@@ -100,9 +103,9 @@ export class OrderService {
     // Валідуємо промокод для поточної суми корзини.
     // validateForCart кидає BadRequestException з людським повідомленням,
     // якщо код невалідний — що автоматично транслюється в 400 для клієнта.
-    let promoCodeDoc: Awaited<
-      ReturnType<PromoCodeService['validateForCart']>
-    >['promoCode'] | null = null;
+    let promoCodeDoc:
+      | Awaited<ReturnType<PromoCodeService['validateForCart']>>['promoCode']
+      | null = null;
     let promoCodeDiscountAmount = 0;
 
     if (dto.promoCode && dto.promoCode.trim()) {
@@ -303,6 +306,62 @@ export class OrderService {
 
   async findOrderById(orderId: string) {
     const order = await this.orderModel.findById(orderId).lean();
+    if (!order) throw new NotFoundException('Order not found');
+    return order;
+  }
+
+  // ─── Методи для залогіненого користувача ─────────────────────────────────
+
+  async findMyOrders(userId: string, query: OrderQueryDto) {
+    const page = Number(query.page) > 0 ? Number(query.page) : 1;
+    const limit = Number(query.limit) > 0 ? Number(query.limit) : 10;
+    const skip = (page - 1) * limit;
+
+    const filter: FilterQuery<OrderDocument> = {
+      userId: new Types.ObjectId(userId),
+    };
+
+    if (query.status) {
+      filter.status = query.status;
+    }
+
+    if (query.paymentStatus) {
+      filter.paymentStatus = query.paymentStatus;
+    }
+
+    const sortOrder: 1 | -1 = query.sortOrder === 'asc' ? 1 : -1;
+
+    const [data, total] = await Promise.all([
+      this.orderModel
+        .find(filter)
+        .sort({ createdAt: sortOrder })
+        .skip(skip)
+        .limit(limit)
+        .lean(),
+      this.orderModel.countDocuments(filter),
+    ]);
+
+    const totalPages = Math.ceil(total / limit);
+
+    return {
+      data,
+      totalDocuments: total,
+      totalPages,
+      page,
+      limit,
+    };
+  }
+
+  async findMyOrderById(userId: string, orderId: string) {
+    if (!Types.ObjectId.isValid(orderId)) {
+      throw new NotFoundException('Order not found');
+    }
+    const order = await this.orderModel
+      .findOne({
+        _id: new Types.ObjectId(orderId),
+        userId: new Types.ObjectId(userId),
+      })
+      .lean();
     if (!order) throw new NotFoundException('Order not found');
     return order;
   }
