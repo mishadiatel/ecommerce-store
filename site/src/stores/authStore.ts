@@ -13,20 +13,17 @@ interface AuthState {
 export const useAuthStore = create<AuthState>((set) => ({
   isAuth: false,
   user: null,
-  isLoading: false,
+  isLoading: true,
 
   setAuth(user) {
-    console.log('setUser', user)
     set({ isAuth: true, user, isLoading: false });
   },
 
   setLoading(loadingState){
-    console.log('setLoading', loadingState)
     set({isLoading: loadingState});
   },
 
   logout() {
-    console.log('logout')
     set({ isAuth: false, user: null, isLoading: false });
   },
 }));

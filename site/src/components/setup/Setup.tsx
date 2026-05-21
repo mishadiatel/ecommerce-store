@@ -6,6 +6,7 @@ import { useLocale } from 'use-intl';
 import { useCartStore } from '@/stores/cartStore';
 import { useAuthStore } from '@/stores/authStore';
 import { getMe } from '@/services/auth';
+import { setApiLocale } from '@/lib/axios';
 
 export default function Setup() {
   const locale = useLocale();
@@ -28,8 +29,13 @@ export default function Setup() {
   }, []);
 
   useEffect(() => {
+    setApiLocale(locale);
+  }, [locale]);
+
+  useEffect(() => {
     (async function(){
       try {
+        setApiLocale(locale);
         setLoading(true);
         const user = await getMe();
         if (user) {
