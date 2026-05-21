@@ -225,6 +225,7 @@ export class OrderService {
     }
 
     // ─── Онлайн-оплата: повертаємо LiqPay-параметри для редіректа ──────────
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison
     if (dto.paymentMethod === PaymentMethod.ONLINE) {
       const liqpay = this.liqpayService.buildCheckoutParams(order);
       return {
@@ -283,6 +284,12 @@ export class OrderService {
       filter.paymentStatus = query.paymentStatus;
     }
 
+    /* 📅 DATE RANGE — фільтр за датою створення (createdAt) */
+    const dateFilter = this.buildDateFilter(query.dateFrom, query.dateTo);
+    if (dateFilter) {
+      filter.createdAt = dateFilter;
+    }
+
     const sortOrder: 1 | -1 = query.sortOrder === 'asc' ? 1 : -1;
 
     const [data, total] = await Promise.all([
@@ -302,6 +309,35 @@ export class OrderService {
       totalDocuments: total,
       totalPages,
     };
+  }
+
+  /**
+   * Будує Mongo-фільтр { $gte, $lte } для діапазону дат.
+   * dateFrom — початок дня, dateTo — кінець дня (інклюзивно).
+   * Повертає undefined якщо обидві дати не задані.
+   */
+  private buildDateFilter(
+    dateFrom?: string,
+    dateTo?: string,
+  ): { $gte?: Date; $lte?: Date } | undefined {
+    const range: { $gte?: Date; $lte?: Date } = {};
+
+    if (dateFrom) {
+      const from = new Date(dateFrom);
+      if (!isNaN(from.getTime())) {
+        from.setHours(0, 0, 0, 0);
+        range.$gte = from;
+      }
+    }
+    if (dateTo) {
+      const to = new Date(dateTo);
+      if (!isNaN(to.getTime())) {
+        to.setHours(23, 59, 59, 999);
+        range.$lte = to;
+      }
+    }
+
+    return Object.keys(range).length ? range : undefined;
   }
 
   async findOrderById(orderId: string) {
@@ -327,6 +363,11 @@ export class OrderService {
 
     if (query.paymentStatus) {
       filter.paymentStatus = query.paymentStatus;
+    }
+
+    const dateFilter = this.buildDateFilter(query.dateFrom, query.dateTo);
+    if (dateFilter) {
+      filter.createdAt = dateFilter;
     }
 
     const sortOrder: 1 | -1 = query.sortOrder === 'asc' ? 1 : -1;
@@ -396,6 +437,7 @@ export class OrderService {
 
       // Якщо статус замовлення ще й змінився (pending → processing) —
       // окремо повідомляємо про зміну статусу
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison
       if (previousStatus !== OrderStatus.PROCESSING) {
         void this.mailService
           .sendOrderStatusUpdatedEmail({
@@ -424,6 +466,7 @@ export class OrderService {
     await order.save();
 
     // Якщо статус реально змінився — шлемо нотифікації
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison
     if (previousStatus !== status) {
       void this.telegramService.sendMessage({
         text: this.buildOrderStatusTelegramMessage(order, previousStatus),

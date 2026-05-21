@@ -206,6 +206,9 @@
     .admin-filters > .admin-filter-select {
         width: 180px;
     }
+    .admin-filters > .admin-filter-date {
+        width: 160px;
+    }
 }
 
 /* На мобільних розширюємо select-тригер на всю ширину контейнера */

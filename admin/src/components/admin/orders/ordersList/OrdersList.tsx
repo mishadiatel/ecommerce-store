@@ -28,6 +28,8 @@ export default function OrdersList() {
   const [selectedStatus, setSelectedStatus] = useState<string>('all');
   const [selectedPaymentStatus, setSelectedPaymentStatus] = useState<string>('all');
   const [sortOrder, setSortOrder] = useState<string>('desc');
+  const [dateFrom, setDateFrom] = useState<string>('');
+  const [dateTo, setDateTo] = useState<string>('');
 
   const updateOrdersList = () => {
     if (isFirstRender.current) {
@@ -52,6 +54,14 @@ export default function OrdersList() {
       query.paymentStatus = selectedPaymentStatus;
     }
 
+    if (dateFrom) {
+      query.dateFrom = dateFrom;
+    }
+
+    if (dateTo) {
+      query.dateTo = dateTo;
+    }
+
     getAdminOrders(query)
       .then((pagesResult) => {
         setOrdersState(pagesResult?.data);
@@ -65,11 +75,11 @@ export default function OrdersList() {
 
   useEffect(() => {
     setCurrentPage(1);
-  }, [selectedStatus, selectedPaymentStatus, sortOrder]);
+  }, [selectedStatus, selectedPaymentStatus, sortOrder, dateFrom, dateTo]);
 
   useEffect(() => {
     updateOrdersList();
-  }, [currentPage, selectedStatus, selectedPaymentStatus, sortOrder]);
+  }, [currentPage, selectedStatus, selectedPaymentStatus, sortOrder, dateFrom, dateTo]);
 
   useEffect(() => {
     const handler = setTimeout(() => {
@@ -77,6 +87,11 @@ export default function OrdersList() {
     }, 1000);
     return () => clearTimeout(handler);
   }, [searchWord]);
+
+  const handleResetDates = () => {
+    setDateFrom('');
+    setDateTo('');
+  };
 
   return (
     <>
@@ -138,6 +153,40 @@ export default function OrdersList() {
             </SelectContent>
           </Select>
         </div>
+
+        <div className={'admin-filter-date flex flex-col gap-1'}>
+          <label className={'text-xs text-muted-foreground'}>{t('dateFromLabel')}</label>
+          <Input
+            type={'date'}
+            value={dateFrom}
+            max={dateTo || undefined}
+            onChange={(e) => setDateFrom(e.target.value)}
+          />
+        </div>
+
+        <div className={'admin-filter-date flex flex-col gap-1'}>
+          <label className={'text-xs text-muted-foreground'}>{t('dateToLabel')}</label>
+          <Input
+            type={'date'}
+            value={dateTo}
+            min={dateFrom || undefined}
+            onChange={(e) => setDateTo(e.target.value)}
+          />
+        </div>
+
+        {(dateFrom || dateTo) && (
+          <div className={'admin-filter-date flex items-end'}>
+            <button
+              type={'button'}
+              onClick={handleResetDates}
+              className={
+                'text-sm underline text-muted-foreground hover:text-foreground transition-colors h-9'
+              }
+            >
+              {t('resetDates')}
+            </button>
+          </div>
+        )}
       </div>
 
       <div className={'flex flex-col gap-5'}>
