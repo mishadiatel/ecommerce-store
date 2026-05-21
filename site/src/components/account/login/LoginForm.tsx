@@ -110,13 +110,15 @@ export default function LoginForm() {
         </div>
       )}
 
-      <button
-        type="submit"
-        disabled={isSubmitting}
-        className="button-main w-full disabled:opacity-60 disabled:cursor-not-allowed"
-      >
-        {isSubmitting ? t('Account.submittingText') : t('Account.loginButtonText')}
-      </button>
+      <div className={'w-fit mx-auto'}>
+        <button
+            type="submit"
+            disabled={isSubmitting}
+            className="button-main w-full disabled:opacity-60 disabled:cursor-not-allowed"
+        >
+          {isSubmitting ? t('Account.submittingText') : t('Account.loginButtonText')}
+        </button>
+      </div>
 
       <div className="text-sm text-center text-gray-90">
         {t('Account.noAccountQuestion')}{' '}

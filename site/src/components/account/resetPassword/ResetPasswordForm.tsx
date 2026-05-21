@@ -106,15 +106,17 @@ export default function ResetPasswordForm({ token }: ResetPasswordFormProps) {
         </div>
       )}
 
-      <button
-        type="submit"
-        disabled={isSubmitting}
-        className="button-main w-full disabled:opacity-60 disabled:cursor-not-allowed"
-      >
-        {isSubmitting
-          ? t('Account.submittingText')
-          : t('Account.resetPassword.submitButton')}
-      </button>
+        <div className={'w-fit mx-auto'}>
+            <button
+                type="submit"
+                disabled={isSubmitting}
+                className="button-main w-full disabled:opacity-60 disabled:cursor-not-allowed"
+            >
+                {isSubmitting
+                    ? t('Account.submittingText')
+                    : t('Account.resetPassword.submitButton')}
+            </button>
+        </div>
     </form>
   );
 }
