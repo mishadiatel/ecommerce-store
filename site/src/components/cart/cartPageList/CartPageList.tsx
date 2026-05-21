@@ -6,7 +6,7 @@ import Loader from '@/components/ui/loader/Loader';
 import FreeShippingLine from '@/components/cart/freeShippingLine/FreeShippingLine';
 import { Link } from '@/i18n/navigation';
 import CartPageItem from '@/components/cart/cartPageItem/CartPageItem';
-import { useEffect, useRef, useState } from 'react';
+import { useShowCheckoutBottom } from '@/hooks/useShowCheckoutBottom';
 
 export default function CartPageList() {
   const t = useTranslations();
@@ -17,35 +17,7 @@ export default function CartPageList() {
   const totalProducts = useCartStore(s =>
     s.cart?.items.reduce((sum, item) => sum + item.quantity, 0) ?? 0,
   );
-  const asideRef = useRef<HTMLDivElement | null>(null);
-  const [showBottom, setShowBottom] = useState(false);
-
-  useEffect(() => {
-    if (typeof window === 'undefined') {
-      return;
-    }
-    const handleScroll = () => {
-      if (!asideRef.current) return;
-      const isMobile = window.innerWidth < 1024;
-      if (!isMobile) {
-        setShowBottom(false);
-        return;
-      }
-      const rect = asideRef.current.getBoundingClientRect();
-      const isAboveAside = rect.top > window.innerHeight;
-      setShowBottom(isAboveAside);
-    };
-
-    handleScroll();
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    window.addEventListener('resize', handleScroll);
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-      window.removeEventListener('resize', handleScroll);
-    };
-  }, []);
+  const { asideRef, showBottom } = useShowCheckoutBottom();
 
   return (
     <>

@@ -4,7 +4,8 @@ import { useTranslations } from 'next-intl';
 import { useCartStore } from '@/stores/cartStore';
 import Loader from '@/components/ui/loader/Loader';
 import { Link, useRouter } from '@/i18n/navigation';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useShowCheckoutBottom } from '@/hooks/useShowCheckoutBottom';
 import { Page } from '@/types/pages';
 import { useAuthStore } from '@/stores/authStore';
 import { z } from 'zod';
@@ -38,8 +39,7 @@ export default function CheckoutPageComponent({ pageInfo }: { pageInfo: Page }) 
   );
   const isAuth = useAuthStore(s => s.isAuth);
   const user = useAuthStore(s => s.user);
-  const asideRef = useRef<HTMLDivElement | null>(null);
-  const [showBottom, setShowBottom] = useState(false);
+  const { asideRef, showBottom } = useShowCheckoutBottom();
   const [warehouseOptions, setWarehouseOptions] = useState<Array<{label: string, value: string}>>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const openModal = useModalStore(s => s.openModal);
@@ -48,33 +48,6 @@ export default function CheckoutPageComponent({ pageInfo }: { pageInfo: Page }) 
   const [promoDiscount, setPromoDiscount] = useState<number>(0);
   const [promoCheckingState, setPromoCheckingState] = useState(false);
   const [promoInlineMessage, setPromoInlineMessage] = useState<{ text: string; type: 'success' | 'error' } | null>(null);
-
-  useEffect(() => {
-    if (typeof window === 'undefined') {
-      return;
-    }
-    const handleScroll = () => {
-      if (!asideRef.current) return;
-      const isMobile = window.innerWidth < 1024;
-      if (!isMobile) {
-        setShowBottom(false);
-        return;
-      }
-      const rect = asideRef.current.getBoundingClientRect();
-      const isAboveAside = rect.top > window.innerHeight;
-      setShowBottom(isAboveAside);
-    };
-
-    handleScroll();
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    window.addEventListener('resize', handleScroll);
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-      window.removeEventListener('resize', handleScroll);
-    };
-  }, []);
 
   const selectOptionSchema = z.object({
     label: z.string(),

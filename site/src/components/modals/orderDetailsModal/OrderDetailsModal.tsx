@@ -85,7 +85,7 @@ export default function OrderDetailsModal({ open }: OrderDetailsModalProps) {
       <div className={`modal-cart-main flex ${open ? 'open' : ''}`}>
         <div className="cart-block flex flex-col w-full p-5 sm:p-8 relative overflow-y-auto">
           <div className="heading mb-6 flex items-center justify-between relative">
-            <div className="font-semibold sm:font-bold text-black text-[22px] sm:text-[28px] lg:text-[32px]">
+            <div className="font-semibold sm:font-bold text-black text-[20px] sm:text-[24px] lg:text-[28px] pr-[56px]">
               {order
                 ? t('Account.orders.detailsTitleWithNumber', {
                     number: order.orderNumber,
