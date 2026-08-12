@@ -9,6 +9,12 @@ import {
   Param,
   Post,
 } from '@nestjs/common';
+import {
+  ApiOperation,
+  ApiParam,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Order, OrderDocument } from '../order/schema/order.schema';
@@ -26,6 +32,7 @@ import {
 import { MailService } from '../mail/mail.service';
 import { TelegramService } from '../telegram/telegram.service';
 
+@ApiTags('Payments')
 @Controller('payments/liqpay')
 export class PaymentsController {
   private readonly logger = new Logger(PaymentsController.name);
@@ -39,6 +46,17 @@ export class PaymentsController {
 
   /** Client calls this to re-obtain LiqPay redirect params for a pending order */
   @Post('init')
+  @ApiOperation({
+    summary: 'Ініціалізувати LiqPay-платіж для замовлення',
+    description:
+      'Повторно повертає параметри редіректу LiqPay (data + signature) для замовлення, яке ще не оплачено. Використовується сторінкою чекауту для запуску форми оплати LiqPay.',
+  })
+  @ApiResponse({ status: 201, description: 'Параметри LiqPay успішно згенеровано' })
+  @ApiResponse({
+    status: 400,
+    description: 'Відсутній orderNumber, замовлення не онлайн-типу або вже оплачене',
+  })
+  @ApiResponse({ status: 404, description: 'Замовлення не знайдено' })
   async init(@Body('orderNumber') orderNumber: string) {
     if (!orderNumber) {
       throw new BadRequestException('orderNumber required');
@@ -60,6 +78,15 @@ export class PaymentsController {
   /** LiqPay server-to-server webhook. Signature-verified, idempotent. */
   @Post('callback')
   @HttpCode(200)
+  @ApiOperation({
+    summary: 'Вебхук LiqPay (server-to-server)',
+    description:
+      'Ендпоінт для серверних callback-запитів від LiqPay. Приймає тіло у форматі application/x-www-form-urlencoded з полями `data` (base64 JSON payload) та `signature`. Підпис перевіряється, обробка ідемпотентна: повторні виклики для вже оплачених замовлень не змінюють стан. Не викликається клієнтом.',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Callback оброблено. Повертає { ok: true } або { ok: false } — LiqPay завжди отримує HTTP 200',
+  })
   async callback(
     @Body('data') data: string,
     @Body('signature') signature: string,
@@ -96,6 +123,18 @@ export class PaymentsController {
    * webhook endpoint.
    */
   @Get('status/:orderNumber')
+  @ApiOperation({
+    summary: 'Отримати актуальний статус оплати замовлення',
+    description:
+      'Опитується сторінкою /checkout/result. Якщо замовлення досі в статусі PENDING — активно робить запит до status API LiqPay і застосовує результат. Це дозволяє працювати flow оплати в локальному середовищі, де LiqPay не може достукатись до нашого webhook.',
+  })
+  @ApiParam({
+    name: 'orderNumber',
+    description: 'Номер замовлення',
+    example: 'ORD-20260812-0001',
+  })
+  @ApiResponse({ status: 200, description: 'Поточний статус оплати повернуто' })
+  @ApiResponse({ status: 404, description: 'Замовлення не знайдено' })
   async status(@Param('orderNumber') orderNumber: string) {
     const order = await this.orderModel.findOne({ orderNumber });
     if (!order) throw new NotFoundException('Order not found');
