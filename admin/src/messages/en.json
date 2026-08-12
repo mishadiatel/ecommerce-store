@@ -49,12 +49,14 @@
   },
   "nav": {
     "dashboard": "General",
+    "stats": "Statistics",
     "pagesControl": "Pages",
     "blocks": "Blocks",
     "mailTemplates": "Mail templates",
     "category": "Categories",
     "product": "Products",
     "orders": "Orders",
+    "users": "Users",
     "promoCodes": "Promo codes"
   },
   "pages": {
@@ -89,6 +91,18 @@
     "promoCodes": {
       "title": "Promo codes",
       "subtitle": "Create and manage discount promo codes for your customers."
+    },
+    "stats": {
+      "title": "Statistics",
+      "subtitle": "Order analytics: top products, revenue, breakdowns by status and customer type."
+    },
+    "users": {
+      "title": "Users",
+      "subtitle": "Registered users, their orders and abandoned carts."
+    },
+    "userDetails": {
+      "title": "User profile",
+      "subtitle": "Full user info, order history and current cart."
     }
   },
   "login": {
@@ -211,6 +225,10 @@
     "markedPaid": "Order marked as paid",
     "markPaidError": "Error marking paid",
     "loadError": "Error loading orders",
+    "customerType": {
+      "guest": "Guest",
+      "registered": "Registered"
+    },
     "status": {
       "pending": "Pending",
       "processing": "Processing",
@@ -410,5 +428,92 @@
       "updateError": "Error updating promo code, try again later",
       "deleteError": "Error deleting, try again later"
     }
+  },
+  "stats": {
+    "loadError": "Failed to load statistics",
+    "dateFromLabel": "Date from",
+    "dateToLabel": "Date to",
+    "granularityLabel": "Granularity",
+    "granularity": {
+      "day": "Daily",
+      "week": "Weekly",
+      "month": "Monthly"
+    },
+    "sortByLabel": "Sort by",
+    "sortBy": {
+      "revenue": "Revenue",
+      "quantity": "Quantity"
+    },
+    "empty": "No data for the selected period",
+    "kpi": {
+      "totalOrders": "Orders",
+      "totalRevenue": "Total revenue",
+      "paidRevenue": "Paid revenue",
+      "paidOrders": "Paid",
+      "avgOrderValue": "Avg. order value",
+      "totalItems": "Items sold"
+    },
+    "charts": {
+      "timelineTitle": "Orders & revenue over time",
+      "timelineSubtitle": "Trends of order count, total revenue and paid revenue.",
+      "ordersLine": "Orders",
+      "revenueLine": "Revenue",
+      "paidRevenueLine": "Paid revenue",
+      "statusBreakdown": "Order status",
+      "paymentBreakdown": "Payment status",
+      "customerTypeBreakdown": "Guest / Registered",
+      "topProductsTitle": "Top 10 products",
+      "topProductsSubtitle": "Sorted by {sortBy}"
+    },
+    "table": {
+      "product": "Product",
+      "quantity": "Sold",
+      "revenue": "Revenue",
+      "orders": "Orders"
+    },
+    "status": {
+      "pending": "Pending",
+      "processing": "Processing",
+      "shipped": "Shipped",
+      "delivered": "Delivered",
+      "completed": "Completed",
+      "cancelled": "Cancelled"
+    },
+    "payment": {
+      "pending": "Pending",
+      "paid": "Paid",
+      "failed": "Failed"
+    },
+    "customerType": {
+      "guest": "Guest",
+      "registered": "Registered"
+    }
+  },
+  "users": {
+    "searchPlaceholder": "Search by email, name or phone",
+    "onlyAbandonedCart": "Only with abandoned cart",
+    "empty": "No users found",
+    "noName": "No name",
+    "notActivated": "Not activated",
+    "abandonedCartBadge": "In cart: {count}",
+    "ordersCount": "Orders",
+    "totalSpent": "Spent",
+    "loadError": "Failed to load users"
+  },
+  "userDetails": {
+    "backToUsers": "Back to users",
+    "notFound": "User not found",
+    "loadError": "Failed to load profile",
+    "noName": "No name",
+    "activated": "Activated",
+    "notActivated": "Not activated",
+    "totalOrders": "Total orders",
+    "totalRevenue": "Total spent",
+    "paidRevenue": "Paid",
+    "abandonedCartTitle": "User has items in the cart!",
+    "abandonedCartSubtitle": "{count} items, ~{total} ₴",
+    "unknownProduct": "Product unavailable",
+    "ordersHistory": "Order history ({count})",
+    "noOrders": "No orders"
   }
 }

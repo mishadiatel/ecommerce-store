@@ -30,6 +30,8 @@ export default function Header() {
   const openModal = useModalStore(state => state.openModal);
   const wishlistLength = useWishlistStore(s => s.items.length);
   const cartLength = useCartStore(s => s.cart?.items.length) || 0;
+  const loadCart = useCartStore(s => s.load);
+  const loadWishlist = useWishlistStore(s => s.load);
   const isAuth = useAuthStore(s => s.isAuth);
   const logoutFromStore = useAuthStore(s => s.logout);
   const closeMobileMenu = () => {
@@ -45,6 +47,8 @@ export default function Header() {
       // ignore — still log out locally
     } finally {
       logoutFromStore();
+      // Після виходу — перезавантажуємо корзину/wishlist під гостьовим контекстом
+      await Promise.all([loadCart(), loadWishlist()]);
       toast.info(tAccount('logoutMessage'));
       setIsOpenLoginPopup(false);
       setIsOpenMobileMenu(false);

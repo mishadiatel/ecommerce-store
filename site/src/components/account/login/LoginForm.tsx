@@ -9,6 +9,8 @@ import { Link, useRouter } from '@/i18n/navigation';
 import { useState } from 'react';
 import {login, getMe} from '@/services/auth';
 import { useAuthStore } from '@/stores/authStore';
+import { useCartStore } from '@/stores/cartStore';
+import { useWishlistStore } from '@/stores/wishlistStore';
 import { toast } from 'react-toastify';
 import axios from 'axios';
 
@@ -18,6 +20,8 @@ export default function LoginForm() {
   const setAuth = useAuthStore(s => s.setAuth);
   const setLoading = useAuthStore(s => s.setLoading);
   const logoutAuth = useAuthStore(s => s.logout);
+  const loadCart = useCartStore(s => s.load);
+  const loadWishlist = useWishlistStore(s => s.load);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
 
@@ -59,6 +63,8 @@ export default function LoginForm() {
       if (user) {
         setAuth(user);
       }
+      // Перезавантажуємо корзину і список бажань під новий (тепер авторизований) контекст
+      await Promise.all([loadCart(), loadWishlist()]);
       toast.success(t('Account.loginSuccessMessage'));
       router.push('/account/profile');
     } catch (err) {

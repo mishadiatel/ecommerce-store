@@ -11,6 +11,8 @@ import {
   ShoppingBag,
   ClipboardList,
   Ticket,
+  BarChart3,
+  Users,
   X,
   type LucideIcon,
 } from 'lucide-react';
@@ -21,12 +23,14 @@ import LanguageSwitcher from "@/components/admin/layout/languageSwitcher/Languag
 interface NavItem {
   key:
     | 'dashboard'
+    | 'stats'
     | 'pagesControl'
     | 'blocks'
     | 'mailTemplates'
     | 'category'
     | 'product'
     | 'orders'
+    | 'users'
     | 'promoCodes';
   href: string;
   icon: LucideIcon;
@@ -34,13 +38,15 @@ interface NavItem {
 
 const NAV_ITEMS: NavItem[] = [
   { key: 'dashboard', href: '/adminPanel/admin823479234/dashboard', icon: LayoutDashboard },
+  { key: 'stats', href: '/adminPanel/admin823479234/stats', icon: BarChart3 },
+  { key: 'orders', href: '/adminPanel/admin823479234/orders', icon: ClipboardList },
+  { key: 'users', href: '/adminPanel/admin823479234/users', icon: Users },
+  { key: 'product', href: '/adminPanel/admin823479234/product', icon: ShoppingBag },
+  { key: 'category', href: '/adminPanel/admin823479234/category', icon: FolderTree },
+  { key: 'promoCodes', href: '/adminPanel/admin823479234/promoCodes', icon: Ticket },
   { key: 'pagesControl', href: '/adminPanel/admin823479234/pagesControl', icon: FileText },
   { key: 'blocks', href: '/adminPanel/admin823479234/blocks', icon: Layers },
   { key: 'mailTemplates', href: '/adminPanel/admin823479234/mailTemplates', icon: Mail },
-  { key: 'category', href: '/adminPanel/admin823479234/category', icon: FolderTree },
-  { key: 'product', href: '/adminPanel/admin823479234/product', icon: ShoppingBag },
-  { key: 'orders', href: '/adminPanel/admin823479234/orders', icon: ClipboardList },
-  { key: 'promoCodes', href: '/adminPanel/admin823479234/promoCodes', icon: Ticket },
 ];
 
 export default function AdminAside() {
@@ -48,13 +54,14 @@ export default function AdminAside() {
   const tCommon = useTranslations('common');
   const pathname = usePathname();
   const segments = pathname.split('/').filter(Boolean);
-  const lastSegment = segments[segments.length - 1];
   const { isOpen, close } = useSidebar();
 
   const navContent = (
     <nav className="flex flex-col gap-1">
       {NAV_ITEMS.map(({ key, href, icon: Icon }) => {
-        const isActive = lastSegment === key;
+        // Матчимо не тільки останній сегмент, а весь шлях —
+        // щоб на /users/:id підсвітлювався пункт "users".
+        const isActive = segments.includes(key);
         return (
           <Link
             key={key}

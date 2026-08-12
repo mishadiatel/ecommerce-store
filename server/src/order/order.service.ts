@@ -346,6 +346,302 @@ export class OrderService {
     return order;
   }
 
+  // ─── Статистика (admin) ─────────────────────────────────────────────────────
+
+  /**
+   * Загальна статистика замовлень за період:
+   *  - загальна кількість замовлень
+   *  - загальна виручка (по завершених/оплачених)
+   *  - середній чек
+   *  - кількість проданих одиниць
+   *  - розбивка за статусом замовлення
+   *  - розбивка за статусом оплати
+   *  - співвідношення гість / зареєстрований
+   */
+  async getStatsSummary(dateFrom?: string, dateTo?: string) {
+    const dateMatch = this.buildDateFilter(dateFrom, dateTo);
+    const match: FilterQuery<OrderDocument> = dateMatch
+      ? { createdAt: dateMatch }
+      : {};
+
+    const [
+      totalsAgg,
+      statusBreakdown,
+      paymentBreakdown,
+      guestVsRegistered,
+      totalItemsAgg,
+      paidRevenueAgg,
+    ] = await Promise.all([
+      this.orderModel.aggregate<{
+        _id: null;
+        totalOrders: number;
+        totalRevenue: number;
+        avgOrderValue: number;
+      }>([
+        { $match: match },
+        {
+          $group: {
+            _id: null,
+            totalOrders: { $sum: 1 },
+            totalRevenue: { $sum: '$total' },
+            avgOrderValue: { $avg: '$total' },
+          },
+        },
+      ]),
+      this.orderModel.aggregate<{ _id: string; count: number; revenue: number }>([
+        { $match: match },
+        {
+          $group: {
+            _id: '$status',
+            count: { $sum: 1 },
+            revenue: { $sum: '$total' },
+          },
+        },
+      ]),
+      this.orderModel.aggregate<{ _id: string; count: number; revenue: number }>([
+        { $match: match },
+        {
+          $group: {
+            _id: '$paymentStatus',
+            count: { $sum: 1 },
+            revenue: { $sum: '$total' },
+          },
+        },
+      ]),
+      this.orderModel.aggregate<{ _id: 'guest' | 'registered'; count: number; revenue: number }>([
+        { $match: match },
+        {
+          $group: {
+            _id: {
+              $cond: [{ $ifNull: ['$userId', false] }, 'registered', 'guest'],
+            },
+            count: { $sum: 1 },
+            revenue: { $sum: '$total' },
+          },
+        },
+      ]),
+      this.orderModel.aggregate<{ _id: null; totalItems: number }>([
+        { $match: match },
+        { $unwind: '$items' },
+        {
+          $group: {
+            _id: null,
+            totalItems: { $sum: '$items.quantity' },
+          },
+        },
+      ]),
+      // Виручка лише за оплаченими замовленнями
+      this.orderModel.aggregate<{ _id: null; paidRevenue: number; paidOrders: number }>([
+        { $match: { ...match, paymentStatus: PaymentStatus.PAID } },
+        {
+          $group: {
+            _id: null,
+            paidRevenue: { $sum: '$total' },
+            paidOrders: { $sum: 1 },
+          },
+        },
+      ]),
+    ]);
+
+    const totals = totalsAgg[0] ?? {
+      totalOrders: 0,
+      totalRevenue: 0,
+      avgOrderValue: 0,
+    };
+    const items = totalItemsAgg[0]?.totalItems ?? 0;
+    const paid = paidRevenueAgg[0] ?? { paidRevenue: 0, paidOrders: 0 };
+
+    return {
+      dateFrom: dateFrom ?? null,
+      dateTo: dateTo ?? null,
+      totalOrders: totals.totalOrders,
+      totalRevenue: Math.round(totals.totalRevenue * 100) / 100,
+      paidRevenue: Math.round(paid.paidRevenue * 100) / 100,
+      paidOrders: paid.paidOrders,
+      avgOrderValue: Math.round((totals.avgOrderValue || 0) * 100) / 100,
+      totalItems: items,
+      statusBreakdown: statusBreakdown.map((s) => ({
+        status: s._id,
+        count: s.count,
+        revenue: Math.round(s.revenue * 100) / 100,
+      })),
+      paymentBreakdown: paymentBreakdown.map((p) => ({
+        paymentStatus: p._id,
+        count: p.count,
+        revenue: Math.round(p.revenue * 100) / 100,
+      })),
+      customerTypeBreakdown: guestVsRegistered.map((c) => ({
+        type: c._id,
+        count: c.count,
+        revenue: Math.round(c.revenue * 100) / 100,
+      })),
+    };
+  }
+
+  /**
+   * Топ-товарів за період — за виручкою (revenue) або кількістю (quantity).
+   */
+  async getTopProducts(
+    dateFrom?: string,
+    dateTo?: string,
+    limit: number = 10,
+    sortBy: 'revenue' | 'quantity' = 'revenue',
+  ) {
+    const dateMatch = this.buildDateFilter(dateFrom, dateTo);
+    const match: FilterQuery<OrderDocument> = dateMatch
+      ? { createdAt: dateMatch }
+      : {};
+
+    const sortField = sortBy === 'quantity' ? 'quantity' : 'revenue';
+
+    const result = await this.orderModel.aggregate<{
+      _id: string;
+      name: string;
+      quantity: number;
+      revenue: number;
+      ordersCount: number;
+    }>([
+      { $match: match },
+      { $unwind: '$items' },
+      {
+        $group: {
+          _id: '$items.productId',
+          name: { $first: '$items.name' },
+          quantity: { $sum: '$items.quantity' },
+          revenue: {
+            $sum: { $multiply: ['$items.price', '$items.quantity'] },
+          },
+          ordersCount: { $addToSet: '$_id' },
+        },
+      },
+      {
+        $project: {
+          _id: 1,
+          name: 1,
+          quantity: 1,
+          revenue: 1,
+          ordersCount: { $size: '$ordersCount' },
+        },
+      },
+      { $sort: { [sortField]: -1 } },
+      { $limit: limit },
+    ]);
+
+    return result.map((r) => ({
+      productId: r._id,
+      name: r.name,
+      quantity: r.quantity,
+      revenue: Math.round(r.revenue * 100) / 100,
+      ordersCount: r.ordersCount,
+    }));
+  }
+
+  /**
+   * Часовий ряд замовлень і виручки для побудови графіків.
+   * Гранулярність: day (за замовч.) / week / month.
+   */
+  async getOrdersTimeline(
+    dateFrom?: string,
+    dateTo?: string,
+    granularity: 'day' | 'week' | 'month' = 'day',
+  ) {
+    const dateMatch = this.buildDateFilter(dateFrom, dateTo);
+    const match: FilterQuery<OrderDocument> = dateMatch
+      ? { createdAt: dateMatch }
+      : {};
+
+    const dateFormat =
+      granularity === 'month'
+        ? '%Y-%m'
+        : granularity === 'week'
+          ? '%G-%V' // ISO week (year-week)
+          : '%Y-%m-%d';
+
+    const result = await this.orderModel.aggregate<{
+      _id: string;
+      orders: number;
+      revenue: number;
+      paidRevenue: number;
+      items: number;
+    }>([
+      { $match: match },
+      {
+        $group: {
+          _id: {
+            $dateToString: { format: dateFormat, date: '$createdAt' },
+          },
+          orders: { $sum: 1 },
+          revenue: { $sum: '$total' },
+          paidRevenue: {
+            $sum: {
+              $cond: [{ $eq: ['$paymentStatus', 'paid'] }, '$total', 0],
+            },
+          },
+          items: {
+            $sum: {
+              $reduce: {
+                input: '$items',
+                initialValue: 0,
+                in: { $add: ['$$value', '$$this.quantity'] },
+              },
+            },
+          },
+        },
+      },
+      { $sort: { _id: 1 } },
+    ]);
+
+    return result.map((r) => ({
+      bucket: r._id,
+      orders: r.orders,
+      revenue: Math.round(r.revenue * 100) / 100,
+      paidRevenue: Math.round(r.paidRevenue * 100) / 100,
+      items: r.items,
+    }));
+  }
+
+  // ─── Хелпери для admin users модуля ──────────────────────────────────────────
+
+  /** Всі замовлення користувача (без пагінації), відсортовані від нових до старих. */
+  async findAllByUserId(userId: string) {
+    if (!Types.ObjectId.isValid(userId)) return [];
+    return this.orderModel
+      .find({ userId: new Types.ObjectId(userId) })
+      .sort({ createdAt: -1 })
+      .lean();
+  }
+
+  /** Короткий підсумок по замовленнях користувача: кількість, сума. */
+  async getUserOrdersSummary(userId: string) {
+    if (!Types.ObjectId.isValid(userId)) {
+      return { totalOrders: 0, totalRevenue: 0, paidRevenue: 0 };
+    }
+    const [agg] = await this.orderModel.aggregate<{
+      totalOrders: number;
+      totalRevenue: number;
+      paidRevenue: number;
+    }>([
+      { $match: { userId: new Types.ObjectId(userId) } },
+      {
+        $group: {
+          _id: null,
+          totalOrders: { $sum: 1 },
+          totalRevenue: { $sum: '$total' },
+          paidRevenue: {
+            $sum: {
+              $cond: [{ $eq: ['$paymentStatus', 'paid'] }, '$total', 0],
+            },
+          },
+        },
+      },
+    ]);
+    return {
+      totalOrders: agg?.totalOrders ?? 0,
+      totalRevenue: Math.round((agg?.totalRevenue ?? 0) * 100) / 100,
+      paidRevenue: Math.round((agg?.paidRevenue ?? 0) * 100) / 100,
+    };
+  }
+
   // ─── Методи для залогіненого користувача ─────────────────────────────────
 
   async findMyOrders(userId: string, query: OrderQueryDto) {

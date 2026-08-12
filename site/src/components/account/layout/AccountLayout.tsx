@@ -4,6 +4,8 @@ import {ReactNode, useEffect, useState} from 'react';
 import {useTranslations} from 'next-intl';
 import {Link, usePathname, useRouter} from '@/i18n/navigation';
 import {useAuthStore} from '@/stores/authStore';
+import {useCartStore} from '@/stores/cartStore';
+import {useWishlistStore} from '@/stores/wishlistStore';
 import {authLogout} from '@/services/auth';
 import {toast} from 'react-toastify';
 
@@ -27,6 +29,8 @@ export default function AccountLayout({children}: AccountLayoutProps) {
     const router = useRouter();
     const pathname = usePathname();
     const logoutFromStore = useAuthStore(s => s.logout);
+    const loadCart = useCartStore(s => s.load);
+    const loadWishlist = useWishlistStore(s => s.load);
     const [isLoggingOut, setIsLoggingOut] = useState(false);
     const user = useAuthStore(s => s.user);
 
@@ -48,6 +52,8 @@ export default function AccountLayout({children}: AccountLayoutProps) {
             // ignore — we still log out locally
         } finally {
             logoutFromStore();
+            // Після виходу — перезавантажуємо корзину/wishlist під гостьовий контекст
+            await Promise.all([loadCart(), loadWishlist()]);
             toast.info(t('Account.logoutMessage'));
             router.replace('/account/login');
             setIsLoggingOut(false);

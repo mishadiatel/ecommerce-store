@@ -103,7 +103,18 @@ export default function OrderCard({ order, updateOrdersList }: OrderCardProps) {
     <div className={'admin-card flex flex-col gap-2 p-4'}>
       <div className={'flex items-center justify-between flex-wrap gap-2'}>
         <div className={'flex flex-col'}>
-          <div className={'font-semibold text-lg'}>{order.orderNumber}</div>
+          <div className={'flex items-center gap-2 flex-wrap'}>
+            <div className={'font-semibold text-lg'}>{order.orderNumber}</div>
+            {order.userId ? (
+              <span className={'px-2 py-0.5 rounded-md text-[10px] uppercase bg-purple-500/15 text-purple-700 dark:text-purple-300 ring-1 ring-purple-500/30 font-medium'}>
+                {t('customerType.registered')}
+              </span>
+            ) : (
+              <span className={'px-2 py-0.5 rounded-md text-[10px] uppercase bg-slate-500/15 text-slate-700 dark:text-slate-300 ring-1 ring-slate-500/30 font-medium'}>
+                {t('customerType.guest')}
+              </span>
+            )}
+          </div>
           <div className={'text-sm text-muted-foreground'}>{formatDate(order.createdAt)}</div>
         </div>
 

@@ -26,6 +26,11 @@ import { RolesGuard } from '../auth/guards/roles.guard';
 import { Roles } from '../auth/decorators/roles.decorator';
 import { OrderQueryDto } from './dto/order-query.dto';
 import { UpdateOrderStatusDto } from './dto/update-order-status.dto';
+import {
+  OrderStatsQueryDto,
+  OrderTimelineQueryDto,
+  TopProductsQueryDto,
+} from './dto/order-stats-query.dto';
 
 @ApiTags('Orders')
 @Controller('order')
@@ -97,6 +102,71 @@ export class OrderController {
   @ApiResponse({ status: 404, description: 'Замовлення не знайдене.' })
   findMyOrder(@CurrentUser() user: JwtUser, @Param('id') id: string) {
     return this.orderService.findMyOrderById(String(user.sub), id);
+  }
+
+  // ─── Статистика (admin) ────────────────────────────────────────────────
+
+  @UseGuards(AccessTokenGuard, RolesGuard)
+  @Roles('admin')
+  @Get('stats/summary')
+  @ApiCookieAuth('accessToken')
+  @ApiBearerAuth('accessToken')
+  @ApiOperation({
+    summary: '[admin] Загальна статистика замовлень',
+    description:
+      'Повертає загальні показники за період: кількість замовлень, виручка, середній чек, розбивка за статусами замовлення/оплати, співвідношення гість/зареєстрований користувач.',
+  })
+  @ApiResponse({ status: 200, description: 'Об\'єкт зі статистикою.' })
+  @ApiResponse({ status: 401, description: 'Не авторизовано.' })
+  @ApiResponse({ status: 403, description: 'Доступ заборонено (не адмін).' })
+  getStatsSummary(@Query() query: OrderStatsQueryDto) {
+    return this.orderService.getStatsSummary(query.dateFrom, query.dateTo);
+  }
+
+  @UseGuards(AccessTokenGuard, RolesGuard)
+  @Roles('admin')
+  @Get('stats/top-products')
+  @ApiCookieAuth('accessToken')
+  @ApiBearerAuth('accessToken')
+  @ApiOperation({
+    summary: '[admin] Топ-товарів за період',
+    description:
+      'Топ-N товарів за виручкою або кількістю проданих одиниць у заданому діапазоні дат.',
+  })
+  @ApiResponse({ status: 200, description: 'Список топ-товарів.' })
+  @ApiResponse({ status: 401, description: 'Не авторизовано.' })
+  @ApiResponse({ status: 403, description: 'Доступ заборонено (не адмін).' })
+  getTopProducts(@Query() query: TopProductsQueryDto) {
+    return this.orderService.getTopProducts(
+      query.dateFrom,
+      query.dateTo,
+      query.limit ?? 10,
+      query.sortBy === 'quantity' ? 'quantity' : 'revenue',
+    );
+  }
+
+  @UseGuards(AccessTokenGuard, RolesGuard)
+  @Roles('admin')
+  @Get('stats/timeline')
+  @ApiCookieAuth('accessToken')
+  @ApiBearerAuth('accessToken')
+  @ApiOperation({
+    summary: '[admin] Часовий ряд замовлень',
+    description:
+      'Часовий ряд для графіків: кількість замовлень, виручка та кількість проданих одиниць по днях / тижнях / місяцях.',
+  })
+  @ApiResponse({ status: 200, description: 'Масив точок часового ряду.' })
+  @ApiResponse({ status: 401, description: 'Не авторизовано.' })
+  @ApiResponse({ status: 403, description: 'Доступ заборонено (не адмін).' })
+  getOrdersTimeline(@Query() query: OrderTimelineQueryDto) {
+    const g = query.granularity;
+    const granularity: 'day' | 'week' | 'month' =
+      g === 'week' || g === 'month' ? g : 'day';
+    return this.orderService.getOrdersTimeline(
+      query.dateFrom,
+      query.dateTo,
+      granularity,
+    );
   }
 
   @UseGuards(AccessTokenGuard, RolesGuard)

@@ -49,12 +49,14 @@
   },
   "nav": {
     "dashboard": "Загальне",
+    "stats": "Статистика",
     "pagesControl": "Сторінки",
     "blocks": "Блоки",
     "mailTemplates": "Шаблони листів",
     "category": "Категорії",
     "product": "Товари",
     "orders": "Замовлення",
+    "users": "Користувачі",
     "promoCodes": "Промокоди"
   },
   "pages": {
@@ -89,6 +91,18 @@
     "promoCodes": {
       "title": "Промокоди",
       "subtitle": "Створюйте та керуйте промокодами зі знижками для ваших клієнтів."
+    },
+    "stats": {
+      "title": "Статистика",
+      "subtitle": "Аналітика замовлень: топ-товари, виручка, розбивка за статусами та типом клієнта."
+    },
+    "users": {
+      "title": "Користувачі",
+      "subtitle": "Список зареєстрованих користувачів, їхні замовлення та покинуті корзини."
+    },
+    "userDetails": {
+      "title": "Профіль користувача",
+      "subtitle": "Повна інформація про користувача, історія замовлень та поточна корзина."
     }
   },
   "login": {
@@ -211,6 +225,10 @@
     "markedPaid": "Замовлення позначено як оплачене",
     "markPaidError": "Помилка позначення оплати",
     "loadError": "Помилка завантаження замовлень",
+    "customerType": {
+      "guest": "Гість",
+      "registered": "Зареєстрований"
+    },
     "status": {
       "pending": "В очікуванні",
       "processing": "В обробці",
@@ -410,5 +428,92 @@
       "updateError": "Помилка оновлення промокоду, спробуйте пізніше",
       "deleteError": "Помилка видалення, спробуйте пізніше"
     }
+  },
+  "stats": {
+    "loadError": "Помилка завантаження статистики",
+    "dateFromLabel": "Дата від",
+    "dateToLabel": "Дата до",
+    "granularityLabel": "Гранулярність",
+    "granularity": {
+      "day": "По днях",
+      "week": "По тижнях",
+      "month": "По місяцях"
+    },
+    "sortByLabel": "Сортувати за",
+    "sortBy": {
+      "revenue": "Виручкою",
+      "quantity": "Кількістю"
+    },
+    "empty": "Немає даних за обраний період",
+    "kpi": {
+      "totalOrders": "Замовлень",
+      "totalRevenue": "Загальна виручка",
+      "paidRevenue": "Оплачено (₴)",
+      "paidOrders": "Оплачених",
+      "avgOrderValue": "Середній чек",
+      "totalItems": "Продано одиниць"
+    },
+    "charts": {
+      "timelineTitle": "Замовлення та виручка за період",
+      "timelineSubtitle": "Динаміка кількості замовлень, загальної виручки та оплаченої виручки.",
+      "ordersLine": "Замовлень",
+      "revenueLine": "Виручка",
+      "paidRevenueLine": "Оплачена виручка",
+      "statusBreakdown": "Статус замовлень",
+      "paymentBreakdown": "Статус оплати",
+      "customerTypeBreakdown": "Гість / Зареєстрований",
+      "topProductsTitle": "Топ-10 товарів",
+      "topProductsSubtitle": "Сортування за {sortBy}"
+    },
+    "table": {
+      "product": "Товар",
+      "quantity": "Продано",
+      "revenue": "Виручка",
+      "orders": "Замовлень"
+    },
+    "status": {
+      "pending": "В очікуванні",
+      "processing": "В обробці",
+      "shipped": "Відправлено",
+      "delivered": "Доставлено",
+      "completed": "Завершено",
+      "cancelled": "Скасовано"
+    },
+    "payment": {
+      "pending": "В очікуванні",
+      "paid": "Оплачено",
+      "failed": "Неуспішно"
+    },
+    "customerType": {
+      "guest": "Гість",
+      "registered": "Зареєстрований"
+    }
+  },
+  "users": {
+    "searchPlaceholder": "Пошук за email, ім'ям або телефоном",
+    "onlyAbandonedCart": "Тільки з покинутою корзиною",
+    "empty": "Користувачів не знайдено",
+    "noName": "Без імені",
+    "notActivated": "Не активовано",
+    "abandonedCartBadge": "У корзині: {count}",
+    "ordersCount": "Замовлень",
+    "totalSpent": "Витрачено",
+    "loadError": "Помилка завантаження користувачів"
+  },
+  "userDetails": {
+    "backToUsers": "Назад до списку",
+    "notFound": "Користувача не знайдено",
+    "loadError": "Помилка завантаження профілю",
+    "noName": "Без імені",
+    "activated": "Активовано",
+    "notActivated": "Не активовано",
+    "totalOrders": "Всього замовлень",
+    "totalRevenue": "Загальна сума",
+    "paidRevenue": "Оплачено",
+    "abandonedCartTitle": "У користувача є щось у корзині!",
+    "abandonedCartSubtitle": "{count} одиниць на суму ~{total} ₴",
+    "unknownProduct": "Товар недоступний",
+    "ordersHistory": "Історія замовлень ({count})",
+    "noOrders": "Замовлень немає"
   }
 }
