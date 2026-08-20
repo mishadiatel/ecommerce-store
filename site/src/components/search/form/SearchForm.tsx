@@ -1,7 +1,7 @@
 'use client'
 import { useTranslations } from 'next-intl';
-import { FormEvent } from 'react';
-import { useRouter } from '@/i18n/navigation';
+import { FormEvent, startTransition } from 'react';
+import { useRouter, usePathname } from '@/i18n/navigation';
 
 interface SearchFormProps {
   onSubmit?: () => void;
@@ -10,14 +10,23 @@ interface SearchFormProps {
 export default function SearchForm({onSubmit}: SearchFormProps) {
   const t = useTranslations('Header')
   const router = useRouter();
+  const pathname = usePathname();
   const searchFormSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     const searchTerm = String(formData.get('term')).trim().toLowerCase();
-    router.push(`/search?term=${encodeURIComponent(searchTerm)}`);
-   if(onSubmit) {
-     onSubmit();
-   }
+    const isOnSearchPage = pathname === '/search';
+
+    startTransition(() => {
+      router.push({ pathname: '/search', query: { term: searchTerm } });
+      if (isOnSearchPage) {
+        // Змушуємо серверний компонент /search перезапустити fetch,
+        // навіть якщо Router Cache вважає сегмент "свіжим".
+        router.refresh();
+      }
+    });
+
+    if (onSubmit) onSubmit();
   }
 
   return (

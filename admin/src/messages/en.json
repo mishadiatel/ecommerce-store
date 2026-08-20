@@ -57,7 +57,8 @@
     "product": "Products",
     "orders": "Orders",
     "users": "Users",
-    "promoCodes": "Promo codes"
+    "promoCodes": "Promo codes",
+    "popularQueries": "Popular queries"
   },
   "pages": {
     "dashboard": {
@@ -103,6 +104,10 @@
     "userDetails": {
       "title": "User profile",
       "subtitle": "Full user info, order history and current cart."
+    },
+    "popularQueries": {
+      "title": "Popular queries",
+      "subtitle": "Manage search suggestions shown in the site search modal."
     }
   },
   "login": {
@@ -153,6 +158,8 @@
     "isOnePlusOne": "1+1",
     "lang": "Language",
     "language": "Language",
+    "queryText": "Query text",
+    "visible": "Visible",
     "pageTitle": "Page title",
     "pageDescription": "Page description",
     "pageSlug": "Page slug",
@@ -515,5 +522,31 @@
     "unknownProduct": "Product unavailable",
     "ordersHistory": "Order history ({count})",
     "noOrders": "No orders"
+  },
+  "popularQueriesPage": {
+    "addButton": "Add query",
+    "createTitle": "Create popular query",
+    "updateTitle": "Update popular query",
+    "createButton": "Create",
+    "searchPlaceholder": "Search by text",
+    "languagePlaceholder": "Language",
+    "allLanguages": "All languages",
+    "visibilityPlaceholder": "Visibility",
+    "visibilityAll": "All",
+    "visibilityVisible": "Visible only",
+    "visibilityHidden": "Hidden only",
+    "visibleBadge": "Visible",
+    "hiddenBadge": "Hidden",
+    "notFound": "No popular queries found",
+    "deleteDescription": "You will delete query \"{queryText}\" for language {language}",
+    "toast": {
+      "created": "Popular query created",
+      "updated": "Popular query updated",
+      "deleted": "Popular query deleted",
+      "createError": "Failed to create query",
+      "updateError": "Failed to update query",
+      "deleteError": "Failed to delete query",
+      "loadError": "Failed to load list"
+    }
   }
 }

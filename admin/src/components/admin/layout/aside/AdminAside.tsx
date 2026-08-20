@@ -13,6 +13,7 @@ import {
   Ticket,
   BarChart3,
   Users,
+  Search,
   X,
   type LucideIcon,
 } from 'lucide-react';
@@ -31,6 +32,7 @@ interface NavItem {
     | 'product'
     | 'orders'
     | 'users'
+    | 'popularQueries'
     | 'promoCodes';
   href: string;
   icon: LucideIcon;
@@ -44,6 +46,7 @@ const NAV_ITEMS: NavItem[] = [
   { key: 'product', href: '/adminPanel/admin823479234/product', icon: ShoppingBag },
   { key: 'category', href: '/adminPanel/admin823479234/category', icon: FolderTree },
   { key: 'promoCodes', href: '/adminPanel/admin823479234/promoCodes', icon: Ticket },
+  { key: 'popularQueries', href: '/adminPanel/admin823479234/popularQueries', icon: Search },
   { key: 'pagesControl', href: '/adminPanel/admin823479234/pagesControl', icon: FileText },
   { key: 'blocks', href: '/adminPanel/admin823479234/blocks', icon: Layers },
   { key: 'mailTemplates', href: '/adminPanel/admin823479234/mailTemplates', icon: Mail },

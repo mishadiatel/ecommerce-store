@@ -33,6 +33,7 @@ import { OrderModule } from './order/order.module';
 import { TelegramModule } from './telegram/telegram.module';
 import { PaymentsModule } from './payments/payments.module';
 import { PromoCodeModule } from './promo-code/promo-code.module';
+import { PopularQueryModule } from './popular-query/popular-query.module';
 
 @Module({
   imports: [
@@ -103,6 +104,7 @@ import { PromoCodeModule } from './promo-code/promo-code.module';
     TelegramModule,
     PaymentsModule,
     PromoCodeModule,
+    PopularQueryModule,
   ],
   controllers: [AppController],
   providers: [AppService],

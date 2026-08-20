@@ -63,7 +63,11 @@ export default async function SearchPage({ params, searchParams }: {
                       className="font-semibold lg:font-bold text-center text-xl sm:text-[22px] lg:text-[32px] mb-5 sm:mb-6 lg:mb-8">
                       {t('resultsCount', {query: searchWord, count: searchProducts.totalDocuments})}
                     </div>
-                    <SearchProductsList searchData={searchProducts} searchWord={searchWord} />
+                    <SearchProductsList
+                      key={searchWord}
+                      searchData={searchProducts}
+                      searchWord={searchWord}
+                    />
                   </>
                   ) :
                   (

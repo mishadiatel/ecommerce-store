@@ -122,6 +122,7 @@ async function bootstrap() {
     .addTag('Upload', 'Завантаження файлів (зображень)')
     // .addTag('Locales', 'Список локалей / мов')
     .addTag('Health', 'Health-check / базовий стан сервісу')
+    .addTag('Popular Queries', 'Популярні пошукові запити для модалки пошуку')
     .build();
 
   const document = SwaggerModule.createDocument(app, swaggerConfig);
