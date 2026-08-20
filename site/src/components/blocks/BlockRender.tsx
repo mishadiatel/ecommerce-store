@@ -1,7 +1,7 @@
 import {
   Block, CategoriesSliderBlockData,
   FaqComplexBlockData,
-  FaqSmallBlockData, InstaBlockData,
+  FaqSmallBlockData, HeroBlockData, InstaBlockData,
   NotFoundBlockData,
   RunningLineBlockData,
   StickyCardBlockData,
@@ -15,6 +15,7 @@ import FaqComplexBlock from '@/components/blocks/faq/FaqComplexBlock';
 import InstaBlock from '@/components/blocks/instaBlock/InstaBlock';
 import CategoriesSlider from '@/components/blocks/categories/CategoriesSlider';
 import CategoriesGridBlock from '@/components/blocks/categories/CategoriesGrid';
+import HeroBlock from './hero/HeroBlock';
 
 interface BlockRenderProps {
   block: Block<object>
@@ -63,6 +64,11 @@ export default function BlockRender({block}: BlockRenderProps) {
     case 'categories-block' :
       return (
         <CategoriesGridBlock />
+      )
+
+    case 'hero' :
+      return (
+        <HeroBlock block={block as Block<HeroBlockData>} />
       )
 
   }
