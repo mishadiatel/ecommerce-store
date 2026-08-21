@@ -385,5 +385,25 @@
       "successMessage": "Thanks! We’ll get back to you shortly.",
       "errorMessage": "Failed to send. Please try again later."
     }
+  },
+  "Reviews": {
+    "title": "Reviews of {name}",
+    "reviewsCount": "{count, plural, one {{count} review} other {{count} reviews}}",
+    "leaveReviewTitle": "Leave your review of this product",
+    "leaveReviewButton": "Write a review",
+    "showAllButton": "Show all reviews",
+    "empty": "No reviews yet. Be the first!",
+    "yourReviewBadge": "Your review",
+    "modalTitle": "Write a review of",
+    "yourRatingLabel": "Your rating",
+    "ratingBad": "Bad",
+    "ratingSoSo": "So-so",
+    "ratingOk": "OK",
+    "ratingGood": "Good",
+    "ratingExcellent": "Excellent",
+    "ratingRequired": "Please choose a rating",
+    "commentLabel": "Comment",
+    "commentPlaceholder": "Share your impressions...",
+    "submitButton": "Submit review"
   }
 }

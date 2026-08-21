@@ -39,6 +39,7 @@ import { ContactsModule } from './contacts/contacts.module';
 import { FeedbackModule } from './feedback/feedback.module';
 import { SubscribersModule } from './subscribers/subscribers.module';
 import { CampaignsModule } from './campaigns/campaigns.module';
+import { ReviewModule } from './review/review.module';
 
 @Module({
   imports: [
@@ -115,6 +116,7 @@ import { CampaignsModule } from './campaigns/campaigns.module';
     FeedbackModule,
     SubscribersModule,
     CampaignsModule,
+    ReviewModule,
   ],
   controllers: [AppController],
   providers: [AppService],

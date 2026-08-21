@@ -7,6 +7,8 @@ import { getPublicProductBySlug, getPublicProducts } from '@/services/product';
 import BlocksList from '@/components/blocks/BlocksList';
 import SmallBreadcrumbsBlock from '@/components/breadcrumbs/SmallBreadcrumbsBlock';
 import ProductPage from '@/components/products/productPage/ProductPage';
+import ReviewsBlock from '@/components/products/reviews/ReviewsBlock';
+import { getPublicReviews } from '@/services/reviews';
 
 export async function generateMetadata({ params }: {
   params: Promise<{ locale: string, slug: string }>
@@ -34,6 +36,7 @@ export default async function ProductInfoPage({ params }: { params: Promise<{ lo
   const productInfo = await getPublicProductBySlug(slug, locale);
   const productCategoryInfo = await getPublicCategoryById(productInfo.categoryId, locale);
   const sameCategoryProducts = await getPublicProducts({lang: locale, category: productCategoryInfo._id})
+  const reviews = await getPublicReviews(productInfo._id, locale);
 
   return (
     <>
@@ -47,6 +50,13 @@ export default async function ProductInfoPage({ params }: { params: Promise<{ lo
         ]} />
       )}
       <ProductPage sameCategoryProducts={sameCategoryProducts} productInfo={productInfo} />
+      <ReviewsBlock
+        productId={productInfo._id}
+        productName={productInfo.translations[0].title}
+        initialReviews={reviews.data}
+        initialAverage={reviews.averageRating}
+        initialCount={reviews.count}
+      />
       <BlocksList blocks={bottomBlocks} />
     </>
   );

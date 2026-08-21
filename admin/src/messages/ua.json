@@ -62,7 +62,8 @@
     "contacts": "Контакти",
     "feedbacks": "Заявки",
     "subscribers": "Підписники",
-    "campaigns": "Розсилки"
+    "campaigns": "Розсилки",
+    "reviews": "Відгуки"
   },
   "pages": {
     "dashboard": {
@@ -128,6 +129,10 @@
     "campaigns": {
       "title": "Розсилки",
       "subtitle": "Створення листів, тестова відправка та розсилка активним підписникам."
+    },
+    "reviews": {
+      "title": "Відгуки",
+      "subtitle": "Керування відгуками про товари — окремо для кожної мови."
     }
   },
   "login": {
@@ -680,6 +685,45 @@
       "updateError": "Не вдалося оновити запит",
       "deleteError": "Не вдалося видалити запит",
       "loadError": "Не вдалося завантажити список"
+    }
+  },
+  "reviewsPage": {
+    "addButton": "Додати відгук",
+    "createTitle": "Створити відгук",
+    "editTitle": "Редагувати відгук",
+    "edit": "Редагувати",
+    "product": "Товар",
+    "productPlaceholder": "Оберіть товар (пошук за назвою або slug)",
+    "language": "Мова",
+    "firstName": "Ім'я",
+    "lastName": "Прізвище",
+    "rating": "Оцінка",
+    "comment": "Текст відгуку",
+    "isVisibleLabel": "Показувати на сайті",
+    "submit": "Створити",
+    "productFilter": "Оберіть товар для фільтру",
+    "allProducts": "Всі товари",
+    "languageFilter": "Мова",
+    "allLanguages": "Усі мови",
+    "visibilityFilter": "Видимість",
+    "allVisibility": "Усі",
+    "visibleOnly": "Видимі",
+    "hiddenOnly": "Приховані",
+    "hiddenBadge": "Прихований",
+    "show": "Показати",
+    "hide": "Приховати",
+    "empty": "Відгуків не знайдено",
+    "deleteDescription": "Ви видалите відгук від {name}",
+    "toast": {
+      "loadError": "Не вдалося завантажити відгуки",
+      "created": "Відгук створено",
+      "updated": "Відгук оновлено",
+      "createError": "Не вдалося створити відгук",
+      "updateError": "Не вдалося оновити відгук",
+      "deleted": "Відгук видалено",
+      "deleteError": "Не вдалося видалити",
+      "emptyFieldsError": "Заповніть усі обов'язкові поля",
+      "badRating": "Оцінка має бути від 1 до 5"
     }
   },
   "variantsEditor": {

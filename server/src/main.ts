@@ -127,6 +127,7 @@ async function bootstrap() {
     .addTag('Feedback', 'Заявки з форм зворотного зв\'язку')
     .addTag('Subscribers', 'Підписники на email-розсилку')
     .addTag('Campaigns', 'Email-розсилки (кампанії)')
+    .addTag('Reviews', 'Відгуки про товари')
     .build();
 
   const document = SwaggerModule.createDocument(app, swaggerConfig);

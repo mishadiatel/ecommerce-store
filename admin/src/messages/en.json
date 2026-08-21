@@ -62,7 +62,8 @@
     "contacts": "Contacts",
     "feedbacks": "Feedbacks",
     "subscribers": "Subscribers",
-    "campaigns": "Campaigns"
+    "campaigns": "Campaigns",
+    "reviews": "Reviews"
   },
   "pages": {
     "dashboard": {
@@ -128,6 +129,10 @@
     "campaigns": {
       "title": "Campaigns",
       "subtitle": "Compose emails, send test previews and dispatch to subscribers."
+    },
+    "reviews": {
+      "title": "Reviews",
+      "subtitle": "Manage product reviews — separately per language."
     }
   },
   "login": {
@@ -680,6 +685,45 @@
       "updateError": "Failed to update query",
       "deleteError": "Failed to delete query",
       "loadError": "Failed to load list"
+    }
+  },
+  "reviewsPage": {
+    "addButton": "Add review",
+    "createTitle": "Create review",
+    "editTitle": "Edit review",
+    "edit": "Edit",
+    "product": "Product",
+    "productPlaceholder": "Select product (search by name or slug)",
+    "language": "Language",
+    "firstName": "First name",
+    "lastName": "Last name",
+    "rating": "Rating",
+    "comment": "Review text",
+    "isVisibleLabel": "Show on site",
+    "submit": "Create",
+    "productFilter": "Select product to filter",
+    "allProducts": "All products",
+    "languageFilter": "Language",
+    "allLanguages": "All languages",
+    "visibilityFilter": "Visibility",
+    "allVisibility": "All",
+    "visibleOnly": "Visible",
+    "hiddenOnly": "Hidden",
+    "hiddenBadge": "Hidden",
+    "show": "Show",
+    "hide": "Hide",
+    "empty": "No reviews found",
+    "deleteDescription": "You will delete review from {name}",
+    "toast": {
+      "loadError": "Failed to load reviews",
+      "created": "Review created",
+      "updated": "Review updated",
+      "createError": "Failed to create review",
+      "updateError": "Failed to update review",
+      "deleted": "Review deleted",
+      "deleteError": "Failed to delete",
+      "emptyFieldsError": "Fill in all required fields",
+      "badRating": "Rating must be 1 to 5"
     }
   },
   "variantsEditor": {

@@ -18,6 +18,7 @@ import {
   Inbox,
   MailPlus,
   Users2,
+  Star,
   X,
   type LucideIcon,
 } from 'lucide-react';
@@ -41,6 +42,7 @@ interface NavItem {
     | 'feedbacks'
     | 'subscribers'
     | 'campaigns'
+    | 'reviews'
     | 'promoCodes';
   href: string;
   icon: LucideIcon;
@@ -59,6 +61,7 @@ const NAV_ITEMS: NavItem[] = [
   { key: 'contacts', href: '/adminPanel/admin823479234/contacts', icon: Contact },
   { key: 'subscribers', href: '/adminPanel/admin823479234/subscribers', icon: Users2 },
   { key: 'campaigns', href: '/adminPanel/admin823479234/campaigns', icon: MailPlus },
+  { key: 'reviews', href: '/adminPanel/admin823479234/reviews', icon: Star },
   { key: 'pagesControl', href: '/adminPanel/admin823479234/pagesControl', icon: FileText },
   { key: 'blocks', href: '/adminPanel/admin823479234/blocks', icon: Layers },
   { key: 'mailTemplates', href: '/adminPanel/admin823479234/mailTemplates', icon: Mail },

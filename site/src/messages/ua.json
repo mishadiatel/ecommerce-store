@@ -385,5 +385,25 @@
       "successMessage": "Дякуємо! Ми зв'яжемось з вами найближчим часом.",
       "errorMessage": "Не вдалося надіслати заявку. Спробуйте пізніше."
     }
+  },
+  "Reviews": {
+    "title": "Відгуки про {name}",
+    "reviewsCount": "{count, plural, one {{count} відгук} few {{count} відгуки} many {{count} відгуків} other {{count} відгуків}}",
+    "leaveReviewTitle": "Залиште свій відгук про цей товар",
+    "leaveReviewButton": "Написати відгук",
+    "showAllButton": "Показати усі відгуки",
+    "empty": "Ще немає відгуків. Будьте першим!",
+    "yourReviewBadge": "Ваш відгук",
+    "modalTitle": "Напишіть відгук про",
+    "yourRatingLabel": "Ваша оцінка",
+    "ratingBad": "Погано",
+    "ratingSoSo": "Так собі",
+    "ratingOk": "Нормально",
+    "ratingGood": "Добре",
+    "ratingExcellent": "Чудово",
+    "ratingRequired": "Оберіть оцінку",
+    "commentLabel": "Повідомлення",
+    "commentPlaceholder": "Поділіться враженнями про товар...",
+    "submitButton": "Залишити відгук"
   }
 }

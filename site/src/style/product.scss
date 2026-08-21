@@ -976,14 +976,14 @@
 
 .review-block {
   .rating {
-    .icon-filled_star {
+    .icon-filled_star, .icon-heroicons-solid_star {
       &:before {
         color: var(--yellow);
       }
     }
   }
   .list-review {
-    .icon-filled_star {
+    .icon-filled_star, .icon-heroicons-solid_star {
       &:before {
         color: var(--yellow);
       }
