@@ -349,5 +349,20 @@
         "cash_on_delivery": "Cash on delivery"
       }
     }
+  },
+  "Contacts": {
+    "callLabel": "Call:",
+    "writeLabel": "Write:",
+    "form": {
+      "messageLabel": "Message",
+      "messagePlaceholder": "Message",
+      "agreePrefix": "I agree to the",
+      "agreeLink": "processing of personal data",
+      "agreeRequired": "You must agree to the processing of personal data",
+      "submitButton": "Send",
+      "submittingText": "Sending...",
+      "successMessage": "Thanks! We’ll get back to you shortly.",
+      "errorMessage": "Failed to send. Please try again later."
+    }
   }
 }

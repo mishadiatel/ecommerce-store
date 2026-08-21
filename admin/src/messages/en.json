@@ -58,7 +58,9 @@
     "orders": "Orders",
     "users": "Users",
     "promoCodes": "Promo codes",
-    "popularQueries": "Popular queries"
+    "popularQueries": "Popular queries",
+    "contacts": "Contacts",
+    "feedbacks": "Feedbacks"
   },
   "pages": {
     "dashboard": {
@@ -108,6 +110,14 @@
     "popularQueries": {
       "title": "Popular queries",
       "subtitle": "Manage search suggestions shown in the site search modal."
+    },
+    "contacts": {
+      "title": "Contacts",
+      "subtitle": "Manage contacts block content on the site (phones, emails, address, socials, form)."
+    },
+    "feedbacks": {
+      "title": "Feedbacks",
+      "subtitle": "Submissions received from site feedback forms."
     }
   },
   "login": {
@@ -522,6 +532,57 @@
     "unknownProduct": "Product unavailable",
     "ordersHistory": "Order history ({count})",
     "noOrders": "No orders"
+  },
+  "contactsPage": {
+    "languageLabel": "Language:",
+    "salesSection": "Sales & support",
+    "salesTitle": "Section title",
+    "phones": "Phones",
+    "addPhone": "Add phone",
+    "emails": "Emails",
+    "addEmail": "Add email",
+    "productionSection": "Production",
+    "productionTitle": "Section title",
+    "productionAddresses": "Production addresses",
+    "addressN": "Address #{n}",
+    "noAddresses": "No addresses added yet",
+    "addAddress": "Add address",
+    "productionCity": "City",
+    "productionPostcode": "Postcode",
+    "productionAddress": "Address",
+    "productionAddressPlaceholder": "Line 1\nLine 2",
+    "socialSection": "Socials",
+    "socialTitle": "Section title",
+    "formSection": "Feedback form",
+    "formTitle": "Form title",
+    "toast": {
+      "loadError": "Failed to load contacts",
+      "saved": "Contacts saved",
+      "saveError": "Failed to save changes"
+    }
+  },
+  "feedbacksPage": {
+    "searchPlaceholder": "Search by name, email, phone",
+    "typePlaceholder": "Type",
+    "allTypes": "All types",
+    "statusPlaceholder": "Status",
+    "allStatuses": "All",
+    "unread": "Unread",
+    "read": "Read",
+    "newBadge": "New",
+    "markRead": "Mark read",
+    "markUnread": "Mark unread",
+    "empty": "No feedbacks found",
+    "deleteDescription": "You will delete feedback from {name}",
+    "types": {
+      "contacts": "Contacts"
+    },
+    "toast": {
+      "loadError": "Failed to load feedbacks",
+      "updateError": "Failed to update status",
+      "deleted": "Feedback deleted",
+      "deleteError": "Failed to delete"
+    }
   },
   "popularQueriesPage": {
     "addButton": "Add query",

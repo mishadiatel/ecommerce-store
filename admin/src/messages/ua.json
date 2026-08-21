@@ -58,7 +58,9 @@
     "orders": "Замовлення",
     "users": "Користувачі",
     "promoCodes": "Промокоди",
-    "popularQueries": "Популярні запити"
+    "popularQueries": "Популярні запити",
+    "contacts": "Контакти",
+    "feedbacks": "Заявки"
   },
   "pages": {
     "dashboard": {
@@ -108,6 +110,14 @@
     "popularQueries": {
       "title": "Популярні запити",
       "subtitle": "Керуйте пропозиціями пошуку, які відображаються у модалці пошуку на сайті."
+    },
+    "contacts": {
+      "title": "Контакти",
+      "subtitle": "Керування контентом блоку контактів на сайті (телефони, пошта, адреса, соцмережі, форма)."
+    },
+    "feedbacks": {
+      "title": "Заявки",
+      "subtitle": "Список усіх заявок з форм зворотного зв'язку."
     }
   },
   "login": {
@@ -522,6 +532,57 @@
     "unknownProduct": "Товар недоступний",
     "ordersHistory": "Історія замовлень ({count})",
     "noOrders": "Замовлень немає"
+  },
+  "contactsPage": {
+    "languageLabel": "Мова:",
+    "salesSection": "Відділ збуту та підтримки",
+    "salesTitle": "Заголовок секції",
+    "phones": "Телефони",
+    "addPhone": "Додати телефон",
+    "emails": "Пошта",
+    "addEmail": "Додати email",
+    "productionSection": "Виробництво",
+    "productionTitle": "Заголовок секції",
+    "productionAddresses": "Адреси виробництва",
+    "addressN": "Адреса #{n}",
+    "noAddresses": "Ще не додано жодної адреси",
+    "addAddress": "Додати адресу",
+    "productionCity": "Місто",
+    "productionPostcode": "Індекс",
+    "productionAddress": "Адреса",
+    "productionAddressPlaceholder": "пров. Старобілоуський, 4а\nвул. Інструментальна, 9",
+    "socialSection": "Соцмережі",
+    "socialTitle": "Заголовок секції",
+    "formSection": "Форма зворотного зв'язку",
+    "formTitle": "Заголовок форми",
+    "toast": {
+      "loadError": "Не вдалося завантажити контакти",
+      "saved": "Контакти збережено",
+      "saveError": "Не вдалося зберегти зміни"
+    }
+  },
+  "feedbacksPage": {
+    "searchPlaceholder": "Пошук за іменем, email, телефоном",
+    "typePlaceholder": "Тип",
+    "allTypes": "Усі типи",
+    "statusPlaceholder": "Статус",
+    "allStatuses": "Усі",
+    "unread": "Непрочитані",
+    "read": "Прочитані",
+    "newBadge": "Нова",
+    "markRead": "Прочитано",
+    "markUnread": "Непрочитано",
+    "empty": "Заявок не знайдено",
+    "deleteDescription": "Ви видалите заявку від {name}",
+    "types": {
+      "contacts": "Контакти"
+    },
+    "toast": {
+      "loadError": "Не вдалося завантажити заявки",
+      "updateError": "Не вдалося оновити статус",
+      "deleted": "Заявку видалено",
+      "deleteError": "Не вдалося видалити"
+    }
   },
   "popularQueriesPage": {
     "addButton": "Додати запит",

@@ -34,6 +34,8 @@ import { TelegramModule } from './telegram/telegram.module';
 import { PaymentsModule } from './payments/payments.module';
 import { PromoCodeModule } from './promo-code/promo-code.module';
 import { PopularQueryModule } from './popular-query/popular-query.module';
+import { ContactsModule } from './contacts/contacts.module';
+import { FeedbackModule } from './feedback/feedback.module';
 
 @Module({
   imports: [
@@ -105,6 +107,8 @@ import { PopularQueryModule } from './popular-query/popular-query.module';
     PaymentsModule,
     PromoCodeModule,
     PopularQueryModule,
+    ContactsModule,
+    FeedbackModule,
   ],
   controllers: [AppController],
   providers: [AppService],

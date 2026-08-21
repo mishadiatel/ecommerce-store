@@ -349,5 +349,20 @@
         "cash_on_delivery": "Оплата при отриманні"
       }
     }
+  },
+  "Contacts": {
+    "callLabel": "Зателефонувати:",
+    "writeLabel": "Написати:",
+    "form": {
+      "messageLabel": "Повідомлення",
+      "messagePlaceholder": "Повідомлення",
+      "agreePrefix": "Даю згоду на",
+      "agreeLink": "обробку персональних даних",
+      "agreeRequired": "Потрібна згода на обробку персональних даних",
+      "submitButton": "Надіслати",
+      "submittingText": "Надсилаємо...",
+      "successMessage": "Дякуємо! Ми зв'яжемось з вами найближчим часом.",
+      "errorMessage": "Не вдалося надіслати заявку. Спробуйте пізніше."
+    }
   }
 }

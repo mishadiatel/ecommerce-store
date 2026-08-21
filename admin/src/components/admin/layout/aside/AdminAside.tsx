@@ -14,6 +14,8 @@ import {
   BarChart3,
   Users,
   Search,
+  Contact,
+  Inbox,
   X,
   type LucideIcon,
 } from 'lucide-react';
@@ -33,6 +35,8 @@ interface NavItem {
     | 'orders'
     | 'users'
     | 'popularQueries'
+    | 'contacts'
+    | 'feedbacks'
     | 'promoCodes';
   href: string;
   icon: LucideIcon;
@@ -47,6 +51,8 @@ const NAV_ITEMS: NavItem[] = [
   { key: 'category', href: '/adminPanel/admin823479234/category', icon: FolderTree },
   { key: 'promoCodes', href: '/adminPanel/admin823479234/promoCodes', icon: Ticket },
   { key: 'popularQueries', href: '/adminPanel/admin823479234/popularQueries', icon: Search },
+  { key: 'feedbacks', href: '/adminPanel/admin823479234/feedbacks', icon: Inbox },
+  { key: 'contacts', href: '/adminPanel/admin823479234/contacts', icon: Contact },
   { key: 'pagesControl', href: '/adminPanel/admin823479234/pagesControl', icon: FileText },
   { key: 'blocks', href: '/adminPanel/admin823479234/blocks', icon: Layers },
   { key: 'mailTemplates', href: '/adminPanel/admin823479234/mailTemplates', icon: Mail },

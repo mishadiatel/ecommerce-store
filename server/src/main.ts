@@ -123,6 +123,8 @@ async function bootstrap() {
     // .addTag('Locales', 'Список локалей / мов')
     .addTag('Health', 'Health-check / базовий стан сервісу')
     .addTag('Popular Queries', 'Популярні пошукові запити для модалки пошуку')
+    .addTag('Contacts', 'Контент блоку "Контакти" на сайті')
+    .addTag('Feedback', 'Заявки з форм зворотного зв\'язку')
     .build();
 
   const document = SwaggerModule.createDocument(app, swaggerConfig);
