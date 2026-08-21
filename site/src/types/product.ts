@@ -1,3 +1,21 @@
+export interface VariantAttribute {
+  name: string;
+  value: string;
+}
+
+export interface ProductVariant {
+  _id?: string;
+  sku: string;
+  name: string;
+  attributes: VariantAttribute[];
+  newPrice: number;
+  oldPrice?: number;
+  stock: number;
+  outOfStock?: boolean;
+  isActive: boolean;
+  image?: string;
+}
+
 export interface Product {
   _id: string;
   categoryId: string;
@@ -19,6 +37,10 @@ export interface Product {
   isVisible: boolean;
 
   order: number;
+
+  stock?: number;
+  outOfStock?: boolean;
+  variants?: ProductVariant[];
 
   createdAt: string;
   updatedAt: string;
@@ -61,6 +83,10 @@ export interface FullProductWithTranslations {
   isVisible: boolean;
 
   order: number;
+
+  stock?: number;
+  outOfStock?: boolean;
+  variants?: ProductVariant[];
 
   createdAt: string;
   updatedAt: string;

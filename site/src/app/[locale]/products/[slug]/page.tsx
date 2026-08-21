@@ -28,7 +28,12 @@ export default async function CategoryProductsPage({ params, searchParams }: {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 }) {
   const { locale, slug } = await params;
-  const {sortBy, sortOrder} = await searchParams;
+  const sp = await searchParams;
+  const asStr = (v: string | string[] | undefined): string | undefined =>
+    typeof v === 'string' && v.length > 0 ? v : undefined;
+  const asBool = (v: string | string[] | undefined): boolean | undefined =>
+    v === 'true' ? true : undefined;
+
   const topBlocks = await getPageBlocks('category-products', locale, true, false);
   const bottomBlocks = await getPageBlocks('category-products', locale, false, true);
   const settings = await getGeneralSettings(locale)
@@ -37,8 +42,15 @@ export default async function CategoryProductsPage({ params, searchParams }: {
   const productsInfo =  await getPublicProducts({
     lang: locale,
     category: categoryInfo._id,
-    sortBy: sortBy ? String(sortBy) : undefined,
-    sortOrder: sortOrder ? String(sortOrder) : undefined,
+    sortBy: asStr(sp.sortBy),
+    sortOrder: asStr(sp.sortOrder),
+    minPrice: asStr(sp.minPrice),
+    maxPrice: asStr(sp.maxPrice),
+    inStockOnly: sp.inStockOnly === 'true',
+    isNew: asBool(sp.isNew),
+    isOnSale: asBool(sp.isOnSale),
+    isLimited: asBool(sp.isLimited),
+    isOnePlusOne: asBool(sp.isOnePlusOne),
   }, false)
   return (
     <>

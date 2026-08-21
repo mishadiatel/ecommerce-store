@@ -34,24 +34,29 @@ export default function CartPageItem({item}: {item: CartItem}) {
             className="max-w-full max-h-full block mx-auto"
           />
         </Link>
-        <Link href={`/product/${item.product.slug}`} target={'_blank'}
-           className="heading6 text-black line-clamp-3 max-lg:line-clamp-2 h-fit break-all">
-          {item.product.translations[0].title}</Link>
+        <div className="flex flex-col gap-1 h-fit">
+          <Link href={`/product/${item.product.slug}`} target={'_blank'}
+             className="heading6 text-black line-clamp-3 max-lg:line-clamp-2 break-all">
+            {item.product.translations[0].title}</Link>
+          {item.variantName && (
+            <span className="caption1 text-gray-80">{item.variantName}</span>
+          )}
+        </div>
 
         <div
           className="flex justify-center flex-wrap items-center text-center gap-1 max-lg:hidden">
-          {item.product.oldPrice ? (
+          {(item.effectiveOldPrice ?? item.product.oldPrice) ? (
             <>
               <div
                 className="caption1 text-gray-30 whitespace-nowrap line-through js--cart-item-price-old">
-                {item.product.oldPrice} {t('Product.currencyUah')}
+                {(item.effectiveOldPrice ?? item.product.oldPrice)} {t('Product.currencyUah')}
               </div>
               <div className="caption1 whitespace-nowrap js--cart-item-price text-semantic-red ">
-                {item.product.newPrice} {t('Product.currencyUah')}
+                {(item.effectivePrice ?? item.product.newPrice)} {t('Product.currencyUah')}
               </div>
             </>
           ) : (
-            <div className="caption1 text-gray-90 whitespace-nowrap">{item.product.newPrice} {t('Product.currencyUah')}</div>
+            <div className="caption1 text-gray-90 whitespace-nowrap">{(item.effectivePrice ?? item.product.newPrice)} {t('Product.currencyUah')}</div>
           )}
 
         </div>
@@ -66,7 +71,7 @@ export default function CartPageItem({item}: {item: CartItem}) {
               onClick={() => {
                 setQuantity(prevQuantity => {
                   if(prevQuantity > 1) {
-                    debouncedUpdateQuantity(item.product._id, prevQuantity - 1)
+                    debouncedUpdateQuantity(item.product._id, prevQuantity - 1, item.variantSku ?? null)
                     return prevQuantity - 1;
                   }
                   return prevQuantity;
@@ -81,7 +86,7 @@ export default function CartPageItem({item}: {item: CartItem}) {
               type="button"
               onClick={() => {
                 setQuantity(prevQuantity => {
-                  debouncedUpdateQuantity(item.product._id, prevQuantity + 1)
+                  debouncedUpdateQuantity(item.product._id, prevQuantity + 1, item.variantSku ?? null)
                   return prevQuantity + 1;
                 })
               }}
@@ -92,18 +97,18 @@ export default function CartPageItem({item}: {item: CartItem}) {
         </div>
         <div
           className="flex justify-center flex-wrap items-center text-center gap-1 max-lg:justify-end max-lg:items-end max-lg:flex-col max-lg:order-6">
-          {item.product.oldPrice ? (
+          {(item.effectiveOldPrice ?? item.product.oldPrice) ? (
             <>
               <div
                 className="caption1 text-gray-30 whitespace-nowrap line-through js--cart-item-price-old">
-                {item.product.oldPrice * quantity} {t('Product.currencyUah')}
+                {(item.effectiveOldPrice ?? item.product.oldPrice) * quantity} {t('Product.currencyUah')}
               </div>
               <div className="caption1 whitespace-nowrap js--cart-item-price text-semantic-red ">
-                {item.product.newPrice  * quantity} {t('Product.currencyUah')}
+                {(item.effectivePrice ?? item.product.newPrice)  * quantity} {t('Product.currencyUah')}
               </div>
             </>
           ) : (
-            <div className="caption1 text-gray-90 whitespace-nowrap">{item.product.newPrice * quantity} {t('Product.currencyUah')}</div>
+            <div className="caption1 text-gray-90 whitespace-nowrap">{(item.effectivePrice ?? item.product.newPrice) * quantity} {t('Product.currencyUah')}</div>
           )}
         </div>
 
@@ -112,7 +117,7 @@ export default function CartPageItem({item}: {item: CartItem}) {
           <button
             type="button"
             className="button-main icon-button small bg-white"
-            onClick={() => removeItemFromCart(item.product._id)}
+            onClick={() => removeItemFromCart(item.product._id, item.variantSku ?? null)}
           ><i className="icon icon-x"></i>
           </button>
         </div>

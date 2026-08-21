@@ -24,6 +24,9 @@ export default function CartPopupItem({item}: {item: CartItem}) {
         </div>
         <div className="flex flex-col h-[80px] justify-between items-start">
           <div className="heading6 text-black line-clamp-2">{item.product.translations[0].title}</div>
+          {item.variantName && (
+            <div className="caption1 text-gray-80">{item.variantName}</div>
+          )}
           <div className="secondary-body text-gray-30 mt-2">{item.quantity}&nbsp;{t('Cart.itemsCountLabel')}</div>
         </div>
       </Link>
@@ -31,12 +34,12 @@ export default function CartPopupItem({item}: {item: CartItem}) {
       <div className="flex flex-col justify-between items-end h-[80px]">
         <button type="button"
                 className="button-main icon-button small bg-white swiper-no-swiping"
-                onClick={() => removeItemFromCart(item.product._id)}
+                onClick={() => removeItemFromCart(item.product._id, item.variantSku ?? null)}
         ><i className="icon icon-x"></i>
         </button>
 
         <div className="caption1 text-gray-90 whitespace-nowrap">
-          {item.product.newPrice} {t('Product.currencyUah')}
+          {(item.effectivePrice ?? item.product.newPrice)} {t('Product.currencyUah')}
         </div>
       </div>
     </div>

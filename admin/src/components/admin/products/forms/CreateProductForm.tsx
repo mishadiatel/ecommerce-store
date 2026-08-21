@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { z } from 'zod';
 import { useFieldArray, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -12,6 +12,9 @@ import { Button } from '@/components/admin/shadcnuiComponents/button';
 import FileInput from '@/components/admin/ui/fileInput';
 import { createProduct } from '@/services/product';
 import GroupSelect from '@/components/admin/ui/selectGroup';
+import VariantsEditor, {
+  ProductVariantInput,
+} from '@/components/admin/products/forms/VariantsEditor';
 
 interface CreateProductFormProps {
   updateProductsList: () => void;
@@ -58,6 +61,9 @@ export default function CreateProductForm({ updateProductsList, categoriesList }
     isVisible: z.boolean(),
     order: z.number({ error: tVal('required', { field: tFields('order') }) }),
   });
+  const [stock, setStock] = useState<number>(0);
+  const [outOfStock, setOutOfStock] = useState<boolean>(false);
+  const [variants, setVariants] = useState<ProductVariantInput[]>([]);
   type CreateProductData = z.infer<typeof createProductFormSchema>
 
   const {
@@ -88,10 +94,16 @@ export default function CreateProductForm({ updateProductsList, categoriesList }
 
 
   const onSubmit = (data: CreateProductData) => {
-    console.log(data);
+    if (variants.length > 0 && variants.some((v) => !v.sku.trim())) {
+      toast.error(t('toast.variantSkuRequired'));
+      return;
+    }
     createProduct({
       ...data,
-      images: data.images.filter(Boolean)
+      images: data.images.filter(Boolean),
+      stock,
+      outOfStock,
+      variants,
     })
       .then(result => {
         toast.success(t('toast.created'));
@@ -168,6 +180,16 @@ export default function CreateProductForm({ updateProductsList, categoriesList }
           <CheckboxInput control={control} name={'isOnePlusOne'} label={tFields('isOnePlusOne')} />
           <CheckboxInput control={control} name={'isVisible'} label={tFields('isVisible')} />
         </div>
+
+        <VariantsEditor
+          stock={stock}
+          onStockChange={setStock}
+          outOfStock={outOfStock}
+          onOutOfStockChange={setOutOfStock}
+          variants={variants}
+          onVariantsChange={setVariants}
+        />
+
         <DialogFooter className="flex-col sm:flex-row gap-2">
           <DialogClose asChild>
             <Button variant="outline" ref={closeRef} className="w-full sm:w-auto">{tCommon('cancel')}</Button>

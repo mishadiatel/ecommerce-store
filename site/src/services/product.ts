@@ -15,6 +15,9 @@ export interface GetProductsParams {
   category?: string;
   sortBy?: string;
   sortOrder?: string;
+  minPrice?: number | string;
+  maxPrice?: number | string;
+  inStockOnly?: boolean;
 }
 
 export async function getPublicProducts(searchParams: GetProductsParams, cache = false): Promise<GetItemsResponse<FullProductWithTranslations>> {
@@ -30,6 +33,9 @@ export async function getPublicProducts(searchParams: GetProductsParams, cache =
     category,
     sortBy,
     sortOrder,
+    minPrice,
+    maxPrice,
+    inStockOnly,
   } = searchParams;
 
   const params = new URLSearchParams();
@@ -48,6 +54,10 @@ export async function getPublicProducts(searchParams: GetProductsParams, cache =
   if (category) params.set('category', category);
   if (sortBy) params.set('sortBy', sortBy);
   if (sortOrder) params.set('sortOrder', sortOrder);
+
+  if (minPrice !== undefined && minPrice !== '') params.set('minPrice', String(minPrice));
+  if (maxPrice !== undefined && maxPrice !== '') params.set('maxPrice', String(maxPrice));
+  if (inStockOnly) params.set('inStockOnly', 'true');
 
   const requestOptions: RequestInit & {
     next?: {

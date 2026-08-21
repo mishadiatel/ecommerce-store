@@ -18,14 +18,15 @@ export default function ProductCard({ product }: { product: FullProductWithTrans
   const t = useTranslations('Product');
   const router = useRouter();
   const addToCart = useCartStore(s => s.add);
+  const isOutOfStock = product.outOfStock === true;
   return (
     <div
-      className="product-item grid-type"
+      className={`product-item grid-type ${isOutOfStock ? 'is-out-of-stock' : ''}`}
       onClick={() => router.push(`/product/${product.slug}`)}
     >
       <div className="product-main cursor-pointer block">
         <div
-          className="product-thumb bg-extra-light-gray bg-christmas relative overflow-hidden rounded-xl flex items-center justify-center w-full aspect-[296/400]">
+          className={`product-thumb bg-extra-light-gray bg-christmas relative overflow-hidden rounded-xl flex items-center justify-center w-full aspect-[296/400] ${isOutOfStock ? 'opacity-60' : ''}`}>
          <ProductBages product={product} />
           <div className="list-action-right absolute top-3 right-3 z-[2]">
                 <button
@@ -48,24 +49,31 @@ export default function ProductCard({ product }: { product: FullProductWithTrans
                 <Image
                   src={generateFileUrl(product.cardImage)}
                   alt={product.translations[0].title}
-                  className="duration-700"
+                  className={`duration-700 ${isOutOfStock ? 'grayscale' : ''}`}
                   width={296}
                   height={400}
                 />
               )}
-              {product.isLimited && (
+              {product.isLimited && !isOutOfStock && (
                 <div
                   className="bg-semantic-orange absolute bottom-0 w-full flex items-center justify-center text-white text-[14px] leading-[17px] lg:text-[16px] lg:leading-[19px] p-[5px] font-bold min-h-[27px] sm:min-h-[40px]">
                   {t('limitedText')}
                 </div>
               )}
 
+              {isOutOfStock && (
+                <div className="absolute inset-0 flex items-center justify-center z-[3] pointer-events-none">
+                  <div className="bg-black/70 text-white px-4 py-2 rounded-md text-xs sm:text-sm lg:text-base font-bold uppercase text-center">
+                    {t('outOfStock')}
+                  </div>
+                </div>
+              )}
             </div>
 
 
 
         </div>
-        <div className="product-infor mt-3 lg:mt-4 ">
+        <div className={`product-infor mt-3 lg:mt-4 ${isOutOfStock ? 'opacity-60' : ''}`}>
           {product.translations[0].title && (
             <Link href={`/product/${product.slug}`}
                   className="product-name duration-300 text-black line-clamp-2 text-base sm:text-lg lg:text-[22px] min-h-[48px] lg:min-h-[56px]">
@@ -91,10 +99,17 @@ export default function ProductCard({ product }: { product: FullProductWithTrans
 
             <button
               type="button"
-              className="button-main bg-gray icon-button middle"
+              disabled={product.outOfStock === true}
+              className="button-main bg-gray icon-button middle disabled:opacity-50 disabled:cursor-not-allowed"
               onClick={(event) => {
                 event.stopPropagation();
-                addToCart(product._id, 1)
+                if (product.outOfStock === true) return;
+                // Якщо у товара є варіанти — просимо обрати варіант на детальній
+                if (product.variants && product.variants.length > 0) {
+                  router.push(`/product/${product.slug}`);
+                  return;
+                }
+                addToCart(product._id, 1);
               }}
             >
               <i className="icon icon-shopping-cart"></i>

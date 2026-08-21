@@ -84,6 +84,11 @@ export class CartController {
   @ApiResponse({ status: 400, description: 'Некоректні вхідні дані' })
   @ApiResponse({ status: 404, description: 'Товар або кошик не знайдено' })
   remove(@Query() dto: RemoveFromCartDto, @CurrentUser() user: JwtUser | null) {
-    return this.cartService.removeItem(user, dto.productId, dto.guestId);
+    return this.cartService.removeItem(
+      user,
+      dto.productId,
+      dto.guestId,
+      dto.variantSku ?? null,
+    );
   }
 }

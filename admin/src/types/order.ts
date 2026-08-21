@@ -24,6 +24,8 @@ export interface OrderItem {
   price: number;
   oldPrice: number;
   quantity: number;
+  variantSku?: string | null;
+  variantName?: string;
 }
 
 export interface Order {

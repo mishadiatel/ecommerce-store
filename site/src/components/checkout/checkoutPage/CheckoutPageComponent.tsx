@@ -22,7 +22,7 @@ import { isValidPhoneNumber } from 'libphonenumber-js';
 import { createOrder, validatePromoCode, ValidatePromoCodeResponse } from '@/services/order';
 import { guestCart } from '@/stores/guestCart';
 import { toast } from 'react-toastify';
-import { redirectToLiqPay } from '@/lib/liqpayRedirect';
+import { redirectToLiqPay, openLiqPayInNewWindow } from '@/lib/liqpayRedirect';
 import { useModalStore } from '@/stores/useModalStore';
 import axios from 'axios';
 
@@ -284,10 +284,17 @@ export default function CheckoutPageComponent({ pageInfo }: { pageInfo: Page }) 
 
       await loadCart();
 
-      // ─── Онлайн-оплата → редирект на LiqPay ─────────────────────────────
+      // ─── Онлайн-оплата → LiqPay у новій вкладці + result-сторінка тут ───
       if (createdOrder.liqpay) {
         toast.info(t('Checkout.redirectingToPayment'));
-        redirectToLiqPay(createdOrder.liqpay);
+        const opened = openLiqPayInNewWindow(createdOrder.liqpay);
+        // Одразу переводимо поточну вкладку на result-сторінку, яка полить
+        // статус і автоматично покаже success, коли LiqPay підтвердить оплату.
+        router.push(`/checkout/result?orderId=${createdOrder.orderNumber}`);
+        // Якщо popup заблоковано — робимо звичайний top-level redirect.
+        if (!opened) {
+          redirectToLiqPay(createdOrder.liqpay);
+        }
         return;
       }
 

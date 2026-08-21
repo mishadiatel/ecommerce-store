@@ -177,6 +177,11 @@ export default function OrderDetailsModal({ open }: OrderDetailsModalProps) {
                         <div className="font-medium break-words">
                           {item.name}
                         </div>
+                        {item.variantName && (
+                          <div className="text-xs text-gray-80 mt-0.5">
+                            {item.variantName}
+                          </div>
+                        )}
                         <div className="text-xs text-gray-90 mt-1">
                           {t('Account.orders.fields.quantity')}:{' '}
                           {item.quantity}

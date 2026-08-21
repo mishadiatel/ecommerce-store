@@ -14,6 +14,9 @@ import { FullProductWithTranslations, Product, ProductTranslation } from '@/type
 import GroupSelect from '@/components/admin/ui/selectGroup';
 import { updateProduct } from '@/services/product';
 import ProductTranslationForm from '@/components/admin/products/forms/ProductTranslationForm';
+import VariantsEditor, {
+  ProductVariantInput,
+} from '@/components/admin/products/forms/VariantsEditor';
 
 interface UpdateProductFormProps {
   updateProductsList: () => void;
@@ -62,6 +65,20 @@ export default function UpdateProductForm({updateProductsList, product, categori
     order: z.number({ error: tVal('required', { field: tFields('order') }) }),
   });
   const [translations, setTranslations] = useState<Array<ProductTranslation | null>>(product.translations || []);
+  const [stock, setStock] = useState<number>(product.stock ?? 0);
+  const [outOfStock, setOutOfStock] = useState<boolean>(product.outOfStock === true);
+  const [variants, setVariants] = useState<ProductVariantInput[]>(
+    (product.variants ?? []).map((v) => ({
+      sku: v.sku,
+      name: v.name,
+      attributes: v.attributes ?? [],
+      newPrice: v.newPrice,
+      oldPrice: v.oldPrice,
+      stock: v.stock,
+      outOfStock: v.outOfStock === true,
+      isActive: v.isActive !== false,
+    })),
+  );
   type CreateProductData = z.infer<typeof updateProductFormSchema>
 
   const {
@@ -94,9 +111,17 @@ export default function UpdateProductForm({updateProductsList, product, categori
   });
 
   const onSubmit = (data: CreateProductData) => {
+    // Валідація: якщо є варіанти — усі мають мати SKU
+    if (variants.length > 0 && variants.some((v) => !v.sku.trim())) {
+      toast.error(t('toast.variantSkuRequired'));
+      return;
+    }
     updateProduct(product._id, {
       ...data,
-      images: data.images.filter(Boolean)
+      images: data.images.filter(Boolean),
+      stock,
+      outOfStock,
+      variants,
     })
       .then(data => {
         toast.success(t('toast.updated'));
@@ -183,6 +208,15 @@ export default function UpdateProductForm({updateProductsList, product, categori
           <CheckboxInput control={control} name={'isOnePlusOne'} label={tFields('isOnePlusOne')} />
           <CheckboxInput control={control} name={'isVisible'} label={tFields('isVisible')} />
         </div>
+
+        <VariantsEditor
+          stock={stock}
+          onStockChange={setStock}
+          outOfStock={outOfStock}
+          onOutOfStockChange={setOutOfStock}
+          variants={variants}
+          onVariantsChange={setVariants}
+        />
 
 
         <div className={'w-full sm:w-fit'}>

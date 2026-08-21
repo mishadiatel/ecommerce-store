@@ -1,5 +1,5 @@
-import { IsMongoId, IsNumber, Min } from 'class-validator';
-import { ApiProperty } from '@nestjs/swagger';
+import { IsMongoId, IsNumber, IsOptional, IsString, Min } from 'class-validator';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { GuestCartDto } from './guest-cart.dto';
 
 export class UpdateCartQtyDto extends GuestCartDto {
@@ -18,4 +18,10 @@ export class UpdateCartQtyDto extends GuestCartDto {
   @IsNumber()
   @Min(1)
   quantity: number;
+
+  @ApiPropertyOptional({
+    description: 'SKU варіанта (якщо позиція корзини з варіантом).',
+  })
+  @IsOptional() @IsString()
+  variantSku?: string;
 }

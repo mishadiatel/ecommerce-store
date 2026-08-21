@@ -5,9 +5,76 @@ import {
   IsNumber,
   IsOptional,
   IsString,
+  Min,
+  ValidateNested,
 } from 'class-validator';
+import { Type } from 'class-transformer';
 import { Types } from 'mongoose';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+
+export class VariantAttributeDto {
+  @ApiProperty({ description: 'Назва атрибута', example: 'Розмір' })
+  @IsString()
+  name: string;
+
+  @ApiProperty({ description: 'Значення атрибута', example: 'M' })
+  @IsString()
+  value: string;
+}
+
+export class ProductVariantDto {
+  @ApiProperty({ description: 'SKU варіанта', example: 'CAKE-CHOC-500G' })
+  @IsString()
+  sku: string;
+
+  @ApiPropertyOptional({
+    description: 'Ім\'я варіанта (для клієнта). Якщо порожнє — сформується з атрибутів.',
+    example: 'Червоний / M',
+  })
+  @IsOptional() @IsString()
+  name?: string;
+
+  @ApiPropertyOptional({
+    description: 'Атрибути варіанта (розмір, колір, вага і т.д.)',
+    type: () => VariantAttributeDto,
+    isArray: true,
+  })
+  @IsOptional()
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => VariantAttributeDto)
+  attributes?: VariantAttributeDto[];
+
+  @ApiProperty({ description: 'Актуальна ціна варіанта', example: 299 })
+  @IsNumber() @Min(0)
+  newPrice: number;
+
+  @ApiPropertyOptional({ description: 'Стара ціна варіанта', example: 349 })
+  @IsOptional() @IsNumber() @Min(0)
+  oldPrice?: number;
+
+  @ApiProperty({ description: 'Залишок варіанта (для показу на сайті)', example: 12 })
+  @IsNumber() @Min(0)
+  stock: number;
+
+  @ApiPropertyOptional({
+    description: 'Прапорець "немає в наявності". Якщо true — заборонено додавати в кошик.',
+    example: false,
+  })
+  @IsOptional() @IsBoolean()
+  outOfStock?: boolean;
+
+  @ApiPropertyOptional({ description: 'Чи активний варіант', example: true })
+  @IsOptional() @IsBoolean()
+  isActive?: boolean;
+
+  @ApiPropertyOptional({
+    description: 'Опціональне окреме зображення варіанта.',
+    example: '/files/uploads/red-m.jpg',
+  })
+  @IsOptional() @IsString()
+  image?: string;
+}
 
 export class CreateProductDto {
   @ApiProperty({
@@ -121,6 +188,32 @@ export class CreateProductDto {
   @IsNumber()
   @IsOptional()
   order: number;
+
+  @ApiPropertyOptional({
+    description:
+      'Залишок товару БЕЗ варіантів. Інформаційне поле, показується на сайті якщо > 0.',
+    example: 100,
+  })
+  @IsOptional() @IsNumber() @Min(0)
+  stock?: number;
+
+  @ApiPropertyOptional({
+    description: 'Прапорець "немає в наявності" для товара без варіантів.',
+    example: false,
+  })
+  @IsOptional() @IsBoolean()
+  outOfStock?: boolean;
+
+  @ApiPropertyOptional({
+    description: 'Варіанти товару (розмір, колір, вага). Кожен — свій SKU/ціна/stock.',
+    type: () => ProductVariantDto,
+    isArray: true,
+  })
+  @IsOptional()
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => ProductVariantDto)
+  variants?: ProductVariantDto[];
 }
 
 export class CreateProductTranslationDto {

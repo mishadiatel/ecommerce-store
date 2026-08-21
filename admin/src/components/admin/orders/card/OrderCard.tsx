@@ -225,7 +225,12 @@ export default function OrderCard({ order, updateOrdersList }: OrderCardProps) {
                 <div className={'flex flex-col gap-1'}>
                   {order.items.map((item, idx) => (
                     <div key={`${item.productId}-${idx}`} className={'flex justify-between gap-2 border-b border-border pb-1'}>
-                      <div>{item.name}</div>
+                      <div className={'flex flex-col'}>
+                        <span>{item.name}</span>
+                        {item.variantName && (
+                          <span className={'text-xs text-muted-foreground'}>{item.variantName}</span>
+                        )}
+                      </div>
                       <div className={'whitespace-nowrap'}>
                         {item.quantity} × {item.price} ₴
                         {item.oldPrice > item.price && (

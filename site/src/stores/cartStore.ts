@@ -12,9 +12,17 @@ interface CartState {
   isLoading: boolean;
   setLocale: (locale: string) => void;
   load: () => Promise<void>;
-  add: (productId: string, quantity: number) => Promise<void>;
-  update: (productId: string, quantity: number) => Promise<void>;
-  remove: (productId: string) => Promise<void>;
+  add: (
+    productId: string,
+    quantity: number,
+    variantSku?: string | null,
+  ) => Promise<void>;
+  update: (
+    productId: string,
+    quantity: number,
+    variantSku?: string | null,
+  ) => Promise<void>;
+  remove: (productId: string, variantSku?: string | null) => Promise<void>;
 }
 
 export const useCartStore = create<CartState>()(
@@ -38,7 +46,7 @@ export const useCartStore = create<CartState>()(
       set({ cart: data, isLoading: false });
     },
 
-    async add(productId: string, quantity: number) {
+    async add(productId, quantity, variantSku = null) {
       const { isAuth } = useAuthStore.getState();
       const guestId = !isAuth ? guestCart.get() : undefined;
 
@@ -46,13 +54,14 @@ export const useCartStore = create<CartState>()(
         productId,
         quantity,
         guestId,
+        variantSku,
       }, get().locale);
 
       set({ cart: data });
       useModalStore.getState().openModal('cart')
     },
 
-    async update(productId: string, quantity: number) {
+    async update(productId, quantity, variantSku = null) {
       const { isAuth } = useAuthStore.getState();
       const guestId = !isAuth ? guestCart.get() : undefined;
 
@@ -60,18 +69,20 @@ export const useCartStore = create<CartState>()(
         productId,
         quantity,
         guestId,
+        variantSku,
       }, get().locale);
 
       set({ cart: data });
     },
 
-    async remove(productId: string) {
+    async remove(productId, variantSku = null) {
       const { isAuth } = useAuthStore.getState();
       const guestId = !isAuth ? guestCart.get() : undefined;
 
       const data = await removeFromCart({
         productId,
         guestId,
+        variantSku,
       }, get().locale);
 
       set({ cart: data });

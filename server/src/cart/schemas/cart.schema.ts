@@ -16,6 +16,13 @@ export class CartItem {
     min: 1,
   })
   quantity: number;
+
+  /**
+   * SKU обраного варіанта. Якщо у товара немає варіантів — null.
+   * Разом з productId утворює унікальний ключ рядка корзини.
+   */
+  @Prop({ type: String, default: null })
+  variantSku: string | null;
 }
 
 export type CartDocument = HydratedDocument<Cart>;

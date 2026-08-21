@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
+import { ScheduleModule } from '@nestjs/schedule';
 import {
   AcceptLanguageResolver,
   HeaderResolver,
@@ -45,6 +46,7 @@ import { CampaignsModule } from './campaigns/campaigns.module';
       isGlobal: true,
       envFilePath: `.${process.env.NODE_ENV}.env`,
     }),
+    ScheduleModule.forRoot(),
     I18nModule.forRoot({
       fallbackLanguage: 'ua',
       loaderOptions: {

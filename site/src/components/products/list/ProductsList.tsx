@@ -35,6 +35,43 @@ export default function ProductsList({ searchData, currentCategory }: ProductsLi
   const isInitialMount = useRef(true);
   const categories = useCategories();
 
+  // ── Локальний стан фільтрів ───────────────────────────
+  const [minPrice, setMinPrice] = useState<string>(pageParams.get('minPrice') || '');
+  const [maxPrice, setMaxPrice] = useState<string>(pageParams.get('maxPrice') || '');
+  const [inStockOnly, setInStockOnly] = useState<boolean>(pageParams.get('inStockOnly') === 'true');
+  const [isNewOnly, setIsNewOnly] = useState<boolean>(pageParams.get('isNew') === 'true');
+  const [isOnSaleOnly, setIsOnSaleOnly] = useState<boolean>(pageParams.get('isOnSale') === 'true');
+  const [isLimitedOnly, setIsLimitedOnly] = useState<boolean>(pageParams.get('isLimited') === 'true');
+
+  const applyFilters = () => {
+    const params = new URLSearchParams(searchParams.toString());
+    const setOrDel = (key: string, val: string | boolean | undefined) => {
+      if (val === undefined || val === '' || val === false) params.delete(key);
+      else params.set(key, val === true ? 'true' : String(val));
+    };
+    setOrDel('minPrice', minPrice);
+    setOrDel('maxPrice', maxPrice);
+    setOrDel('inStockOnly', inStockOnly);
+    setOrDel('isNew', isNewOnly);
+    setOrDel('isOnSale', isOnSaleOnly);
+    setOrDel('isLimited', isLimitedOnly);
+    router.push(`?${params.toString()}`, { scroll: false });
+    setIsOpenMobileFilters(false);
+  };
+
+  const resetFilters = () => {
+    setMinPrice('');
+    setMaxPrice('');
+    setInStockOnly(false);
+    setIsNewOnly(false);
+    setIsOnSaleOnly(false);
+    setIsLimitedOnly(false);
+    const params = new URLSearchParams(searchParams.toString());
+    ['minPrice', 'maxPrice', 'inStockOnly', 'isNew', 'isOnSale', 'isLimited'].forEach(k => params.delete(k));
+    router.push(`?${params.toString()}`, { scroll: false });
+    setIsOpenMobileFilters(false);
+  };
+
   const sortOptions = [
     {
       id: 'default',
@@ -81,6 +118,12 @@ export default function ProductsList({ searchData, currentCategory }: ProductsLi
         lang: String(params.locale),
         sortBy,
         sortOrder,
+        minPrice: searchParams.get('minPrice') || undefined,
+        maxPrice: searchParams.get('maxPrice') || undefined,
+        inStockOnly: searchParams.get('inStockOnly') === 'true',
+        isNew: searchParams.get('isNew') === 'true' || undefined,
+        isOnSale: searchParams.get('isOnSale') === 'true' || undefined,
+        isLimited: searchParams.get('isLimited') === 'true' || undefined,
       });
 
       setProductsList(data.data);
@@ -134,6 +177,12 @@ export default function ProductsList({ searchData, currentCategory }: ProductsLi
           lang: String(params.locale),
           sortBy: pageSortBy,
           sortOrder: pageSortOrder,
+          minPrice: searchParams.get('minPrice') || undefined,
+          maxPrice: searchParams.get('maxPrice') || undefined,
+          inStockOnly: searchParams.get('inStockOnly') === 'true',
+          isNew: searchParams.get('isNew') === 'true' || undefined,
+          isOnSale: searchParams.get('isOnSale') === 'true' || undefined,
+          isLimited: searchParams.get('isLimited') === 'true' || undefined,
         });
         setTotalDocuments(data.totalDocuments);
         setTotalPages(data.totalPages);
@@ -286,13 +335,126 @@ export default function ProductsList({ searchData, currentCategory }: ProductsLi
                   )}
                 </Dropdown>
 
+                {/* ── Ціна ─────────────────────────────────── */}
+                <Dropdown
+                  options={[]}
+                  initialOpenState={true}
+                  dropdownContainerClass={'mb-4'}
+                  disableAutoClose={true}
+                >
+                  {({ isOpen, toggle }) => (
+                    <div className={`filter-dropdown ${isOpen ? 'open' : ''}`}>
+                      <div className="flex justify-between items-center cursor-pointer" onClick={toggle}>
+                        <div className="text-black text-xl">{t('priceRangeTitle')}</div>
+                        <div className="dropdown-icon">
+                          <i className="icon icon-plus"></i>
+                          <i className="icon icon-minus"></i>
+                        </div>
+                      </div>
+                      <div className="filter-dropdown-content mt-4">
+                        <div className="flex items-center gap-2">
+                          <input
+                            type="number"
+                            min={0}
+                            placeholder={t('priceFromPlaceholder')}
+                            className="input w-full"
+                            value={minPrice}
+                            onChange={(e) => setMinPrice(e.target.value)}
+                          />
+                          <span className="text-gray-30">—</span>
+                          <input
+                            type="number"
+                            min={0}
+                            placeholder={t('priceToPlaceholder')}
+                            className="input w-full"
+                            value={maxPrice}
+                            onChange={(e) => setMaxPrice(e.target.value)}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </Dropdown>
 
+                {/* ── Наявність + прапорці ─────────────────── */}
+                <Dropdown
+                  options={[]}
+                  initialOpenState={true}
+                  dropdownContainerClass={'mb-4'}
+                  disableAutoClose={true}
+                >
+                  {({ isOpen, toggle }) => (
+                    <div className={`filter-dropdown ${isOpen ? 'open' : ''}`}>
+                      <div className="flex justify-between items-center cursor-pointer" onClick={toggle}>
+                        <div className="text-black text-xl">{t('availabilityTitle')}</div>
+                        <div className="dropdown-icon">
+                          <i className="icon icon-plus"></i>
+                          <i className="icon icon-minus"></i>
+                        </div>
+                      </div>
+                      <div className="filter-dropdown-content mt-4">
+                        <div className="flex flex-col gap-3">
+                          <label className="flex items-center gap-2 cursor-pointer">
+                            <input
+                              type="checkbox"
+                              checked={inStockOnly}
+                              onChange={(e) => setInStockOnly(e.target.checked)}
+                            />
+                            <span>{t('inStockOnlyLabel')}</span>
+                          </label>
+                          <label className="flex items-center gap-2 cursor-pointer">
+                            <input
+                              type="checkbox"
+                              checked={isOnSaleOnly}
+                              onChange={(e) => setIsOnSaleOnly(e.target.checked)}
+                            />
+                            <span>{t('onSaleOnlyLabel')}</span>
+                          </label>
+                          <label className="flex items-center gap-2 cursor-pointer">
+                            <input
+                              type="checkbox"
+                              checked={isNewOnly}
+                              onChange={(e) => setIsNewOnly(e.target.checked)}
+                            />
+                            <span>{t('newOnlyLabel')}</span>
+                          </label>
+                          <label className="flex items-center gap-2 cursor-pointer">
+                            <input
+                              type="checkbox"
+                              checked={isLimitedOnly}
+                              onChange={(e) => setIsLimitedOnly(e.target.checked)}
+                            />
+                            <span>{t('limitedOnlyLabel')}</span>
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </Dropdown>
+
+                {/* ── Apply / Reset (desktop) ──────────────── */}
+                <div className="hidden lg:flex flex-col gap-2 mt-4">
+                  <button
+                    type="button"
+                    className="button-main w-full"
+                    onClick={applyFilters}
+                  >
+                    {t('applyButtonText')}
+                  </button>
+                  <button
+                    type="button"
+                    className="button-main bordered w-full"
+                    onClick={resetFilters}
+                  >
+                    {t('deselectButtonText')}
+                  </button>
+                </div>
               </div>
               <div className="fixed bottom-0 left-0 right-0 lg:hidden">
                 <div className="container py-5 flex gap-4 sm:gap-6 bg-white border-t border-t-gray-20">
                   <button type="button"
                           className="button-main bordered flex-grow !min-w-0 !p-4 w-1/2"
-                          onClick={() => setIsOpenMobileFilters(false)}
+                          onClick={resetFilters}
                   >
                     {t('deselectButtonText')}
                   </button>
@@ -300,7 +462,7 @@ export default function ProductsList({ searchData, currentCategory }: ProductsLi
                   <button
                     type="button"
                     className="button-main flex-grow !min-w-0 !p-4 w-1/2"
-                    onClick={() => setIsOpenMobileFilters(false)}>
+                    onClick={applyFilters}>
                     {t('applyButtonText')}
                   </button>
                 </div>

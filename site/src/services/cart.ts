@@ -15,7 +15,7 @@ export const getCart = async (
 };
 
 export const addToCart = async (
-  payload: { productId: string; quantity: number; guestId?: string },
+  payload: { productId: string; quantity: number; guestId?: string; variantSku?: string | null },
   lang: string
 ): Promise<Cart> => {
   try {
@@ -28,7 +28,7 @@ export const addToCart = async (
 };
 
 export const updateCartQty = async (
-  payload: { productId: string; quantity: number; guestId?: string },
+  payload: { productId: string; quantity: number; guestId?: string; variantSku?: string | null },
   lang: string
 ): Promise<Cart> => {
   try {
@@ -41,7 +41,7 @@ export const updateCartQty = async (
 };
 
 export const removeFromCart = async (
-  payload: { productId: string; guestId?: string },
+  payload: { productId: string; guestId?: string; variantSku?: string | null },
   lang: string
 ): Promise<Cart> => {
   try {

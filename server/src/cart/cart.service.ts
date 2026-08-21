@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { JwtUser } from '../auth/interfaces/jwt-user.interface';
 import { AddToCartDto } from './dto/add-to-cart.dto';
 import { ProductService } from '../product/product.service';
@@ -7,6 +7,16 @@ import { Cart, CartDocument } from './schemas/cart.schema';
 import { Model, Types } from 'mongoose';
 import { UpdateCartQtyDto } from './dto/update-qty.dto';
 import { FullProductWithTranslations } from '../product/interface/product.interface';
+
+interface VariantSummary {
+  sku: string;
+  name: string;
+  newPrice: number;
+  oldPrice?: number;
+  stock: number;
+  outOfStock: boolean;
+  isActive: boolean;
+}
 
 @Injectable()
 export class CartService {
@@ -31,23 +41,75 @@ export class CartService {
     return cart;
   }
 
+  /** Знайти варіант у продукті за SKU. */
+  private findVariant(
+    product: FullProductWithTranslations,
+    sku: string | null,
+  ): VariantSummary | null {
+    if (!sku) return null;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const variants: any[] = (product as any).variants ?? [];
+    const v = variants.find((vv) => vv.sku === sku);
+    if (!v) return null;
+    return {
+      sku: v.sku,
+      name: v.name || v.attributes?.map((a: { value: string }) => a.value).join(' / ') || v.sku,
+      newPrice: v.newPrice,
+      oldPrice: v.oldPrice,
+      stock: v.stock ?? 0,
+      outOfStock: v.outOfStock === true,
+      isActive: v.isActive !== false,
+    };
+  }
+
+  /** Ефективна ціна/залишок з урахуванням варіанту. */
+  private effectivePriceAndStock(
+    product: FullProductWithTranslations,
+    variantSku: string | null,
+  ) {
+    const variant = this.findVariant(product, variantSku);
+    if (variant) {
+      return {
+        newPrice: variant.newPrice,
+        oldPrice: variant.oldPrice ?? variant.newPrice,
+        stock: variant.stock,
+        outOfStock: variant.outOfStock,
+        variantName: variant.name,
+        isActive: variant.isActive,
+      };
+    }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const rawProduct: any = product;
+    return {
+      newPrice: product.newPrice,
+      oldPrice: product.oldPrice ?? product.newPrice,
+      stock: rawProduct.stock ?? 0,
+      outOfStock: rawProduct.outOfStock === true,
+      variantName: '',
+      isActive: true,
+    };
+  }
+
   private calculateTotals(
-    items: Array<{ quantity: number; product: FullProductWithTranslations }>,
+    items: Array<{
+      quantity: number;
+      product: FullProductWithTranslations;
+      variantSku: string | null;
+    }>,
   ) {
     let subtotal = 0;
     let discount = 0;
 
     for (const i of items) {
-      const price = i.product.newPrice;
-      const old = i.product.oldPrice ?? price;
-
-      subtotal += old * i.quantity;
-      discount += (old - price) * i.quantity;
+      const { newPrice, oldPrice } = this.effectivePriceAndStock(
+        i.product,
+        i.variantSku,
+      );
+      subtotal += oldPrice * i.quantity;
+      discount += (oldPrice - newPrice) * i.quantity;
     }
 
-    const total = subtotal - discount;
-
-    return { subtotal, discount, total };
+    return { subtotal, discount, total: subtotal - discount };
   }
 
   async getCart(user: JwtUser | null, guestId: string | undefined) {
@@ -63,19 +125,29 @@ export class CartService {
     }
 
     const ids = cart.items.map((i) => i.productId.toString());
-    // console.log('ids', ids);
-
     const products =
       await this.productService.findPublicProductsByIdsArray(ids);
-    // console.log(products);
 
-    const items: Array<{
-      quantity: number;
-      product: FullProductWithTranslations;
-    }> = cart.items.map((i) => ({
-      product: products.find((p) => String(p._id) === i.productId.toString())!,
-      quantity: i.quantity,
-    }));
+    // Формуємо позиції корзини з підтягнутими даними продуктів + варіантів
+    const items = cart.items
+      .map((i) => {
+        const product = products.find(
+          (p) => String(p._id) === i.productId.toString(),
+        );
+        if (!product) return null;
+        const info = this.effectivePriceAndStock(product, i.variantSku ?? null);
+        return {
+          product,
+          variantSku: i.variantSku ?? null,
+          variantName: info.variantName,
+          effectivePrice: info.newPrice,
+          effectiveOldPrice: info.oldPrice,
+          availableStock: info.stock,
+          outOfStock: info.outOfStock,
+          quantity: i.quantity,
+        };
+      })
+      .filter((x): x is NonNullable<typeof x> => x !== null);
 
     const totals = this.calculateTotals(items);
 
@@ -88,8 +160,32 @@ export class CartService {
   async addItem(user: JwtUser | null, dto: AddToCartDto) {
     const cart = await this.findOrCreateCart(user, dto.guestId);
 
+    // Перевіряємо, чи товар потребує варіант
+    const [product] = await this.productService.findPublicProductsByIdsArray([
+      dto.productId,
+    ]);
+    if (!product) throw new BadRequestException('Product not found');
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const hasVariants = Array.isArray((product as any).variants) && (product as any).variants.length > 0;
+    if (hasVariants && !dto.variantSku) {
+      throw new BadRequestException('variantSku is required for this product');
+    }
+    if (hasVariants && !this.findVariant(product, dto.variantSku ?? null)) {
+      throw new BadRequestException('Variant not found');
+    }
+    const info = this.effectivePriceAndStock(product, dto.variantSku ?? null);
+
+    // Єдина перевірка — прапорець outOfStock. Кількість (stock) — суто
+    // інформаційне поле і не обмежує додавання в кошик.
+    if (info.outOfStock) {
+      throw new BadRequestException('Product is out of stock');
+    }
+
+    const variantSku = dto.variantSku ?? null;
     const index = cart.items.findIndex(
-      (i) => i.productId.toString() === dto.productId,
+      (i) =>
+        i.productId.toString() === dto.productId &&
+        (i.variantSku ?? null) === variantSku,
     );
 
     if (index >= 0) {
@@ -98,6 +194,7 @@ export class CartService {
       cart.items.push({
         productId: new Types.ObjectId(dto.productId),
         quantity: dto.quantity,
+        variantSku,
       });
     }
 
@@ -109,10 +206,12 @@ export class CartService {
   async updateQty(user: JwtUser | null, dto: UpdateCartQtyDto) {
     const cart = await this.findOrCreateCart(user, dto.guestId);
 
+    const variantSku = dto.variantSku ?? null;
     cart.items = cart.items
       .map((i) =>
-        i.productId.toString() === dto.productId
-          ? { ...i, quantity: dto.quantity }
+        i.productId.toString() === dto.productId &&
+        (i.variantSku ?? null) === variantSku
+          ? { ...i, quantity: dto.quantity, variantSku: i.variantSku ?? null }
           : i,
       )
       .filter((i) => i.quantity > 0);
@@ -126,10 +225,17 @@ export class CartService {
     user: JwtUser | null,
     productId: string,
     guestId: string | undefined,
+    variantSku?: string | null,
   ) {
     const cart = await this.findOrCreateCart(user, guestId);
+    const skuFilter = variantSku ?? null;
 
-    cart.items = cart.items.filter((i) => i.productId.toString() !== productId);
+    cart.items = cart.items.filter((i) => {
+      const same =
+        i.productId.toString() === productId &&
+        (i.variantSku ?? null) === skuFilter;
+      return !same;
+    });
 
     await cart.save();
 

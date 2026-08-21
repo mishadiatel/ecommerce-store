@@ -68,6 +68,8 @@ export interface MyOrderItem {
   price: number;
   oldPrice: number;
   quantity: number;
+  variantSku?: string | null;
+  variantName?: string;
 }
 
 export interface MyOrder {

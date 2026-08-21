@@ -28,9 +28,36 @@ export default function ProductPage({ sameCategoryProducts, productInfo }: Produ
     s => s.ids.includes(productInfo._id)
   );
   const addToCart = useCartStore(s => s.add);
-  const isAddedToCart = Boolean(useCartStore(s => s.cart?.items.find(el => el.product._id === productInfo._id)))
   const t = useTranslations('Product');
   const [count, setCount] = useState(1);
+
+  // ── Варіанти ────────────────────────────────────────────────
+  const variants = (productInfo.variants ?? []).filter(v => v.isActive !== false);
+  const hasVariants = variants.length > 0;
+  const [selectedSku, setSelectedSku] = useState<string | null>(
+    hasVariants ? variants[0].sku : null,
+  );
+  const selectedVariant = hasVariants
+    ? variants.find(v => v.sku === selectedSku) ?? variants[0]
+    : null;
+
+  const displayPrice = selectedVariant?.newPrice ?? productInfo.newPrice;
+  const displayOldPrice = selectedVariant?.oldPrice ?? productInfo.oldPrice;
+  // Залишок (stock) — інформаційне поле: показуємо тільки якщо > 0.
+  const availableStock = selectedVariant
+    ? selectedVariant.stock
+    : (productInfo.stock ?? 0);
+  // Купівлю блокує ТІЛЬКИ прапорець outOfStock (керується адміном).
+  const outOfStock = selectedVariant
+    ? selectedVariant.outOfStock === true
+    : productInfo.outOfStock === true;
+
+  const isAddedToCart = Boolean(useCartStore(s =>
+    s.cart?.items.find(el =>
+      el.product._id === productInfo._id &&
+      (el.variantSku ?? null) === (selectedSku ?? null),
+    ),
+  ));
 
   return (
     <div className={'product-detail grouped style-grouped'}>
@@ -77,18 +104,18 @@ export default function ProductPage({ sameCategoryProducts, productInfo }: Produ
                   {t('priceLabel')}
                 </div>
                 <div>
-                  {productInfo.oldPrice ? (
+                  {displayOldPrice ? (
                     <>
                       <div className="product-price heading2 !text-semantic-red !font-medium inline-block">
-                        {Number(productInfo.newPrice) * count} {t('currencyUah')}
+                        {Number(displayPrice) * count} {t('currencyUah')}
                       </div>
                       <div className="product-origin-price inline-block heading3 !font-medium !text-gray-30 ml-2">
-                        <del>{Number(productInfo.oldPrice) * count} {t('currencyUah')}</del>
+                        <del>{Number(displayOldPrice) * count} {t('currencyUah')}</del>
                       </div>
                     </>
                   ) : (
                     <div className="product-price heading2 inline-block !text-gray-90">
-                      {Number(productInfo.newPrice) * count} {t('currencyUah')}
+                      {Number(displayPrice) * count} {t('currencyUah')}
                     </div>
                   )}
 
@@ -99,9 +126,58 @@ export default function ProductPage({ sameCategoryProducts, productInfo }: Produ
                   <div>
                     {t('countMessage', { count: count })}
                   </div>
-                  <div>{t('priceMessage', { price: `${productInfo.newPrice} ${t('currencyUah')}` })}</div>
+                  <div>{t('priceMessage', { price: `${displayPrice} ${t('currencyUah')}` })}</div>
                 </div>
               )}
+
+              {/* ── Варіанти ─────────────────────────────────── */}
+              {hasVariants && (
+                <div className="mt-4">
+                  <div className="heading6 mb-2">{t('variantLabel')}</div>
+                  <div className="flex flex-wrap gap-2">
+                    {variants.map((v) => {
+                      const isSelected = v.sku === selectedSku;
+                      const isDisabled = v.outOfStock === true;
+                      return (
+                        <button
+                          key={v.sku}
+                          type="button"
+                          disabled={isDisabled}
+                          onClick={() => {
+                            setSelectedSku(v.sku);
+                            setCount(1);
+                          }}
+                          className={[
+                            'px-4 py-2 rounded-full border text-sm transition-colors',
+                            isSelected
+                              ? 'bg-primary-green text-white border-primary-green'
+                              : 'bg-extra-light-gray border-transparent hover:border-primary-green',
+                            isDisabled ? 'opacity-40 cursor-not-allowed line-through' : '',
+                          ].join(' ')}
+                        >
+                          {v.name || v.attributes.map(a => a.value).join(' / ') || v.sku}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
+              {/* ── Наявність ────────────────────────────────── */}
+              {outOfStock ? (
+                <div className="mt-3 text-sm">
+                  <span className="text-semantic-red font-semibold">
+                    {t('outOfStock')}
+                  </span>
+                </div>
+              ) : availableStock > 0 ? (
+                <div className="mt-3 text-sm">
+                  <span className="text-primary-green font-semibold">
+                    {t('inStock', { count: availableStock })}
+                  </span>
+                </div>
+              ) : null}
+
               <div className="heading6 mt-4">
                 {t('countLabel')}
               </div>
@@ -133,8 +209,9 @@ export default function ProductPage({ sameCategoryProducts, productInfo }: Produ
                   <Link href={'/cart'} className={'button-main whitespace-nowrap w-full lg:w-fit text-center'}>{t('cartLinkText')}</Link>
                   ) : (
                   <button
-                    className="add-cart-btn button-main whitespace-nowrap w-full lg:w-fit text-center"
-                    onClick={() => addToCart(productInfo._id, count)}
+                    className="add-cart-btn button-main whitespace-nowrap w-full lg:w-fit text-center disabled:opacity-60 disabled:cursor-not-allowed"
+                    disabled={outOfStock}
+                    onClick={() => addToCart(productInfo._id, count, selectedSku)}
                   >
                     {t('cartButtonText')}
                   </button>

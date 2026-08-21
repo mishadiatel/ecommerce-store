@@ -293,6 +293,7 @@
     "notFound": "Products not found",
     "deleteDescription": "You will delete product {slug}",
     "toast": {
+      "variantSkuRequired": "Every variant must have a SKU",
       "created": "Successfully created product",
       "updated": "Successfully updated product",
       "deleted": "Successfully removed",
@@ -680,5 +681,28 @@
       "deleteError": "Failed to delete query",
       "loadError": "Failed to load list"
     }
+  },
+  "variantsEditor": {
+    "title": "Variants & stock",
+    "subtitle": "Add variants (size, color, weight). Stock is informational; only the \"Out of stock\" flag blocks purchasing.",
+    "productStockLabel": "Product stock",
+    "stockHint": "Shown on the site only if > 0. Does not limit the number of orders.",
+    "outOfStock": "Out of stock",
+    "outOfStockLabel": "Mark as \"out of stock\"",
+    "outOfStockHint": "If enabled — cannot be added to cart or ordered.",
+    "variantN": "Variant #{n}",
+    "sku": "SKU",
+    "displayName": "Variant name",
+    "displayNamePlaceholder": "Red / M (optional)",
+    "newPrice": "Price",
+    "oldPrice": "Old price",
+    "stock": "Stock",
+    "isActive": "Active",
+    "isActiveLabel": "Show to customers",
+    "attributes": "Attributes",
+    "attrName": "e.g. Size",
+    "attrValue": "e.g. M",
+    "addAttr": "Add attribute",
+    "addVariant": "Add variant"
   }
 }

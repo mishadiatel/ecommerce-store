@@ -19,18 +19,11 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Order, OrderDocument } from '../order/schema/order.schema';
 import {
-  OrderStatus,
   PaymentMethod,
   PaymentStatus,
 } from '../order/enum/order.enums';
 import { LiqPayService } from './liqpay/liqpay.service';
-import {
-  LiqPayCallbackPayload,
-  LIQPAY_FINAL_FAIL,
-  LIQPAY_FINAL_SUCCESS,
-} from './liqpay/liqpay.types';
-import { MailService } from '../mail/mail.service';
-import { TelegramService } from '../telegram/telegram.service';
+import { LiqPayReconcilerService } from './liqpay/liqpay-reconciler.service';
 
 @ApiTags('Payments')
 @Controller('payments/liqpay')
@@ -40,8 +33,7 @@ export class PaymentsController {
   constructor(
     @InjectModel(Order.name) private readonly orderModel: Model<OrderDocument>,
     private readonly liqpay: LiqPayService,
-    private readonly mailService: MailService,
-    private readonly telegramService: TelegramService,
+    private readonly reconciler: LiqPayReconcilerService,
   ) {}
 
   /** Client calls this to re-obtain LiqPay redirect params for a pending order */
@@ -49,7 +41,7 @@ export class PaymentsController {
   @ApiOperation({
     summary: 'Ініціалізувати LiqPay-платіж для замовлення',
     description:
-      'Повторно повертає параметри редіректу LiqPay (data + signature) для замовлення, яке ще не оплачено. Використовується сторінкою чекауту для запуску форми оплати LiqPay.',
+      'Повторно повертає параметри редіректу LiqPay (data + signature) для замовлення, яке ще не оплачено.',
   })
   @ApiResponse({ status: 201, description: 'Параметри LiqPay успішно згенеровано' })
   @ApiResponse({
@@ -81,12 +73,9 @@ export class PaymentsController {
   @ApiOperation({
     summary: 'Вебхук LiqPay (server-to-server)',
     description:
-      'Ендпоінт для серверних callback-запитів від LiqPay. Приймає тіло у форматі application/x-www-form-urlencoded з полями `data` (base64 JSON payload) та `signature`. Підпис перевіряється, обробка ідемпотентна: повторні виклики для вже оплачених замовлень не змінюють стан. Не викликається клієнтом.',
+      'Ендпоінт для серверних callback-запитів від LiqPay. Приймає application/x-www-form-urlencoded з `data` (base64 JSON) та `signature`. Ідемпотентний. Потребує щоб `API_PUBLIC_URL` був доступний з інтернету — інакше LiqPay callback не досягне сервера і треба покладатись на background poller.',
   })
-  @ApiResponse({
-    status: 200,
-    description: 'Callback оброблено. Повертає { ok: true } або { ok: false } — LiqPay завжди отримує HTTP 200',
-  })
+  @ApiResponse({ status: 200, description: 'Callback оброблено' })
   async callback(
     @Body('data') data: string,
     @Body('signature') signature: string,
@@ -112,28 +101,22 @@ export class PaymentsController {
       return { ok: false };
     }
 
-    await this.applyLiqPayPayload(order, payload);
+    await this.reconciler.apply(order, payload);
     return { ok: true };
   }
 
-  /**
-   * Polled by storefront /checkout/result page. If the order is still pending
-   * locally, we actively query LiqPay's status API and apply the result —
-   * this makes the flow work on LAN/localhost where LiqPay can't reach our
-   * webhook endpoint.
-   */
   @Get('status/:orderNumber')
   @ApiOperation({
     summary: 'Отримати актуальний статус оплати замовлення',
     description:
-      'Опитується сторінкою /checkout/result. Якщо замовлення досі в статусі PENDING — активно робить запит до status API LiqPay і застосовує результат. Це дозволяє працювати flow оплати в локальному середовищі, де LiqPay не може достукатись до нашого webhook.',
+      'Опитується сторінкою /checkout/result. Якщо замовлення досі PENDING — активно робить запит до LiqPay API і застосовує результат.',
   })
   @ApiParam({
     name: 'orderNumber',
     description: 'Номер замовлення',
     example: 'ORD-20260812-0001',
   })
-  @ApiResponse({ status: 200, description: 'Поточний статус оплати повернуто' })
+  @ApiResponse({ status: 200, description: 'Поточний статус оплати' })
   @ApiResponse({ status: 404, description: 'Замовлення не знайдено' })
   async status(@Param('orderNumber') orderNumber: string) {
     const order = await this.orderModel.findOne({ orderNumber });
@@ -145,7 +128,9 @@ export class PaymentsController {
     ) {
       const remote = await this.liqpay.queryRemoteStatus(orderNumber);
       if (remote && remote.status) {
-        await this.applyLiqPayPayload(order, remote);
+        // 'poll' — не позначаємо як FAILED тільки з polling'у,
+        // щоб не збити стан ще-неоплаченого замовлення
+        await this.reconciler.apply(order, remote, 'poll');
       }
     }
 
@@ -156,75 +141,5 @@ export class PaymentsController {
       liqpayStatus: order.liqpayStatus ?? null,
       isSandboxPayment: order.isSandboxPayment ?? false,
     };
-  }
-
-  /** Shared between webhook and active-poll paths. Idempotent. */
-  private async applyLiqPayPayload(
-    order: OrderDocument,
-    payload: LiqPayCallbackPayload,
-  ): Promise<void> {
-    // idempotent: already paid → just refresh mirrored fields and return
-    if (order.paymentStatus === PaymentStatus.PAID) {
-      return;
-    }
-
-    const previousStatus = order.liqpayStatus;
-
-    order.liqpayPaymentId = String(payload.payment_id ?? '');
-    order.liqpayTransactionId = String(payload.transaction_id ?? '');
-    order.liqpayStatus = payload.status;
-    order.isSandboxPayment =
-      payload.status === 'sandbox' || payload.sandbox === 1;
-
-    if (LIQPAY_FINAL_SUCCESS.includes(payload.status)) {
-      order.paymentStatus = PaymentStatus.PAID;
-      if (order.status === OrderStatus.PENDING) {
-        order.status = OrderStatus.PROCESSING;
-      }
-
-      this.logger.log(
-        `Order ${order.orderNumber} PAID (${payload.status}, amount=${payload.amount} ${payload.currency})`,
-      );
-
-      void this.telegramService
-        .sendMessage({
-          text:
-            `✅ <b>Замовлення оплачено</b>\n` +
-            `<b>№:</b> ${order.orderNumber}\n` +
-            `<b>Сума:</b> ${payload.amount ?? order.total} ${payload.currency ?? 'UAH'}\n` +
-            `<b>LiqPay:</b> ${payload.status}` +
-            (order.isSandboxPayment ? ' (sandbox)' : ''),
-        })
-        .catch((err: unknown) => {
-          this.logger.warn(
-            `Failed to send paid telegram: ${(err as Error).message}`,
-          );
-        });
-
-      if (order.email && previousStatus !== payload.status) {
-        void this.mailService
-          .sendOrderPaidEmail({
-            email: order.email,
-            orderNumber: order.orderNumber,
-            firstName: order.firstName,
-          })
-          .catch((err: unknown) => {
-            this.logger.warn(
-              `Failed to send paid email: ${(err as Error).message}`,
-            );
-          });
-      }
-    } else if (LIQPAY_FINAL_FAIL.includes(payload.status)) {
-      order.paymentStatus = PaymentStatus.FAILED;
-      this.logger.warn(
-        `Order ${order.orderNumber} payment FAILED: ${payload.status} ${payload.err_code ?? ''} ${payload.err_description ?? ''}`,
-      );
-    } else {
-      this.logger.log(
-        `Order ${order.orderNumber} intermediate status: ${payload.status}`,
-      );
-    }
-
-    await order.save();
   }
 }

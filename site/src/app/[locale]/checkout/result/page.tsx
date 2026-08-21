@@ -8,7 +8,7 @@ import {
   initLiqPayCheckout,
   PaymentStatusResponse,
 } from '@/services/order';
-import { redirectToLiqPay } from '@/lib/liqpayRedirect';
+import { openLiqPayInNewWindow, redirectToLiqPay } from '@/lib/liqpayRedirect';
 import { Link, useRouter } from '@/i18n/navigation';
 import Loader from '@/components/ui/loader/Loader';
 
@@ -33,7 +33,15 @@ export default function CheckoutResultPage() {
 
     let cancelled = false;
     let attempts = 0;
-    const maxAttempts = 20; // ≈ 40s of polling
+    // Полимо ~15 хв (450 × 2s) — покриває кейси коли користувач повільно
+    // вводить дані картки / підтверджує 3DS / переключається на банківський
+    // додаток. При досягненні ліміту залишаємось у pending-стані —
+    // користувач може оновити сторінку або спробувати оплатити знову.
+    const maxAttempts = 450;
+
+    // Одразу показуємо "pending" (чекаємо на оплату) а не порожній loading,
+    // щоб не було враження помилки на першу секунду.
+    setStatus('pending');
 
     const tick = async () => {
       attempts++;
@@ -43,7 +51,7 @@ export default function CheckoutResultPage() {
 
         setInfo(data);
 
-        // Cash on delivery — nothing to poll, show thank-you immediately.
+        // Cash on delivery — нічого не поллимо, одразу дякую-сторінка.
         if (data.paymentMethod === 'cash_on_delivery') {
           setStatus('cod');
           return;
@@ -58,17 +66,15 @@ export default function CheckoutResultPage() {
           return;
         }
 
-        // Online + pending → keep polling
-        setStatus('pending');
+        // Online + pending — продовжуємо полити.
         if (attempts < maxAttempts) {
           setTimeout(tick, 2000);
         }
       } catch (err) {
         console.error(err);
+        // Мережеві помилки — не збиваємо стан на "error", просто ретраїмо.
         if (attempts < maxAttempts && !cancelled) {
           setTimeout(tick, 2000);
-        } else if (!cancelled) {
-          setStatus('error');
         }
       }
     };
@@ -85,7 +91,15 @@ export default function CheckoutResultPage() {
     setRetrying(true);
     try {
       const params = await initLiqPayCheckout(orderId);
-      redirectToLiqPay(params);
+      // Відкриваємо у новому вікні, поточна вкладка продовжує полити статус
+      const opened = openLiqPayInNewWindow(params);
+      if (!opened) {
+        redirectToLiqPay(params);
+        return;
+      }
+      // Повертаємо статус на "pending" щоб UI знов почав опитування
+      setStatus('pending');
+      setRetrying(false);
     } catch (err) {
       console.error(err);
       setRetrying(false);
@@ -113,12 +127,21 @@ export default function CheckoutResultPage() {
         {status === 'pending' && (
           <div className="flex flex-col items-center gap-4">
             <Loader />
-            <p>{t('processingPayment')}</p>
+            <p className="max-w-md">{t('processingPayment')}</p>
             {orderId && (
               <p className="text-sm text-gray-500">
                 {t('orderNumberLabel')}: {orderId}
               </p>
             )}
+            <p className="text-sm text-gray-500">{t('pendingHint')}</p>
+            <button
+              type="button"
+              onClick={retryPayment}
+              disabled={retrying}
+              className="button-main-outline disabled:opacity-60"
+            >
+              {retrying ? t('redirectingToPayment') : t('retryPayment')}
+            </button>
           </div>
         )}
 

@@ -52,14 +52,16 @@ export class OrderService {
     cartItems: Array<{
       quantity: number;
       product: FullProductWithTranslations;
+      effectivePrice?: number;
+      effectiveOldPrice?: number;
     }>,
   ) {
     let subtotal = 0;
     let discount = 0;
 
     for (const i of cartItems) {
-      const price = i.product.newPrice;
-      const old = i.product.oldPrice ?? price;
+      const price = i.effectivePrice ?? i.product.newPrice;
+      const old = i.effectiveOldPrice ?? i.product.oldPrice ?? price;
 
       subtotal += old * i.quantity;
       discount += (old - price) * i.quantity;
@@ -122,13 +124,41 @@ export class OrderService {
     }
 
     // Маппінг позицій для збереження в БД
-    const items = cart.items.map((i) => ({
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const items = cart.items.map((i: any) => ({
       productId: i.product._id.toString(),
       name: this.getProductName(i.product),
-      price: i.product.newPrice,
-      oldPrice: i.product.oldPrice ?? i.product.newPrice,
+      price: i.effectivePrice ?? i.product.newPrice,
+      oldPrice: i.effectiveOldPrice ?? i.product.oldPrice ?? i.product.newPrice,
       quantity: i.quantity,
+      variantSku: i.variantSku ?? null,
+      variantName: i.variantName ?? '',
     }));
+
+    // ─── Перевірка наявності через прапорець outOfStock ───────────────
+    // Залишок (stock) — суто інформаційне поле і не декрементується.
+    // Забороняємо тільки замовлення позицій, які адмін явно позначив
+    // як "немає в наявності".
+    for (const i of items) {
+      const hasVariant = !!i.variantSku;
+      const filter = hasVariant
+        ? {
+            _id: new Types.ObjectId(i.productId),
+            'variants.sku': i.variantSku,
+            'variants.outOfStock': true,
+          }
+        : {
+            _id: new Types.ObjectId(i.productId),
+            outOfStock: true,
+          };
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const oosCount = await (this.orderModel.db.model('Product') as any).countDocuments(filter);
+      if (oosCount > 0) {
+        throw new BadRequestException(
+          `"${i.name}${i.variantName ? ` (${i.variantName})` : ''}" is out of stock`,
+        );
+      }
+    }
 
     const order = await this.orderModel.create({
       orderNumber: this.generateOrderNumber(),
@@ -760,6 +790,9 @@ export class OrderService {
     const previousStatus = order.status;
     order.status = status;
     await order.save();
+
+    // Залишки більше не декрементуються при створенні замовлення,
+    // тому і повертати нічого не треба при скасуванні.
 
     // Якщо статус реально змінився — шлемо нотифікації
     // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison

@@ -324,15 +324,41 @@ export class ProductService {
     }
     const sortOrder = query.sortOrder === 'desc' ? -1 : 1;
 
-    const match: {
-      isVisible?: boolean;
-      categoryId?: Types.ObjectId;
-    } = {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const match: any = {
       isVisible: true,
     };
 
     if (query.category) {
       match.categoryId = new Types.ObjectId(query.category);
+    }
+
+    // ── Ціна ─────────────────────────────────────
+    const minPrice = query.minPrice ? Number(query.minPrice) : NaN;
+    const maxPrice = query.maxPrice ? Number(query.maxPrice) : NaN;
+    if (Number.isFinite(minPrice) || Number.isFinite(maxPrice)) {
+      match.newPrice = {};
+      if (Number.isFinite(minPrice)) match.newPrice.$gte = minPrice;
+      if (Number.isFinite(maxPrice)) match.newPrice.$lte = maxPrice;
+    }
+
+    // ── Прапорці ────────────────────────────────
+    if (query.isNew === 'true') match.isNew = true;
+    if (query.isLimited === 'true') match.isLimited = true;
+    if (query.isOnSale === 'true') match.isOnSale = true;
+    if (query.isOnePlusOne === 'true') match.isOnePlusOne = true;
+
+    // ── Тільки в наявності ──────────────────────
+    if (query.inStockOnly === 'true') {
+      match.$and = [
+        ...(match.$and ?? []),
+        {
+          $or: [
+            { outOfStock: { $ne: true } },
+            { outOfStock: { $exists: false } },
+          ],
+        },
+      ];
     }
 
     const result: AggregateFinalResult<FullProductWithTranslations> =
