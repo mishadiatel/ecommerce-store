@@ -60,7 +60,9 @@
     "promoCodes": "Промокоди",
     "popularQueries": "Популярні запити",
     "contacts": "Контакти",
-    "feedbacks": "Заявки"
+    "feedbacks": "Заявки",
+    "subscribers": "Підписники",
+    "campaigns": "Розсилки"
   },
   "pages": {
     "dashboard": {
@@ -118,6 +120,14 @@
     "feedbacks": {
       "title": "Заявки",
       "subtitle": "Список усіх заявок з форм зворотного зв'язку."
+    },
+    "subscribers": {
+      "title": "Підписники",
+      "subtitle": "Список email-адрес, які підписались на розсилку."
+    },
+    "campaigns": {
+      "title": "Розсилки",
+      "subtitle": "Створення листів, тестова відправка та розсилка активним підписникам."
     }
   },
   "login": {
@@ -532,6 +542,67 @@
     "unknownProduct": "Товар недоступний",
     "ordersHistory": "Історія замовлень ({count})",
     "noOrders": "Замовлень немає"
+  },
+  "subscribersPage": {
+    "searchPlaceholder": "Пошук за email",
+    "statusPlaceholder": "Статус",
+    "allStatuses": "Усі",
+    "active": "Активні",
+    "inactive": "Відписані",
+    "unsubscribedBadge": "Відписаний",
+    "total": "Всього: {count}",
+    "empty": "Підписників не знайдено",
+    "deleteDescription": "Ви видалите підписника {email}",
+    "toast": {
+      "loadError": "Не вдалося завантажити підписників",
+      "deleted": "Підписника видалено",
+      "deleteError": "Не вдалося видалити"
+    }
+  },
+  "campaignsPage": {
+    "newTitle": "Новий лист розсилки",
+    "editingTitle": "Редагувати чернетку",
+    "newCampaign": "Новий лист",
+    "subjectLabel": "Тема листа",
+    "subjectPlaceholder": "Наприклад: Новинки місяця",
+    "htmlLabel": "HTML листа",
+    "htmlHint": "(вставте {{unsubscribeUrl}} — буде замінено на посилання відписки)",
+    "previewButton": "Превʼю",
+    "previewTitle": "Превʼю листа",
+    "previewDescription": "Тема: {subject}",
+    "saveDraftButton": "Зберегти як чернетку",
+    "testSendLabel": "Тестова відправка",
+    "testSendButton": "Надіслати тест",
+    "sendButton": "Надіслати підписникам",
+    "confirmSendTitle": "Надіслати листа всім активним підписникам?",
+    "confirmSendDescription": "Це відправить лист усім активним підписникам. Дію не можна відмінити.",
+    "historyTitle": "Історія розсилок",
+    "empty": "Ще немає жодної розсилки",
+    "edit": "Редагувати",
+    "viewOrClone": "Переглянути",
+    "progressText": "Надіслано {sent}/{total} · Помилок: {failed}",
+    "createdAt": "Створено: {date}",
+    "deleteDescription": "Ви видалите розсилку \"{subject}\"",
+    "status": {
+      "draft": "Чернетка",
+      "sending": "Надсилається",
+      "sent": "Надіслано",
+      "failed": "Помилка"
+    },
+    "toast": {
+      "loadError": "Не вдалося завантажити",
+      "created": "Чернетку створено",
+      "updated": "Чернетку оновлено",
+      "saveError": "Не вдалося зберегти",
+      "emptyFieldsError": "Заповніть тему та HTML",
+      "testEmailRequired": "Введіть email для тесту",
+      "testSent": "Тестовий лист надіслано на {email}",
+      "testError": "Не вдалося надіслати тест",
+      "sendStarted": "Розсилка стартувала: {count} отримувачів",
+      "sendError": "Не вдалося запустити розсилку",
+      "deleted": "Розсилку видалено",
+      "deleteError": "Не вдалося видалити"
+    }
   },
   "contactsPage": {
     "languageLabel": "Мова:",

@@ -36,6 +36,8 @@ import { PromoCodeModule } from './promo-code/promo-code.module';
 import { PopularQueryModule } from './popular-query/popular-query.module';
 import { ContactsModule } from './contacts/contacts.module';
 import { FeedbackModule } from './feedback/feedback.module';
+import { SubscribersModule } from './subscribers/subscribers.module';
+import { CampaignsModule } from './campaigns/campaigns.module';
 
 @Module({
   imports: [
@@ -109,6 +111,8 @@ import { FeedbackModule } from './feedback/feedback.module';
     PopularQueryModule,
     ContactsModule,
     FeedbackModule,
+    SubscribersModule,
+    CampaignsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

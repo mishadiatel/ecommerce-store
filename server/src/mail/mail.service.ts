@@ -209,6 +209,14 @@ export class MailService {
       .replace(/>/g, '&gt;');
   }
 
+  /**
+   * Публічна обгортка для довільної розсилки (кампанії).
+   * Не додає ніяких шаблонів — приймає готовий HTML.
+   */
+  async sendRawEmail(to: string, subject: string, html: string) {
+    return this.sendEmail({ to, subject, html });
+  }
+
   private async sendEmail({
     to,
     subject,

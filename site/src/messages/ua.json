@@ -32,7 +32,16 @@
   },
   "Subscribe": {
     "agreeText": "Даю згоду на <link>обробку персональних даних</link>",
-    "buttonText": "Підписатись"
+    "buttonText": "Підписатись",
+    "submittingText": "Підписуємо...",
+    "successMessage": "Дякуємо за підписку!",
+    "errorMessage": "Не вдалося підписатись. Спробуйте пізніше.",
+    "unsubscribe": {
+      "successTitle": "Ви відписані від розсилки",
+      "successText": "Ми більше не будемо надсилати вам листи.",
+      "errorTitle": "Не вдалося відписати",
+      "errorText": "Посилання невірне або вже було використане."
+    }
   },
   "Search": {
     "popupTitle": "Пошук",

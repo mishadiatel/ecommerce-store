@@ -60,7 +60,9 @@
     "promoCodes": "Promo codes",
     "popularQueries": "Popular queries",
     "contacts": "Contacts",
-    "feedbacks": "Feedbacks"
+    "feedbacks": "Feedbacks",
+    "subscribers": "Subscribers",
+    "campaigns": "Campaigns"
   },
   "pages": {
     "dashboard": {
@@ -118,6 +120,14 @@
     "feedbacks": {
       "title": "Feedbacks",
       "subtitle": "Submissions received from site feedback forms."
+    },
+    "subscribers": {
+      "title": "Subscribers",
+      "subtitle": "List of emails subscribed to the newsletter."
+    },
+    "campaigns": {
+      "title": "Campaigns",
+      "subtitle": "Compose emails, send test previews and dispatch to subscribers."
     }
   },
   "login": {
@@ -532,6 +542,67 @@
     "unknownProduct": "Product unavailable",
     "ordersHistory": "Order history ({count})",
     "noOrders": "No orders"
+  },
+  "subscribersPage": {
+    "searchPlaceholder": "Search by email",
+    "statusPlaceholder": "Status",
+    "allStatuses": "All",
+    "active": "Active",
+    "inactive": "Unsubscribed",
+    "unsubscribedBadge": "Unsubscribed",
+    "total": "Total: {count}",
+    "empty": "No subscribers found",
+    "deleteDescription": "You will delete subscriber {email}",
+    "toast": {
+      "loadError": "Failed to load subscribers",
+      "deleted": "Subscriber deleted",
+      "deleteError": "Failed to delete"
+    }
+  },
+  "campaignsPage": {
+    "newTitle": "New newsletter",
+    "editingTitle": "Edit draft",
+    "newCampaign": "New campaign",
+    "subjectLabel": "Subject",
+    "subjectPlaceholder": "e.g. Monthly newsletter",
+    "htmlLabel": "HTML content",
+    "htmlHint": "(insert {{unsubscribeUrl}} to place the personal unsubscribe link)",
+    "previewButton": "Preview",
+    "previewTitle": "Email preview",
+    "previewDescription": "Subject: {subject}",
+    "saveDraftButton": "Save as draft",
+    "testSendLabel": "Test send",
+    "testSendButton": "Send test",
+    "sendButton": "Send to subscribers",
+    "confirmSendTitle": "Send to all active subscribers?",
+    "confirmSendDescription": "This will dispatch the email to every active subscriber. This action cannot be undone.",
+    "historyTitle": "Campaign history",
+    "empty": "No campaigns yet",
+    "edit": "Edit",
+    "viewOrClone": "View",
+    "progressText": "Sent {sent}/{total} · Failed: {failed}",
+    "createdAt": "Created: {date}",
+    "deleteDescription": "You will delete campaign \"{subject}\"",
+    "status": {
+      "draft": "Draft",
+      "sending": "Sending",
+      "sent": "Sent",
+      "failed": "Failed"
+    },
+    "toast": {
+      "loadError": "Failed to load",
+      "created": "Draft created",
+      "updated": "Draft updated",
+      "saveError": "Failed to save",
+      "emptyFieldsError": "Fill in subject and HTML",
+      "testEmailRequired": "Enter an email for test",
+      "testSent": "Test email sent to {email}",
+      "testError": "Test send failed",
+      "sendStarted": "Sending started: {count} recipients",
+      "sendError": "Failed to start send",
+      "deleted": "Campaign deleted",
+      "deleteError": "Failed to delete"
+    }
   },
   "contactsPage": {
     "languageLabel": "Language:",

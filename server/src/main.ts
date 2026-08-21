@@ -125,6 +125,8 @@ async function bootstrap() {
     .addTag('Popular Queries', 'Популярні пошукові запити для модалки пошуку')
     .addTag('Contacts', 'Контент блоку "Контакти" на сайті')
     .addTag('Feedback', 'Заявки з форм зворотного зв\'язку')
+    .addTag('Subscribers', 'Підписники на email-розсилку')
+    .addTag('Campaigns', 'Email-розсилки (кампанії)')
     .build();
 
   const document = SwaggerModule.createDocument(app, swaggerConfig);

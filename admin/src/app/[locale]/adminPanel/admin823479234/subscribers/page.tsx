@@ -3,12 +3,12 @@ import { useTranslations } from 'next-intl';
 import { useAuth } from '@/components/admin/authProvider/AdminAuthProvider';
 import { useRouter } from '@/i18n/navigation';
 import PageHeader from '@/components/admin/ui/pageHeader';
-import ContactsForm from '@/components/admin/contacts/ContactsForm';
+import SubscribersList from '@/components/admin/subscribers/SubscribersList';
 
-export default function AdminContactsPage() {
+export default function AdminSubscribersPage() {
   const { isAuthenticated } = useAuth();
   const router = useRouter();
-  const t = useTranslations('pages.contacts');
+  const t = useTranslations('pages.subscribers');
   const tCommon = useTranslations('common');
 
   if (!isAuthenticated) {
@@ -18,7 +18,7 @@ export default function AdminContactsPage() {
   return (
     <div className="flex flex-col gap-6">
       <PageHeader title={t('title')} subtitle={t('subtitle')} />
-      <ContactsForm />
+      <SubscribersList />
     </div>
   );
 }

@@ -32,7 +32,16 @@
   },
   "Subscribe": {
     "agreeText": "I agree to the <link>processing of personal data</link>",
-    "buttonText": "Subscribe"
+    "buttonText": "Subscribe",
+    "submittingText": "Subscribing...",
+    "successMessage": "Thanks for subscribing!",
+    "errorMessage": "Failed to subscribe. Please try again later.",
+    "unsubscribe": {
+      "successTitle": "You have been unsubscribed",
+      "successText": "We will not send you any more emails.",
+      "errorTitle": "Failed to unsubscribe",
+      "errorText": "The link is invalid or has already been used."
+    }
   },
   "Search": {
     "popupTitle": "Search",
